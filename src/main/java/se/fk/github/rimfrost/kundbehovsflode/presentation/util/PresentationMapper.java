@@ -1,6 +1,7 @@
 package se.fk.github.rimfrost.kundbehovsflode.presentation.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -8,21 +9,15 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ErsattningDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.FSSAInformationDTO;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableErsattningDTO;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableIndividDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovCreateRequest;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsflodeCreateRequest;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsflodeDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsflodeGetRequest;
+import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsflodePatchRequest;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsflodePutRequest;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsflodespecifikationDTO;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableKundbehovsrollDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableLagrumDTO;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutablePeriodDTO;
-import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableProduceratResultatDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableRegelDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableUnderlagDTO;
+import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableUpdateErsattningDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableUppgiftDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ImmutableUppgiftspecifikationDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.IndividDTO;
@@ -34,6 +29,8 @@ import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodeCreateResp
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodeDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodeGetRequest;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodeGetResponse;
+import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodePatchRequest;
+import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodePatchResponse;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodePutRequest;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodePutResponse;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.KundbehovsflodespecifikationDTO;
@@ -43,6 +40,7 @@ import se.fk.github.rimfrost.kundbehovsflode.logic.dto.PeriodDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.ProduceratResultatDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.RegelDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.UnderlagDTO;
+import se.fk.github.rimfrost.kundbehovsflode.logic.dto.UpdateErsattningDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.UppgiftDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.UppgiftStatusDTO;
 import se.fk.github.rimfrost.kundbehovsflode.logic.dto.UppgiftspecifikationDTO;
@@ -55,6 +53,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Kundbehovsflod
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Kundbehovsflodespecifikation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Kundbehovsroll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Lagrum;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PatchKundbehovsflodeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Period;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostKundbehovRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostKundbehovResponse;
@@ -65,6 +64,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsf
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsflodeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Regel;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UpdateErsattning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftspecifikation;
@@ -289,7 +289,7 @@ public class PresentationMapper
             .skapadTs(uppgift.getSkapadTs())
             .planeradTs(uppgift.getPlaneradTs())
             .utfordTs(uppgift.getUtfordTs())
-            .kundbehovsflode(toKundbehovsflodeDTO(uppgift.getKundbehovsflode()))
+            .kundbehovsflodeId(uppgift.getKundbehovsflodeId())
             .uppgiftSpecifikation(toUppgiftspecifikationDTO(uppgift.getUppgiftspecifikation()))
             .version(uppgift.getVersion())
             .uppgiftStatus(toUppgiftStatus(uppgift.getUppgiftStatus()))
@@ -359,7 +359,7 @@ public class PresentationMapper
       var uppgift = new Uppgift();
       uppgift.setId(uppgiftDTO.uppgiftId());
       uppgift.setVersion(uppgiftDTO.version());
-      uppgift.setKundbehovsflode(toKundbehovsflode(uppgiftDTO.kundbehovsflode()));
+      uppgift.setKundbehovsflodeId(uppgiftDTO.kundbehovsflodeId());
       uppgift.setPlaneradTs(uppgiftDTO.planeradTs());
       uppgift.setUtfordTs(uppgiftDTO.utfordTs());
       uppgift.setSkapadTs(uppgiftDTO.skapadTs());
@@ -515,50 +515,6 @@ public class PresentationMapper
       return lagrum;
    }
 
-   public KundbehovsflodeDTO toKundbehovsflodeDTO(Kundbehovsflode kundbehovsflode)
-   {
-      if (kundbehovsflode == null)
-      {
-         return null;
-      }
-
-      KundbehovsflodeDTO kundbehovsflodeDTO = ImmutableKundbehovsflodeDTO.builder()
-            .id(kundbehovsflode.getId())
-            .kundbehov(toKundbehovDTO(kundbehovsflode.getKundbehov()))
-            .version(kundbehovsflode.getVersion())
-            .processinstansId(kundbehovsflode.getProcessinstansId())
-            .skapadTS(kundbehovsflode.getSkapadTS())
-            .avslutadTS(kundbehovsflode.getAvslutadTS())
-            .kundbehovsspecifikation(toKundbehovsflodespecifikationDTO(kundbehovsflode.getKundbehovsspecifikation()))
-            .build();
-
-      return kundbehovsflodeDTO;
-   }
-
-   public KundbehovsflodespecifikationDTO toKundbehovsflodespecifikationDTO(
-         Kundbehovsflodespecifikation kundbehovsflodespecifikation)
-   {
-      if (kundbehovsflodespecifikation == null)
-      {
-         return null;
-      }
-
-      KundbehovsflodespecifikationDTO kundbehovsflodespecifikationDTO = ImmutableKundbehovsflodespecifikationDTO.builder()
-            .id(kundbehovsflodespecifikation.getId())
-            .version(kundbehovsflodespecifikation.getVersion())
-            .bpmn(kundbehovsflodespecifikation.getBpmn())
-            .namn(kundbehovsflodespecifikation.getNamn())
-            .beskrivning(kundbehovsflodespecifikation.getBeskrivning())
-            .uppgiftspecifikation(
-                  kundbehovsflodespecifikation.getUppgiftspecifikation()
-                        .stream()
-                        .map(this::toUppgiftspecifikationDTO)
-                        .toList())
-            .build();
-
-      return kundbehovsflodespecifikationDTO;
-   }
-
    public UppgiftspecifikationDTO toUppgiftspecifikationDTO(Uppgiftspecifikation uppgiftspecifikation)
    {
       if (uppgiftspecifikation == null)
@@ -620,110 +576,43 @@ public class PresentationMapper
       return lagrumDTO;
    }
 
-   public KundbehovDTO toKundbehovDTO(Kundbehov kundbehov)
+   public KundbehovsflodePatchRequest toKundbehovsflodePatchRequest(UUID kundbehovsflodeId,
+         List<UpdateErsattning> updateErsattning)
    {
-      if (kundbehov == null)
+      if (kundbehovsflodeId == null || updateErsattning == null)
       {
          return null;
       }
 
-      return ImmutableKundbehovDTO.builder()
-            .id(kundbehov.getId())
-            .formanstyp(kundbehov.getFormanstyp())
-            .version(kundbehov.getVersion())
-            .kundbehovsdatum(kundbehov.getKundbehovsdatum())
-            .kundbehovsstatus(enumMapper.toKundbehovsstatusDTO(kundbehov.getKundbehovsstatus()))
-            .period(toPeriodDTO(kundbehov.getPeriod()))
-            .avsikt(enumMapper.toAvsiktDTO(kundbehov.getAvsikt()))
-            .andringsorsak(kundbehov.getAndringsorsak())
-            .kundbehovsroll(kundbehov.getKundbehovsroll()
-                  .stream()
-                  .map(this::toKundbehovsrollDTO)
-                  .toList())
-            .ersattning(kundbehov.getErsattning()
-                  .stream()
-                  .map(this::toErsattningDTO)
-                  .toList())
+      return ImmutableKundbehovsflodePatchRequest.builder().kundbehovsflodeId(kundbehovsflodeId)
+            .addAllUpdateErsattning(updateErsattning.stream().map(this::toUpdateErsattningDTO).toList()).build();
+   }
+
+   public UpdateErsattningDTO toUpdateErsattningDTO(UpdateErsattning updateErsattning)
+   {
+      if (updateErsattning == null)
+      {
+         return null;
+      }
+
+      return ImmutableUpdateErsattningDTO.builder()
+            .ersattningsId(updateErsattning.getErsattningId())
+            .beslutsutfall(enumMapper.toBeslutsutfallDTO(updateErsattning.getBeslutsutfall()))
+            .avslagsanledning(updateErsattning.getAvslagsanledning())
             .build();
    }
 
-   public PeriodDTO toPeriodDTO(Period period)
+   public PatchKundbehovsflodeResponse toPatchKundbehovsflodeResponse(KundbehovsflodePatchResponse kundbehovsflodePatchResponse)
    {
-      if (period == null)
+      if (kundbehovsflodePatchResponse == null)
       {
          return null;
       }
 
-      return ImmutablePeriodDTO.builder()
-            .start(period.getStart())
-            .slut(period.getSlut())
-            .build();
-   }
+      PatchKundbehovsflodeResponse response = new PatchKundbehovsflodeResponse();
+      response.setKundbehovsflode(toKundbehovsflode(kundbehovsflodePatchResponse.kundbehovsflode()));
 
-   public KundbehovsrollDTO toKundbehovsrollDTO(Kundbehovsroll kundbehovsroll)
-   {
-      if (kundbehovsroll == null)
-      {
-         return null;
-      }
-
-      return ImmutableKundbehovsrollDTO.builder()
-            .id(kundbehovsroll.getId())
-            .individ(toIndividDTO(kundbehovsroll.getIndivid()))
-            .roll(enumMapper.toRollDTO(kundbehovsroll.getRoll()))
-            .yrkande(kundbehovsroll.getYrkande())
-            .build();
-   }
-
-   public IndividDTO toIndividDTO(Individ individ)
-   {
-      if (individ == null)
-      {
-         return null;
-      }
-
-      return ImmutableIndividDTO.builder()
-            .id(individ.getId())
-            .fornamn(individ.getFornamn())
-            .efternamn(individ.getEfternamn())
-            .build();
-   }
-
-   public ErsattningDTO toErsattningDTO(Ersattning ersattning)
-   {
-      if (ersattning == null)
-      {
-         return null;
-      }
-
-      return ImmutableErsattningDTO.builder()
-            .id(ersattning.getId())
-            .belopp(ersattning.getBelopp())
-            .berakningsgrund(enumMapper.toBerakningsgrundDTO(ersattning.getBerakningsgrund()))
-            .beloppstyp(enumMapper.toBeloppstypDTO(ersattning.getBeloppstyp()))
-            .ersattningstyp(enumMapper.toErsattningstypDTO(ersattning.getErsattningstyp()))
-            .periodisering(enumMapper.toPeriodiseringDTO(ersattning.getPeriodisering()))
-            .omfattning(ersattning.getOmfattning())
-            .beslutsutfall(enumMapper.toBeslutsutfallDTO(ersattning.getBeslutsutfall()))
-            .avslagsanledning(ersattning.getAvslagsanledning())
-            .produceratResultat(toProduceratResultatDTO(ersattning.getProduceratResultat()))
-            .build();
-   }
-
-   public ProduceratResultatDTO toProduceratResultatDTO(ProduceratResultat produceratResultat)
-   {
-      if (produceratResultat == null)
-      {
-         return null;
-      }
-
-      return ImmutableProduceratResultatDTO.builder()
-            .id(produceratResultat.getId())
-            .version(produceratResultat.getVersion())
-            .franOchMed(produceratResultat.getFrom())
-            .tillOchMed(produceratResultat.getTom())
-            .status(enumMapper.toErsattningsstatusDTO(produceratResultat.getStatus()))
-            .build();
+      return response;
    }
 
 }

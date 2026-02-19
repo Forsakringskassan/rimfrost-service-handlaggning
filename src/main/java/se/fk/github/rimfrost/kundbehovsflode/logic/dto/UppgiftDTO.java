@@ -27,7 +27,7 @@ public interface UppgiftDTO
    @Nullable
    UUID utforarId();
 
-   KundbehovsflodeDTO kundbehovsflode();
+   UUID kundbehovsflodeId();
 
    UppgiftStatusDTO uppgiftStatus();
 

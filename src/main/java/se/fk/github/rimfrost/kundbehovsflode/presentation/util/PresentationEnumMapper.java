@@ -14,7 +14,7 @@ import se.fk.github.rimfrost.kundbehovsflode.logic.dto.VerksamhetslogikDTO;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Avsikt;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beloppstyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Berakningsgrund;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning.BeslutsutfallEnum;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsutfall;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattningsstatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattningstyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Kundbehovsstatus;
@@ -66,12 +66,12 @@ public class PresentationEnumMapper
         return out;
     }
 
-   public BeslutsutfallEnum toBeslutsutfallEnum(BeslutsutfallDTO beslutsutfallDTO) {
-        BeslutsutfallEnum out;
+   public Beslutsutfall toBeslutsutfallEnum(BeslutsutfallDTO beslutsutfallDTO) {
+        Beslutsutfall out;
         switch (beslutsutfallDTO) {
-            case FU -> out = BeslutsutfallEnum.FU;
-            case JA -> out = BeslutsutfallEnum.JA;
-            case NEJ -> out = BeslutsutfallEnum.NEJ;
+            case FU -> out = Beslutsutfall.FU;
+            case JA -> out = Beslutsutfall.JA;
+            case NEJ -> out = Beslutsutfall.NEJ;
             default -> {
                 return null;
             }
@@ -208,7 +208,7 @@ public class PresentationEnumMapper
         return out;
     }
 
-   public BeslutsutfallDTO toBeslutsutfallDTO(BeslutsutfallEnum beslutsutfall) {
+   public BeslutsutfallDTO toBeslutsutfallDTO(Beslutsutfall beslutsutfall) {
         BeslutsutfallDTO out;
         switch (beslutsutfall) {
             case FU -> out = BeslutsutfallDTO.FU;

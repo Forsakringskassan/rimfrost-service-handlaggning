@@ -18,3 +18,5 @@ buildNumber.properties
 
 */settings.json
 .vscode/settings.json
+
+.idea
