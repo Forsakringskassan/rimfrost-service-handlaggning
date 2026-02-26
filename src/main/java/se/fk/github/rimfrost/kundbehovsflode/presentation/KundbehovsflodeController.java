@@ -101,7 +101,7 @@ public class KundbehovsflodeController implements KundbehovsflodeControllerApi
 
    @Override
    @PATCH
-   @Path("/{kundbehovsflodeId}")
+   @Path("/{kundbehovsflodeId}/ersattning")
    @Consumes(
    {
          "application/json"
