@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-service-kundbehovsflode.
 
+## 0.2.1 (2026-02-26)
+
+### Bug Fixes
+
+-  ersattning som endpoint i PATCH. KundbehovsflodeEntity builder, lägger till from(kundbehovsflode) ([bffcb](https://github.com/Forsakringskassan/rimfrost-service-kundbehovsflode/commit/bffcb618018a8ba) Ulf Slunga)  
+
 ## 0.2.0 (2026-02-24)
 
 ### Features
