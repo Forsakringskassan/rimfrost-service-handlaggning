@@ -151,7 +151,7 @@ public class KundbehovsflodeServiceImpl implements KundbehovsflodeService
 
       KundbehovEntity updatedKundbehov = ImmutableKundbehovEntity.builder().from(kundbehov)
             .ersattning(updatedErsattning).build();
-      KundbehovsflodeEntity updatedKundbehovsflode = ImmutableKundbehovsflodeEntity.builder()
+      KundbehovsflodeEntity updatedKundbehovsflode = ImmutableKundbehovsflodeEntity.builder().from(kundbehovsflode)
             .kundbehov(updatedKundbehov).build();
       kundbehovsflodeRepository.save(updatedKundbehovsflode);
 
