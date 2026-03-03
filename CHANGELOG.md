@@ -2,6 +2,13 @@
 
 Changelog of rimfrost-service-kundbehovsflode.
 
+## 0.2.2 (2026-03-03)
+
+### Bug Fixes
+
+-  Bump to trigger release flow ([49e4e](https://github.com/Forsakringskassan/rimfrost-service-kundbehovsflode/commit/49e4e07b052c92a) Lars Persson)  
+-  Avslagsanledning as nullable (#12) ([f2164](https://github.com/Forsakringskassan/rimfrost-service-kundbehovsflode/commit/f21645b393f03c8) NilsElveros)  
+
 ## 0.2.1 (2026-02-26)
 
 ### Bug Fixes
