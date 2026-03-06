@@ -9,9 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.integration.KafkaProducer;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
-import se.fk.github.rimfrost.handlaggning.logic.dto.HandlaggningCreateRequest;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
-import se.fk.github.rimfrost.handlaggning.logic.entity.YrkandeEntity;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.HandlaggningRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
@@ -105,7 +103,7 @@ public class HandlaggningServiceImpl implements HandlaggningService
       HandlaggningEntity handlaggning = handlaggningRepository.findById(request.handlaggningId()).orElse(null);
       if (handlaggning == null)
       {
-         return null;
+         throw new InternalError("Could not find handlaggning with ID: " + request.handlaggningId());
       }
 
       YrkandeEntity yrkande = handlaggning.yrkande();
@@ -119,9 +117,22 @@ public class HandlaggningServiceImpl implements HandlaggningService
                .findFirst().orElse(null);
          if (updateErsattning != null)
          {
-            ersattning = ImmutableErsattningEntity.builder().from(ersattning)
-                  .beslutsutfall(enumMapper.toBeslutsutfallEntity(updateErsattning.beslutsutfall()))
-                  .avslagsanledning(updateErsattning.avslagsanledning()).build();
+            var ersattningBuilder = ImmutableErsattningEntity.builder().from(ersattning);
+            if (updateErsattning.beslutsutfall() != null)
+            {
+               ersattningBuilder.beslutsutfall(enumMapper.toBeslutsutfallEntity(updateErsattning.beslutsutfall()));
+            }
+            if (updateErsattning.avslagsanledning() != null)
+            {
+               ersattningBuilder.avslagsanledning(updateErsattning.avslagsanledning());
+            }
+            if (updateErsattning.ersattningsStatus() != null)
+            {
+               ersattningBuilder
+                     .produceratResultat(ImmutableProduceratResultatEntity.builder().from(ersattning.produceratResultat())
+                           .status(enumMapper.toErsattningsstatusEntity(updateErsattning.ersattningsStatus())).build());
+            }
+            ersattning = ersattningBuilder.build();
          }
 
          updatedErsattning.add(ersattning);
