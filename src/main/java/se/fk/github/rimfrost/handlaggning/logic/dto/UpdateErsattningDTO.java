@@ -13,4 +13,7 @@ public interface UpdateErsattningDTO
 
    @Nullable
    String avslagsanledning();
+
+   @Nullable
+   ErsattningsstatusDTO ersattningsStatus();
 }

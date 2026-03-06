@@ -542,13 +542,10 @@ public class PresentationMapper
    public HandlaggningPatchRequest toHandlaggningPatchRequest(UUID handlaggningId,
          List<UpdateErsattning> updateErsattning)
    {
-      if (handlaggningId == null || updateErsattning == null)
-      {
-         return null;
-      }
-
-      return ImmutableHandlaggningPatchRequest.builder().handlaggningId(handlaggningId)
-            .addAllUpdateErsattning(updateErsattning.stream().map(this::toUpdateErsattningDTO).toList()).build();
+      return ImmutableHandlaggningPatchRequest.builder()
+            .handlaggningId(handlaggningId)
+            .addAllUpdateErsattning(updateErsattning.stream().map(this::toUpdateErsattningDTO).toList())
+            .build();
    }
 
    public UpdateErsattningDTO toUpdateErsattningDTO(UpdateErsattning updateErsattning)
@@ -561,6 +558,7 @@ public class PresentationMapper
       return ImmutableUpdateErsattningDTO.builder()
             .ersattningsId(updateErsattning.getErsattningId())
             .beslutsutfall(enumMapper.toBeslutsutfallDTO(updateErsattning.getBeslutsutfall()))
+            .ersattningsStatus(enumMapper.toErsattningsstatusDTO(updateErsattning.getErsattningsStatus()))
             .avslagsanledning(updateErsattning.getAvslagsanledning())
             .build();
    }
