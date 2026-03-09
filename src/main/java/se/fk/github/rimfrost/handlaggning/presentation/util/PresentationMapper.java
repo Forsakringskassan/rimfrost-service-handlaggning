@@ -11,6 +11,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Individ;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Roll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggningspecifikation;
@@ -46,11 +47,40 @@ public class PresentationMapper
          return null;
       }
 
+      List<YrkandePerson> personer = new ArrayList<>();
+      for (var person : PostYrkandeRequest.getPerson())
+      {
+         var yrkandePerson = ImmutableYrkandePerson.builder()
+               .persnr(person.getPersnr())
+               .roll(person.getRoll())
+               .yrkande(person.getYrkande())
+               .build();
+         personer.add(yrkandePerson);
+      }
+
+      List<YrkandeErsattning> ersattningar = new ArrayList<>();
+      for (var ersattning : PostYrkandeRequest.getErsattning())
+      {
+         var ersattningPeriod = ImmutablePeriodDTO.builder()
+               .start(ersattning.getPeriod().getStart())
+               .slut(ersattning.getPeriod().getSlut())
+               .build();
+
+         var yrkandeErsattning = ImmutableYrkandeErsattning.builder()
+               .produktvariantId(ersattning.getErsattningstyp().getId())
+               .omfattning(ersattning.getOmfattning())
+               .period(ersattningPeriod)
+               .periodisering(enumMapper.toPeriodiseringDTO(ersattning.getPeriodisering()))
+               .build();
+         ersattningar.add(yrkandeErsattning);
+      }
+
       YrkandeCreateRequest request = ImmutableYrkandeCreateRequest.builder()
-            .persnr(PostYrkandeRequest.getPersnr())
+            .person(personer)
             .formanstyp(PostYrkandeRequest.getFormanstyp())
             .start(PostYrkandeRequest.getPeriod().getStart())
             .slut(PostYrkandeRequest.getPeriod().getSlut())
+            .ersattning(ersattningar)
             .build();
       return request;
    }
@@ -119,7 +149,7 @@ public class PresentationMapper
       Yrkanderoll yrkanderoll = new Yrkanderoll();
       yrkanderoll.setId(yrkanderollDTO.id());
       yrkanderoll.setIndivid(toIndivid(yrkanderollDTO.individ()));
-      yrkanderoll.setRoll(enumMapper.toRoll(yrkanderollDTO.roll()));
+      yrkanderoll.setRoll(toRoll(yrkanderollDTO.roll()));
       yrkanderoll.setYrkande(yrkanderollDTO.yrkande());
       return yrkanderoll;
    }
@@ -150,7 +180,7 @@ public class PresentationMapper
       ersattning.setBelopp(ersattningDTO.belopp());
       ersattning.setBerakningsgrund(enumMapper.toBerakningsgrund(ersattningDTO.berakningsgrund()));
       ersattning.setBeloppstyp(enumMapper.toBeloppstyp(ersattningDTO.beloppstyp()));
-      ersattning.setErsattningstyp(enumMapper.toErsattningstyp(ersattningDTO.ersattningstyp()));
+      ersattning.setErsattningstyp(enumMapper.toErsattningstyp(ersattningDTO.produktvariant()));
       ersattning.setPeriodisering(enumMapper.toPeriodisering(ersattningDTO.periodisering()));
       ersattning.setOmfattning(ersattningDTO.omfattning());
       ersattning.setBeslutsutfall(enumMapper.toBeslutsutfallEnum(ersattningDTO.beslutsutfall()));
@@ -434,7 +464,7 @@ public class PresentationMapper
       uppgiftspecifikation.setNamn(uppgiftspecifikationDTO.namn());
       uppgiftspecifikation.setUppgiftbeskrivning(uppgiftspecifikationDTO.uppgiftbeskrivning());
       uppgiftspecifikation.setVerksamhetslogik(enumMapper.toVerksamhetslogik(uppgiftspecifikationDTO.verksamhetslogik()));
-      uppgiftspecifikation.setRoll(enumMapper.toRoll(uppgiftspecifikationDTO.roll()));
+      uppgiftspecifikation.setRoll(toRoll(uppgiftspecifikationDTO.roll()));
       uppgiftspecifikation.setApplikationsId(uppgiftspecifikationDTO.applikationsId());
       uppgiftspecifikation.setApplikationsVersion(uppgiftspecifikationDTO.applikationsVersion());
       uppgiftspecifikation.setRegel(toRegel(uppgiftspecifikationDTO.regel()));
@@ -491,7 +521,7 @@ public class PresentationMapper
             .namn(uppgiftspecifikation.getNamn())
             .uppgiftbeskrivning(uppgiftspecifikation.getUppgiftbeskrivning())
             .verksamhetslogik(enumMapper.toVerksamhetslogikDTO(uppgiftspecifikation.getVerksamhetslogik()))
-            .roll(enumMapper.toRollDTO(uppgiftspecifikation.getRoll()))
+            .roll(toRollDTO(uppgiftspecifikation.getRoll()))
             .applikationsId(uppgiftspecifikation.getApplikationsId())
             .applikationsVersion(uppgiftspecifikation.getApplikationsVersion())
             .regel(toRegelDTO(uppgiftspecifikation.getRegel()))
@@ -574,6 +604,25 @@ public class PresentationMapper
       response.setHandlaggning(toHandlaggning(handlaggningPatchResponse.handlaggning()));
 
       return response;
+   }
+
+   public Roll toRoll(RollDTO rollDTO)
+   {
+      Roll out = new Roll();
+      out.setId(rollDTO.id());
+      out.namn(rollDTO.namn());
+      out.version(rollDTO.version());
+
+      return out;
+   }
+
+   public RollDTO toRollDTO(Roll roll)
+   {
+      return ImmutableRollDTO.builder()
+            .id(roll.getId())
+            .namn(roll.getNamn())
+            .version(roll.getVersion())
+            .build();
    }
 
 }

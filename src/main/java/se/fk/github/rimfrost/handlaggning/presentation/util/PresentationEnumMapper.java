@@ -88,18 +88,14 @@ public class PresentationEnumMapper
         return out;
     }
 
-   public Ersattningstyp toErsattningstyp(ErsattningstypDTO ersattningstypDTO) {
-        Ersattningstyp out;
-        switch (ersattningstypDTO) {
-            case HUNDBIDRAG -> out = Ersattningstyp.HUNDBIDRAG;
-            case TILLFALLIG_VARD_AV_HUND -> out = Ersattningstyp.TILLFALLIG_VARD_AV_HUND;
-            default -> {
-                return null;
-            }            
-        }
+   public Ersattningstyp toErsattningstyp(ProduktvariantDTO produktvariantDTO)
+   {
+      var ersattningsTyp = new Ersattningstyp();
+      ersattningsTyp.setId(produktvariantDTO.id());
+      ersattningsTyp.setNamn(produktvariantDTO.namn());
 
-        return out;
-    }
+      return ersattningsTyp;
+   }
 
    public Yrkandestatus toYrkandestatus(YrkandestatusDTO yrkandestatusDTO) {
         Yrkandestatus out;
@@ -129,20 +125,6 @@ public class PresentationEnumMapper
             }
         }
         
-        return out;
-    }
-
-   public Roll toRoll(RollDTO rollDTO) {
-        Roll out;
-        switch(rollDTO) {
-            case AGARE -> out = Roll.AGARE;
-            case ANSVARIG_HANDLAGGARE -> out = Roll.ANSVARIG_HANDLAGGARE;
-            case DJUR -> out = Roll.DJUR;
-            default -> {
-                return null;
-            }            
-        }
-
         return out;
     }
 
@@ -235,18 +217,13 @@ public class PresentationEnumMapper
     }
 
    @SuppressWarnings("unused")
-   public ErsattningstypDTO toErsattningstypDTO(Ersattningstyp ersattningstyp) {
-        ErsattningstypDTO out;
-        switch (ersattningstyp) {
-            case HUNDBIDRAG -> out = ErsattningstypDTO.HUNDBIDRAG;
-            case TILLFALLIG_VARD_AV_HUND -> out = ErsattningstypDTO.TILLFALLIG_VARD_AV_HUND;
-            default -> {
-                return null;
-            }
-        }
-
-        return out;
-    }
+   public ProduktvariantDTO toProduktvariantDTO(Ersattningstyp ersattningstyp)
+   {
+      return ImmutableProduktvariantDTO.builder()
+            .id(ersattningstyp.getId())
+            .namn(ersattningstyp.getNamn())
+            .build();
+   }
 
    @SuppressWarnings("unused")
    public YrkandestatusDTO toYrkandestatusDTO(Yrkandestatus Yrkandestatus) {
@@ -273,20 +250,6 @@ public class PresentationEnumMapper
             case ENGANGS -> out = PeriodiseringDTO.ENGANGS;
             case MANAD -> out = PeriodiseringDTO.MANAD;
             case VECKA -> out = PeriodiseringDTO.VECKA;
-            default -> {
-                return null;
-            }
-        }
-
-        return out;
-    }
-
-   public RollDTO toRollDTO(Roll roll) {
-        RollDTO out;
-        switch (roll) {
-            case AGARE -> out = RollDTO.AGARE;
-            case ANSVARIG_HANDLAGGARE -> out = RollDTO.ANSVARIG_HANDLAGGARE;
-            case DJUR -> out = RollDTO.DJUR;
             default -> {
                 return null;
             }

@@ -3,6 +3,8 @@ package se.fk.github.rimfrost.handlaggning.logic.util;
 import jakarta.enterprise.context.ApplicationScoped;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.dto.YrkandestatusDTO;
+import se.fk.github.rimfrost.handlaggning.logic.entity.ProduktvariantEntity;
+import se.fk.github.rimfrost.handlaggning.logic.entity.RollEntity;
 import se.fk.github.rimfrost.handlaggning.logic.enums.*;
 import se.fk.github.rimfrost.handlaggning.logic.enums.YrkandestatusEntity;
 
@@ -161,34 +163,6 @@ public class LogicEnumMapper
         return out;
     }
 
-   public ErsattningstypEntity toErsattningstypEntity(ErsattningstypDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        ErsattningstypEntity out;
-        switch (dto) {
-            case HUNDBIDRAG -> out = ErsattningstypEntity.HUNDBIDRAG;
-            case TILLFALLIG_VARD_AV_HUND -> out = ErsattningstypEntity.TILLFALLIG_VARD_AV_HUND;
-            default -> { return null; }
-        }
-        return out;
-    }
-
-   public ErsattningstypDTO toErsattningstypDTO(ErsattningstypEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        ErsattningstypDTO out;
-        switch (entity) {
-            case HUNDBIDRAG -> out = ErsattningstypDTO.HUNDBIDRAG;
-            case TILLFALLIG_VARD_AV_HUND -> out = ErsattningstypDTO.TILLFALLIG_VARD_AV_HUND;
-            default -> { return null; }
-        }
-        return out;
-    }
-
    public YrkandestatusEntity toYrkandestatusEntity(YrkandestatusDTO dto) {
         if (dto == null) {
             return null;
@@ -255,35 +229,18 @@ public class LogicEnumMapper
         return out;
     }
 
-   public RollEntity toRollEntity(RollDTO dto) {
-        if (dto == null) {
-            return null;
-        }
+   public RollDTO toRollDTO(RollEntity entity)
+   {
+      if (entity == null)
+      {
+         return null;
+      }
 
-        RollEntity out;
-        switch (dto) {
-            case AGARE -> out = RollEntity.AGARE;
-            case ANSVARIG_HANDLAGGARE -> out = RollEntity.ANSVARIG_HANDLAGGARE;
-            case DJUR -> out = RollEntity.DJUR;
-            default -> { return null; }
-        }
-        return out;
-    }
-
-   public RollDTO toRollDTO(RollEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        RollDTO out;
-        switch (entity) {
-            case AGARE -> out = RollDTO.AGARE;
-            case ANSVARIG_HANDLAGGARE -> out = RollDTO.ANSVARIG_HANDLAGGARE;
-            case DJUR -> out = RollDTO.DJUR;
-            default -> { return null; }
-        }
-        return out;
-    }
+      return ImmutableRollDTO.builder()
+            .id(entity.id())
+            .namn(entity.namn())
+            .build();
+   }
 
    public VerksamhetslogikEntity toVerksamhetslogikEntity(VerksamhetslogikDTO dto) {
         if (dto == null) {

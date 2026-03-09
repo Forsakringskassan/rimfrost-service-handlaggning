@@ -1,0 +1,6 @@
+erbjudandetyp: VAH
+bpmn: VAH
+namn: Vård av hudsjur
+beskrivning: Kollar om du har rätt för ersättning för vård av husdjur
+kafkaTopic: vah-handlaggning-requests
+kafkaRequestType: vah-handlaggning-requests

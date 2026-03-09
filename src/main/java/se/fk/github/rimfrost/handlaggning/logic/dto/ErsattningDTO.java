@@ -17,7 +17,7 @@ public interface ErsattningDTO
 
    BeloppstypDTO beloppstyp();
 
-   ErsattningstypDTO ersattningstyp();
+   ProduktvariantDTO produktvariant();
 
    PeriodiseringDTO periodisering();
 

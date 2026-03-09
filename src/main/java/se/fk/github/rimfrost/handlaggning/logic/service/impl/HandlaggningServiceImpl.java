@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.integration.KafkaProducer;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
+import se.fk.github.rimfrost.handlaggning.logic.repository.ErbjudandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.HandlaggningRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
@@ -26,6 +27,9 @@ public class HandlaggningServiceImpl implements HandlaggningService
    YrkandeRepository yrkandeRepository;
 
    @Inject
+   ErbjudandeRepository erbjudandeRepository;
+
+   @Inject
    KafkaProducer producer;
 
    @Inject
@@ -40,16 +44,19 @@ public class HandlaggningServiceImpl implements HandlaggningService
    public HandlaggningCreateResponse createHandlaggning(HandlaggningCreateRequest request)
    {
 
-      YrkandeEntity yrkandeEntity = yrkandeRepository.findById(request.yrkandeId()).orElse(null);
+      YrkandeEntity yrkandeEntity = yrkandeRepository.findById(request.yrkandeId()).orElseThrow();
+      // TODO: Fetch this information from correct location
+      var erbjudandeFlowInfo = erbjudandeRepository.getErbjudandeFlowInfoByErbjudandetyp(yrkandeEntity.formanstyp())
+            .orElseThrow();
 
       // Innehåller ingen uppgiftspecifikation just nu
       HandlaggningspecifikationEntity handlaggningspecifikationEntity = ImmutableHandlaggningspecifikationEntity
             .builder()
             .id(UUID.randomUUID())
             .version("1.0")
-            .bpmn("VAH") // TODO: Uppdatera detta till något annat baserat på yrkandets typ?
-            .namn("Vård av hudsjur") // TODO: Uppdatera detta till något annat baserat på yrkandets typ?
-            .beskrivning("Kollar om du har rätt för ersättning för vård av husdjur")
+            .bpmn(erbjudandeFlowInfo.bpmn())
+            .namn(erbjudandeFlowInfo.namn())
+            .beskrivning(erbjudandeFlowInfo.beskrivning())
             .build();
 
       HandlaggningEntity handlaggningEntity = ImmutableHandlaggningEntity.builder()
