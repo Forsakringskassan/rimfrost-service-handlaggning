@@ -8,7 +8,6 @@ import jakarta.annotation.Nullable;
 import se.fk.github.rimfrost.handlaggning.logic.enums.BeloppstypEntity;
 import se.fk.github.rimfrost.handlaggning.logic.enums.BerakningsgrundEntity;
 import se.fk.github.rimfrost.handlaggning.logic.enums.BeslutsutfallEntity;
-import se.fk.github.rimfrost.handlaggning.logic.enums.ErsattningstypEntity;
 import se.fk.github.rimfrost.handlaggning.logic.enums.PeriodiseringEntity;
 
 @Value.Immutable
@@ -22,7 +21,7 @@ public interface ErsattningEntity
 
    BeloppstypEntity beloppstyp();
 
-   ErsattningstypEntity ersattningstyp();
+   ProduktvariantEntity produktvariant();
 
    PeriodiseringEntity periodisering();
 

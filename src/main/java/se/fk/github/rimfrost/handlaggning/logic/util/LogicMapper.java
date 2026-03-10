@@ -3,9 +3,7 @@ package se.fk.github.rimfrost.handlaggning.logic.util;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
-import se.fk.github.rimfrost.handlaggning.logic.dto.YrkandeDTO;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
-import se.fk.github.rimfrost.handlaggning.logic.entity.YrkandeEntity;
 
 @ApplicationScoped
 public class LogicMapper
@@ -95,7 +93,7 @@ public class LogicMapper
             .belopp(ersattningEntity.belopp())
             .berakningsgrund(enumMapper.toBerakningsgrundDTO(ersattningEntity.berakningsgrund()))
             .beloppstyp(enumMapper.toBeloppstypDTO(ersattningEntity.beloppstyp()))
-            .ersattningstyp(enumMapper.toErsattningstypDTO(ersattningEntity.ersattningstyp()))
+            .produktvariant(toProduktvariantDTO(ersattningEntity.produktvariant()))
             .periodisering(enumMapper.toPeriodiseringDTO(ersattningEntity.periodisering()))
             .omfattning(ersattningEntity.omfattning())
             .beslutsutfall(enumMapper.toBeslutsutfallDTO(ersattningEntity.beslutsutfall()))
@@ -282,7 +280,7 @@ public class LogicMapper
       return ImmutableYrkanderollEntity.builder()
             .id(yrkanderollDTO.id())
             .individ(toIndividEntity(yrkanderollDTO.individ()))
-            .roll(enumMapper.toRollEntity(yrkanderollDTO.roll()))
+            .roll(toRollEntity(yrkanderollDTO.roll()))
             .yrkande(yrkanderollDTO.yrkande())
             .build();
    }
@@ -313,7 +311,7 @@ public class LogicMapper
             .belopp(ersattningDTO.belopp())
             .berakningsgrund(enumMapper.toBerakningsgrundEntity(ersattningDTO.berakningsgrund()))
             .beloppstyp(enumMapper.toBeloppstypEntity(ersattningDTO.beloppstyp()))
-            .ersattningstyp(enumMapper.toErsattningstypEntity(ersattningDTO.ersattningstyp()))
+            .produktvariant(toProduktvariantEntity(ersattningDTO.produktvariant()))
             .periodisering(enumMapper.toPeriodiseringEntity(ersattningDTO.periodisering()))
             .omfattning(ersattningDTO.omfattning())
             .beslutsutfall(enumMapper.toBeslutsutfallEntity(ersattningDTO.beslutsutfall()))
@@ -393,7 +391,7 @@ public class LogicMapper
             .namn(uppgiftspecifikationDTO.namn())
             .uppgiftbeskrivning(uppgiftspecifikationDTO.uppgiftbeskrivning())
             .verksamhetslogik(enumMapper.toVerksamhetslogikEntity(uppgiftspecifikationDTO.verksamhetslogik()))
-            .roll(enumMapper.toRollEntity(uppgiftspecifikationDTO.roll()))
+            .roll(toRollEntity(uppgiftspecifikationDTO.roll()))
             .applikationsId(uppgiftspecifikationDTO.applikationsId())
             .applikationsVersion(uppgiftspecifikationDTO.applikationsVersion())
             .regel(toRegelEntity(uppgiftspecifikationDTO.regel()))
@@ -432,6 +430,45 @@ public class LogicMapper
             .paragraf(lagrumDTO.paragraf())
             .stycke(lagrumDTO.stycke())
             .punkt(lagrumDTO.punkt())
+            .build();
+   }
+
+   public RollEntity toRollEntity(RollDTO dto)
+   {
+      if (dto == null)
+      {
+         return null;
+      }
+
+      return ImmutableRollEntity.builder()
+            .id(dto.id())
+            .namn(dto.namn())
+            .build();
+   }
+
+   public ProduktvariantEntity toProduktvariantEntity(ProduktvariantDTO dto)
+   {
+      if (dto == null)
+      {
+         return null;
+      }
+
+      return ImmutableProduktvariantEntity.builder()
+            .id(dto.id())
+            .namn(dto.namn())
+            .build();
+   }
+
+   public ProduktvariantDTO toProduktvariantDTO(ProduktvariantEntity entity)
+   {
+      if (entity == null)
+      {
+         return null;
+      }
+
+      return ImmutableProduktvariantDTO.builder()
+            .id(entity.id())
+            .namn(entity.namn())
             .build();
    }
 
