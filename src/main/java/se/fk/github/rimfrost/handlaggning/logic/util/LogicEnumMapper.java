@@ -239,6 +239,7 @@ public class LogicEnumMapper
       return ImmutableRollDTO.builder()
             .id(entity.id())
             .namn(entity.namn())
+            .version(entity.version())
             .build();
    }
 
