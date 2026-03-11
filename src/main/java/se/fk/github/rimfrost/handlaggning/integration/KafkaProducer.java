@@ -1,33 +1,41 @@
 package se.fk.github.rimfrost.handlaggning.integration;
 
+import io.smallrye.reactive.messaging.kafka.api.OutgoingKafkaRecordMetadata;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.eclipse.microprofile.reactive.messaging.Message;
 import se.fk.rimfrost.*;
 
 @ApplicationScoped
 public class KafkaProducer
 {
 
-   @Channel("vah-handlaggning-requests")
-   Emitter<VahHandlaggningRequestMessagePayload> vahEmitter;
+   @Channel("handlaggning-requests")
+   Emitter<HandlaggningRequestMessagePayload> emitter;
 
-   public void sendVahRequestMessage(UUID handlaggningId)
+   public void sendRequestMessage(String topic, String requestType, UUID handlaggningId)
    {
-      var data = new VahHandlaggningRequestMessageData();
+      var data = new HandlaggningRequestMessageData();
       data.setHandlaggningId(handlaggningId.toString());
 
-      var payload = new VahHandlaggningRequestMessagePayload();
+      var payload = new HandlaggningRequestMessagePayload();
       payload.setId(handlaggningId.toString());
       payload.setData(data);
-      payload.setType("vah-handlaggning-requests");
+      payload.setType(requestType);
       payload.setSource("/service/handlaggning");
       payload.setTime(OffsetDateTime.now());
       payload.setSpecversion(SpecVersion.NUMBER_1_DOT_0);
       payload.setKogitoproctype(KogitoProcType.BPMN);
-      vahEmitter.send(payload);
+
+      var metadata = OutgoingKafkaRecordMetadata.builder()
+            .withTopic(topic)
+            .build();
+      var message = Message.of(payload).addMetadata(metadata);
+
+      emitter.send(message);
    }
 
    @Channel("handlaggning-done")

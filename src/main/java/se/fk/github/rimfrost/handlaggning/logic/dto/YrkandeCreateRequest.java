@@ -11,7 +11,7 @@ public interface YrkandeCreateRequest
 {
    public List<YrkandePerson> person();
 
-   public UUID formanstyp();
+   public String formanstyp();
 
    public OffsetDateTime start();
 

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import se.fk.github.logging.callerinfo.model.MDCKeys;
 import se.fk.github.rimfrost.handlaggning.logic.service.impl.HandlaggningServiceImpl;
-import se.fk.rimfrost.VahHandlaggningResponseMessagePayload;
+import se.fk.rimfrost.HandlaggningResponseMessagePayload;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -22,15 +22,15 @@ public class KafkaConsumer
    HandlaggningServiceImpl handlaggningService;
 
    @SuppressWarnings("unused")
-   @Incoming("vah-handlaggning-responses")
-   public void onVahHandlaggningResponse(VahHandlaggningResponseMessagePayload vahHandlaggningResponseMessagePayload)
+   @Incoming("handlaggning-responses")
+   public void onHandlaggningResponse(HandlaggningResponseMessagePayload handlaggningResponseMessagePayload)
    {
-      MDC.put(MDCKeys.PROCESSID.name(), vahHandlaggningResponseMessagePayload.getData().getHandlaggningId());
+      MDC.put(MDCKeys.PROCESSID.name(), handlaggningResponseMessagePayload.getData().getHandlaggningId());
       LOGGER.info(
-            "VahHandlaggningResponseMessagePayload received with HandlaggningId: "
-                  + vahHandlaggningResponseMessagePayload.getData().getHandlaggningId());
+            "HandlaggningResponseMessagePayload received with HandlaggningId: "
+                  + handlaggningResponseMessagePayload.getData().getHandlaggningId());
       handlaggningService.sendHandlaggningDoneMessage(
-            UUID.fromString(vahHandlaggningResponseMessagePayload.getData().getHandlaggningId()));
+            UUID.fromString(handlaggningResponseMessagePayload.getData().getHandlaggningId()));
    }
 
 }

@@ -69,7 +69,8 @@ public class HandlaggningServiceImpl implements HandlaggningService
             .build();
 
       handlaggningRepository.save(handlaggningEntity);
-      producer.sendVahRequestMessage(handlaggningEntity.id());
+      producer.sendRequestMessage(erbjudandeFlowInfo.kafkaTopic(), erbjudandeFlowInfo.kafkaRequestType(),
+            handlaggningEntity.id());
 
       HandlaggningCreateResponse response = ImmutableHandlaggningCreateResponse.builder()
             .handlaggning(mapper.toHandlaggningDTO(handlaggningEntity))
