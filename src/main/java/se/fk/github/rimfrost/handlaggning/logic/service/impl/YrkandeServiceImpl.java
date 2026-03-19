@@ -48,6 +48,7 @@ public class YrkandeServiceImpl implements YrkandeService
             .map(e -> (ProduceratResultatEntity) ImmutableProduceratResultatEntity.builder()
                   .id(UUID.randomUUID())
                   .version(1)
+                  .yrkandeStatus(Yrkandestatus.YRKAT)
                   .franOchMed(e.franOchMed())
                   .tillOchMed(e.tillOchMed())
                   .typ(e.typ())
@@ -62,8 +63,8 @@ public class YrkandeServiceImpl implements YrkandeService
             .yrkandeFrom(request.yrkandeFrom())
             .yrkandeTom(request.yrkandeTom())
             .yrkandedatum(OffsetDateTime.now())
-            .yrkandestatus(YrkandestatusEntity.YRKAT)
-            .avsikt(AvsiktEntity.NY)
+            .yrkandestatus(Yrkandestatus.YRKAT)
+            .avsikt(Avsikt.NY)
             .individYrkandeRoll(individYrkandeRoller)
             .produceradeResultat(produceradeResultat)
             .build();

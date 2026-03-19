@@ -1,6 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.enums;
 
-public enum AvsiktEntity
+public enum Avsikt
 {
    NY, ANDRING, BORTTAG, ATERTAGEN
 }

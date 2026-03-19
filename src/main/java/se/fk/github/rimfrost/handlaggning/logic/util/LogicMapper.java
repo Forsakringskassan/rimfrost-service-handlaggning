@@ -1,16 +1,12 @@
 package se.fk.github.rimfrost.handlaggning.logic.util;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
 
 @ApplicationScoped
 public class LogicMapper
 {
-
-   @Inject
-   LogicEnumMapper enumMapper;
 
    public YrkandeDTO toYrkandeDTO(YrkandeEntity yrkandeEntity)
    {
@@ -21,8 +17,8 @@ public class LogicMapper
             .yrkandedatum(yrkandeEntity.yrkandedatum())
             .yrkandeFrom(yrkandeEntity.yrkandeFrom())
             .yrkandeTom(yrkandeEntity.yrkandeTom())
-            .yrkandestatus(enumMapper.toYrkandestatusDTO(yrkandeEntity.yrkandestatus()))
-            .avsikt(enumMapper.toAvsiktDTO(yrkandeEntity.avsikt()))
+            .yrkandestatus(yrkandeEntity.yrkandestatus())
+            .avsikt(yrkandeEntity.avsikt())
             .andringsorsak(yrkandeEntity.andringsorsak())
             .individYrkandeRoll(yrkandeEntity.individYrkandeRoll()
                   .stream()
@@ -50,6 +46,8 @@ public class LogicMapper
             .version(produceratResultatEntity.version())
             .franOchMed(produceratResultatEntity.franOchMed())
             .tillOchMed(produceratResultatEntity.tillOchMed())
+            .yrkandestatus(produceratResultatEntity.yrkandeStatus())
+            .avslagsanledning(produceratResultatEntity.avslagsanledning())
             .typ(produceratResultatEntity.typ())
             .data(produceratResultatEntity.data())
             .build();
@@ -77,8 +75,8 @@ public class LogicMapper
             .yrkandedatum(yrkandeDTO.yrkandedatum())
             .yrkandeFrom(yrkandeDTO.yrkandeFrom())
             .yrkandeTom(yrkandeDTO.yrkandeTom())
-            .yrkandestatus(enumMapper.toYrkandestatusEntity(yrkandeDTO.yrkandestatus()))
-            .avsikt(enumMapper.toAvsiktEntity(yrkandeDTO.avsikt()))
+            .yrkandestatus(yrkandeDTO.yrkandestatus())
+            .avsikt(yrkandeDTO.avsikt())
             .andringsorsak(yrkandeDTO.andringsorsak())
             .individYrkandeRoll(
                   yrkandeDTO.individYrkandeRoll()

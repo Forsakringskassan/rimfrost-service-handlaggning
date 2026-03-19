@@ -94,6 +94,8 @@ public class PresentationMapper
       produceratResultat.setVersion(produceratResultatDTO.version());
       produceratResultat.setFrom(produceratResultatDTO.franOchMed());
       produceratResultat.setTom(produceratResultatDTO.tillOchMed());
+      produceratResultat.setAvslagsanledning(produceratResultatDTO.avslagsanledning());
+      produceratResultat.setYrkandestatus(mapYrkandeStatus(produceratResultatDTO.yrkandestatus()));
       produceratResultat.setTyp(produceratResultatDTO.typ());
       produceratResultat.setData(produceratResultatDTO.data());
       return produceratResultat;
@@ -107,6 +109,8 @@ public class PresentationMapper
             .version(produceratResultat.getVersion())
             .franOchMed(produceratResultat.getFrom())
             .tillOchMed(produceratResultat.getTom())
+            .avslagsanledning(produceratResultat.getAvslagsanledning())
+            .yrkandestatus(mapYrkandeStatus(produceratResultat.getYrkandestatus()))
             .typ(produceratResultat.getTyp())
             .data(produceratResultat.getData())
             .build();
@@ -198,17 +202,17 @@ public class PresentationMapper
 
    }
 
-   private YrkandestatusDTO mapYrkandeStatus(Yrkandestatus yrkandestatus) {
+   private se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus mapYrkandeStatus(Yrkandestatus yrkandestatus) {
       return switch (yrkandestatus) {
-         case PLANERAT -> YrkandestatusDTO.PLANERAT;
-         case YRKAT -> YrkandestatusDTO.YRKAT;
-         case UNDER_UTREDNING -> YrkandestatusDTO.UNDER_UTREDNING;
-         case FASTSTALLT_UNDER_UTREDNING -> YrkandestatusDTO.FASTSTALLT_UNDER_UTREDNING;
-         case FASTSTALLT -> YrkandestatusDTO.FASTSTALLT;
+         case PLANERAT -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.PLANERAT;
+         case YRKAT -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.YRKAT;
+         case UNDER_UTREDNING -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.UNDER_UTREDNING;
+         case FASTSTALLT_UNDER_UTREDNING -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.FASTSTALLT_UNDER_UTREDNING;
+         case FASTSTALLT -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.FASTSTALLT;
       };
    }
 
-   private Yrkandestatus mapYrkandeStatus(YrkandestatusDTO yrkandestatus) {
+   private Yrkandestatus mapYrkandeStatus(se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus yrkandestatus) {
       return switch (yrkandestatus) {
          case PLANERAT -> Yrkandestatus.PLANERAT;
          case YRKAT -> Yrkandestatus.YRKAT;
@@ -218,12 +222,12 @@ public class PresentationMapper
       };
    }
 
-   private AvsiktDTO mapAvsikt(Avsiktstyp avsiktsTyp) {
+   private se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt mapAvsikt(Avsiktstyp avsiktsTyp) {
          return switch (avsiktsTyp) {
-            case NY -> AvsiktDTO.NY;
-            case ANDRING -> AvsiktDTO.ANDRING;
-            case BORTTAG -> AvsiktDTO.BORTTAG;
-            case ATERTAGEN -> AvsiktDTO.ATERTAGEN;
+            case NY -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.NY;
+            case ANDRING -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ANDRING;
+            case BORTTAG -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.BORTTAG;
+            case ATERTAGEN -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ATERTAGEN;
          };
    }
 
@@ -261,31 +265,31 @@ public class PresentationMapper
             .build();
    }
 
-   private FSSAInformationDTO toFSSAInformation(FSSAinformation fssaInformation)
+   private se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation toFSSAInformation(FSSAinformation fssaInformation)
    {
       switch (fssaInformation)
       {
          case HANDLAGGNING_PAGAR:
-            return FSSAInformationDTO.HANDLAGGNING_PAGAR;
+            return se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation.HANDLAGGNING_PAGAR;
          case VANTAR_PA_INFO_FRAN_ANNAN_PART:
-            return FSSAInformationDTO.VANTAR_PA_INFO_FRAN_ANNAN_PART;
+            return se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation.VANTAR_PA_INFO_FRAN_ANNAN_PART;
          case VANTAR_PA_INFO_FRAN_KUND:
-            return FSSAInformationDTO.VANTAR_PA_INFO_FRAN_KUND;
+            return se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation.VANTAR_PA_INFO_FRAN_KUND;
          default:
             throw new InternalServerErrorException("Could not map fssaInformation: " + fssaInformation);
       }
    }
 
-   private UppgiftStatusDTO toUppgiftStatus(UppgiftStatus uppgiftStatus)
+   private UppgiftStatus toUppgiftStatus(se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus uppgiftStatus)
    {
       switch (uppgiftStatus)
       {
          case PLANERAD:
-            return UppgiftStatusDTO.PLANERAD;
+            return UppgiftStatus.PLANERAD;
          case TILLDELAD:
-            return UppgiftStatusDTO.TILLDELAD;
+            return UppgiftStatus.TILLDELAD;
          case AVSLUTAD:
-            return UppgiftStatusDTO.AVSLUTAD;
+            return UppgiftStatus.AVSLUTAD;
          default:
             throw new InternalServerErrorException("Could not map UppgiftStatus: " + uppgiftStatus);
       }
@@ -321,22 +325,22 @@ public class PresentationMapper
       return uppgiftSpecifikation;
    }
 
-   private UppgiftStatus toUppgiftStatus(UppgiftStatusDTO uppgiftStatus)
+   private se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus toUppgiftStatus(UppgiftStatus uppgiftStatus)
    {
       switch (uppgiftStatus)
       {
          case PLANERAD:
-            return UppgiftStatus.PLANERAD;
+            return se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus.PLANERAD;
          case TILLDELAD:
-            return UppgiftStatus.TILLDELAD;
+            return se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus.TILLDELAD;
          case AVSLUTAD:
-            return UppgiftStatus.AVSLUTAD;
+            return se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus.AVSLUTAD;
          default:
             throw new InternalServerErrorException("Could not map uppgiftStatus: " + uppgiftStatus);
       }
    }
 
-   private FSSAinformation toFSSAInformation(FSSAInformationDTO fssaInformation)
+   private FSSAinformation toFSSAInformation(se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation fssaInformation)
    {
       switch (fssaInformation)
       {

@@ -1,6 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.enums;
 
-public enum BeslutsutfallEntity
+public enum UppgiftStatus
 {
-   JA, NEJ, FU
+   PLANERAD, TILLDELAD, AVSLUTAD
 }

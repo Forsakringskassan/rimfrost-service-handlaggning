@@ -13,7 +13,6 @@ import se.fk.github.rimfrost.handlaggning.logic.repository.ErbjudandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.HandlaggningRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
-import se.fk.github.rimfrost.handlaggning.logic.util.LogicEnumMapper;
 import se.fk.github.rimfrost.handlaggning.logic.util.LogicMapper;
 
 @ApplicationScoped
@@ -33,9 +32,6 @@ public class HandlaggningServiceImpl implements HandlaggningService
 
    @Inject
    private LogicMapper mapper;
-
-   @Inject
-   LogicEnumMapper enumMapper;
 
    private static final Logger LOGGER = LoggerFactory.getLogger(HandlaggningServiceImpl.class);
 

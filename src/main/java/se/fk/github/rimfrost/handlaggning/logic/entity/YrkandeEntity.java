@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.immutables.value.Value;
 
 import jakarta.annotation.Nullable;
-import se.fk.github.rimfrost.handlaggning.logic.enums.AvsiktEntity;
-import se.fk.github.rimfrost.handlaggning.logic.enums.YrkandestatusEntity;
+import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
+import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
 
 @Value.Immutable
 public interface YrkandeEntity
@@ -24,9 +24,9 @@ public interface YrkandeEntity
 
    OffsetDateTime yrkandeTom();
 
-   YrkandestatusEntity yrkandestatus();
+   Yrkandestatus yrkandestatus();
 
-   AvsiktEntity avsikt();
+   Avsikt avsikt();
 
    @Nullable
    String andringsorsak();

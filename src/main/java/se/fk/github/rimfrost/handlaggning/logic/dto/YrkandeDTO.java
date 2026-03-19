@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
 
+import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
+import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
+
 @Value.Immutable
 public interface YrkandeDTO
 {
@@ -20,9 +23,9 @@ public interface YrkandeDTO
 
    OffsetDateTime yrkandeTom();
 
-   YrkandestatusDTO yrkandestatus();
+   Yrkandestatus yrkandestatus();
 
-   AvsiktDTO avsikt();
+   Avsikt avsikt();
 
    String andringsorsak();
 
