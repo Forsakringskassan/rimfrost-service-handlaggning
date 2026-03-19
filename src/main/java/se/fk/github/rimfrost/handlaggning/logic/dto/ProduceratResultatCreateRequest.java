@@ -1,15 +1,12 @@
 package se.fk.github.rimfrost.handlaggning.logic.dto;
 
 import java.time.OffsetDateTime;
-import java.util.UUID;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface ProduceratResultatDTO
+public interface ProduceratResultatCreateRequest
 {
-   UUID id();
-
-   Integer version();
 
    OffsetDateTime franOchMed();
 

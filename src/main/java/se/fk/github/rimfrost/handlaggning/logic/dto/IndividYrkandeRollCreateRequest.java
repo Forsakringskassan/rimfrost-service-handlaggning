@@ -1,14 +1,12 @@
-package se.fk.github.rimfrost.handlaggning.logic.entity;
+package se.fk.github.rimfrost.handlaggning.logic.dto;
 
 import java.util.UUID;
 
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface IndividYrkandeRollEntity
+public interface IndividYrkandeRollCreateRequest
 {
-
-   UUID id();
 
    UUID individId();
 

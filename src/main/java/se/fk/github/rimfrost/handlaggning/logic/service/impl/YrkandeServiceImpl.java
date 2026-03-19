@@ -1,6 +1,7 @@
 package se.fk.github.rimfrost.handlaggning.logic.service.impl;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
 import se.fk.github.rimfrost.handlaggning.logic.enums.*;
+import se.fk.github.rimfrost.handlaggning.logic.repository.IndividYrkandeRollRepository;
+import se.fk.github.rimfrost.handlaggning.logic.repository.ProduceratResultatRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
 import se.fk.github.rimfrost.handlaggning.logic.util.LogicMapper;
@@ -22,13 +25,35 @@ public class YrkandeServiceImpl implements YrkandeService
    private YrkandeRepository yrkandeRepository;
 
    @Inject
+   private IndividYrkandeRollRepository individYrkandeRollRepository;
+
+   @Inject
+   private ProduceratResultatRepository produceratResultatRepository;
+
+   @Inject
    private LogicMapper mapper;
 
    @Override
    public YrkandeCreateResponse createYrkande(YrkandeCreateRequest request)
    {
-      var individYrkandeRoller = request.individYrkandeRoller().stream().map(e -> mapper.toIndividYrkandeRollEntity(e)).toList();
-      var produceradeResultat = request.produceradeResultat().stream().map(e -> mapper.toProduceratResultatEntity(e)).toList();
+      var individYrkandeRoller = request.individYrkandeRoller().stream()
+            .map(e -> (IndividYrkandeRollEntity) ImmutableIndividYrkandeRollEntity.builder()
+                  .id(UUID.randomUUID())
+                  .individId(e.individId())
+                  .yrkandeRollId(e.yrkandeRollId())
+                  .build())
+            .toList();
+
+      var produceradeResultat = request.produceradeResultat().stream()
+            .map(e -> (ProduceratResultatEntity) ImmutableProduceratResultatEntity.builder()
+                  .id(UUID.randomUUID())
+                  .version(1)
+                  .franOchMed(e.franOchMed())
+                  .tillOchMed(e.tillOchMed())
+                  .typ(e.typ())
+                  .data(e.data())
+                  .build())
+            .toList();
 
       var yrkandeEntity = ImmutableYrkandeEntity.builder()
             .id(UUID.randomUUID())
@@ -43,6 +68,8 @@ public class YrkandeServiceImpl implements YrkandeService
             .produceradeResultat(produceradeResultat)
             .build();
 
+      individYrkandeRollRepository.save(individYrkandeRoller);
+      produceratResultatRepository.save(produceradeResultat);
       yrkandeRepository.save(yrkandeEntity);
 
       return ImmutableYrkandeCreateResponse.builder()

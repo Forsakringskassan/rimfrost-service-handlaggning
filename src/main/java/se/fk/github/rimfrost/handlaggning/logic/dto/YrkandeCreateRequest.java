@@ -16,7 +16,8 @@ public interface YrkandeCreateRequest
 
    public OffsetDateTime yrkandeTom();
 
-   public List<IndividYrkandeRollDTO> individYrkandeRoller();
+   public List<IndividYrkandeRollCreateRequest> individYrkandeRoller();
 
-   public List<ProduceratResultatDTO> produceradeResultat();
+   public List<ProduceratResultatCreateRequest> produceradeResultat();
+
 }

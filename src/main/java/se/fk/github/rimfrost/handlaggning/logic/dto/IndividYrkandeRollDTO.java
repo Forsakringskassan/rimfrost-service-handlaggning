@@ -8,6 +8,8 @@ import org.immutables.value.Value;
 public interface IndividYrkandeRollDTO
 {
 
+   UUID id();
+
    UUID individId();
 
    UUID yrkandeRollId();

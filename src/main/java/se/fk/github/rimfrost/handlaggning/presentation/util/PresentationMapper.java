@@ -2,7 +2,6 @@ package se.fk.github.rimfrost.handlaggning.presentation.util;
 
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Avsiktstyp;
@@ -32,14 +31,14 @@ public class PresentationMapper
    public YrkandeCreateRequest toYrkandeCreateRequest(PostYrkandeRequest postYrkandeRequest)
    {
       var individYrkandeRoller = postYrkandeRequest.getIndividYrkandeRoller().stream()
-            .map(e -> ImmutableIndividYrkandeRollDTO.builder()
+            .map(e -> ImmutableIndividYrkandeRollCreateRequest.builder()
                   .individId(e.getIndividId())
                   .yrkandeRollId(e.getYrkandeRollId())
                   .build())
             .toList();
 
       var produceradeResultat = postYrkandeRequest.getProduceradeResultat().stream()
-            .map(e -> ImmutableProduceratResultatDTO.builder()
+            .map(e -> ImmutableProduceratResultatCreateRequest.builder()
                   .franOchMed(e.getFrom())
                   .tillOchMed(e.getTom())
                   .typ(e.getTyp())
