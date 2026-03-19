@@ -4,16 +4,23 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.immutables.value.Value;
 
+import jakarta.annotation.Nullable;
+
 @Value.Immutable
 public interface ProduceratResultatDTO
 {
+   @Nullable
    UUID id();
 
-   String version();
+   @Nullable
+   Integer version();
 
    OffsetDateTime franOchMed();
 
    OffsetDateTime tillOchMed();
 
-   ErsattningsstatusDTO status();
+   String typ();
+
+   String data();
+
 }

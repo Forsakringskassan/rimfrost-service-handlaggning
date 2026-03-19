@@ -5,6 +5,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface HandlaggningPutResponse
 {
-   UppgiftDTO uppgift();
+   HandlaggningDTO handlaggning();
 
 }

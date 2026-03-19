@@ -10,28 +10,30 @@ public interface YrkandeDTO
 {
    UUID id();
 
-   String formanstyp();
+   UUID erbjudandeId();
 
-   String version();
+   Integer version();
 
    OffsetDateTime yrkandedatum();
 
-   YrkandestatusDTO yrkandestatus();
+   OffsetDateTime yrkandeFrom();
 
-   PeriodDTO period();
+   OffsetDateTime yrkandeTom();
+
+   YrkandestatusDTO yrkandestatus();
 
    AvsiktDTO avsikt();
 
    String andringsorsak();
 
    @Value.Default
-   default List<YrkanderollDTO> yrkanderoll()
+   default List<IndividYrkandeRollDTO> individYrkandeRoll()
    {
       return List.of();
    }
 
    @Value.Default
-   default List<ErsattningDTO> ersattning()
+   default List<ProduceratResultatDTO> produceradeResultat()
    {
       return List.of();
    }

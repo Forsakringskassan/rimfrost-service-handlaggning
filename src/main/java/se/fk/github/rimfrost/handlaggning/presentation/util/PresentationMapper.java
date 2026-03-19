@@ -1,24 +1,18 @@
 package se.fk.github.rimfrost.handlaggning.presentation.util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Ersattning;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Avsiktstyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Individ;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Roll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggningspecifikation;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkanderoll;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Lagrum;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PatchHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Period;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningRequest;
@@ -26,72 +20,46 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggni
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Regel;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UpdateErsattning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftspecifikation;
 
 @ApplicationScoped
 public class PresentationMapper
 {
 
-   @Inject
-   PresentationEnumMapper enumMapper;
-
-   public YrkandeCreateRequest toYrkandeCreateRequest(PostYrkandeRequest PostYrkandeRequest)
+   public YrkandeCreateRequest toYrkandeCreateRequest(PostYrkandeRequest postYrkandeRequest)
    {
-      if (PostYrkandeRequest == null)
-      {
-         return null;
-      }
+      var individYrkandeRoller = postYrkandeRequest.getIndividYrkandeRoller().stream()
+            .map(e -> ImmutableIndividYrkandeRollDTO.builder()
+                  .individId(e.getIndividId())
+                  .yrkandeRollId(e.getYrkandeRollId())
+                  .build())
+            .toList();
 
-      List<YrkandePerson> personer = new ArrayList<>();
-      for (var person : PostYrkandeRequest.getPerson())
-      {
-         var yrkandePerson = ImmutableYrkandePerson.builder()
-               .persnr(person.getPersnr())
-               .roll(person.getRoll())
-               .yrkande(person.getYrkande())
-               .build();
-         personer.add(yrkandePerson);
-      }
-
-      List<YrkandeErsattning> ersattningar = new ArrayList<>();
-      for (var ersattning : PostYrkandeRequest.getErsattning())
-      {
-         var ersattningPeriod = ImmutablePeriodDTO.builder()
-               .start(ersattning.getPeriod().getStart())
-               .slut(ersattning.getPeriod().getSlut())
-               .build();
-
-         var yrkandeErsattning = ImmutableYrkandeErsattning.builder()
-               .produktvariantId(ersattning.getErsattningstyp().getId())
-               .omfattning(ersattning.getOmfattning())
-               .period(ersattningPeriod)
-               .periodisering(enumMapper.toPeriodiseringDTO(ersattning.getPeriodisering()))
-               .build();
-         ersattningar.add(yrkandeErsattning);
-      }
+      var produceradeResultat = postYrkandeRequest.getProduceradeResultat().stream()
+            .map(e -> ImmutableProduceratResultatDTO.builder()
+                  .franOchMed(e.getFrom())
+                  .tillOchMed(e.getTom())
+                  .typ(e.getTyp())
+                  .data(e.getData())
+                  .build())
+            .toList();
 
       YrkandeCreateRequest request = ImmutableYrkandeCreateRequest.builder()
-            .person(personer)
-            .formanstyp(PostYrkandeRequest.getFormanstyp())
-            .start(PostYrkandeRequest.getPeriod().getStart())
-            .slut(PostYrkandeRequest.getPeriod().getSlut())
-            .ersattning(ersattningar)
+            .erbjudandedId(postYrkandeRequest.getErbjudandeId())
+            .yrkandeFrom(postYrkandeRequest.getYrkandeFrom())
+            .yrkandeTom(postYrkandeRequest.getYrkandeTom())
+            .individYrkandeRoller(individYrkandeRoller)
+            .produceradeResultat(produceradeResultat)
             .build();
+
       return request;
    }
 
    public PostYrkandeResponse toPostYrkandeResponse(YrkandeCreateResponse yrkandeCreateResponse)
    {
-      if (yrkandeCreateResponse == null)
-      {
-         return null;
-      }
-
       PostYrkandeResponse postYrkandeResponse = new PostYrkandeResponse();
       postYrkandeResponse.setYrkande(toYrkande(yrkandeCreateResponse.yrkande()));
       return postYrkandeResponse;
@@ -99,144 +67,71 @@ public class PresentationMapper
 
    public Yrkande toYrkande(YrkandeDTO yrkandeDTO)
    {
-      if (yrkandeDTO == null)
-      {
-         return null;
-      }
-
       Yrkande yrkande = new Yrkande();
       yrkande.setId(yrkandeDTO.id());
-      yrkande.setFormanstyp(yrkandeDTO.formanstyp());
+      yrkande.setErbjudandeId(yrkandeDTO.erbjudandeId());
       yrkande.setVersion(yrkandeDTO.version());
       yrkande.setYrkandedatum(yrkandeDTO.yrkandedatum());
-      yrkande.setYrkandestatus(enumMapper.toYrkandestatus(yrkandeDTO.yrkandestatus()));
-      yrkande.setPeriod(toPeriod(yrkandeDTO.period()));
-      yrkande.setAvsikt(enumMapper.toAvsikt(yrkandeDTO.avsikt()));
-      yrkande.setAndringsorsak(yrkandeDTO.andringsorsak());
-      yrkande.setYrkanderoll(
-            yrkandeDTO.yrkanderoll()
+      yrkande.setYrkandeFrom(yrkandeDTO.yrkandeFrom());
+      yrkande.setYrkandeTom(yrkandeDTO.yrkandeTom());
+      yrkande.setYrkandestatus(mapYrkandeStatus(yrkandeDTO.yrkandestatus()));
+      yrkande.setIndividYrkandeRoller(
+            yrkandeDTO.individYrkandeRoll()
                   .stream()
-                  .map(this::toYrkanderoll)
+                  .map(this::toIndividYrkandeRoll)
                   .toList());
-      yrkande.setErsattning(
-            yrkandeDTO.ersattning()
+      yrkande.setProduceradeResultat(
+            yrkandeDTO.produceradeResultat()
                   .stream()
-                  .map(this::toErsattning)
+                  .map(this::toProduceratResultat)
                   .toList());
       return yrkande;
    }
 
-   public Period toPeriod(PeriodDTO periodDTO)
-   {
-      if (periodDTO == null)
-      {
-         return null;
-      }
-
-      Period period = new Period();
-      period.setStart(periodDTO.start());
-      period.setSlut(periodDTO.slut());
-      return period;
-   }
-
-   public Yrkanderoll toYrkanderoll(YrkanderollDTO yrkanderollDTO)
-   {
-      if (yrkanderollDTO == null)
-      {
-         return null;
-      }
-
-      Yrkanderoll yrkanderoll = new Yrkanderoll();
-      yrkanderoll.setId(yrkanderollDTO.id());
-      yrkanderoll.setIndivid(toIndivid(yrkanderollDTO.individ()));
-      yrkanderoll.setRoll(toRoll(yrkanderollDTO.roll()));
-      yrkanderoll.setYrkande(yrkanderollDTO.yrkande());
-      return yrkanderoll;
-   }
-
-   public Individ toIndivid(IndividDTO individDTO)
-   {
-      if (individDTO == null)
-      {
-         return null;
-      }
-
-      Individ individ = new Individ();
-      individ.setId(individDTO.id());
-      individ.setFornamn(individDTO.fornamn());
-      individ.setEfternamn(individDTO.efternamn());
-      return individ;
-   }
-
-   public Ersattning toErsattning(ErsattningDTO ersattningDTO)
-   {
-      if (ersattningDTO == null)
-      {
-         return null;
-      }
-
-      Ersattning ersattning = new Ersattning();
-      ersattning.setId(ersattningDTO.id());
-      ersattning.setBelopp(ersattningDTO.belopp());
-      ersattning.setBerakningsgrund(enumMapper.toBerakningsgrund(ersattningDTO.berakningsgrund()));
-      ersattning.setBeloppstyp(enumMapper.toBeloppstyp(ersattningDTO.beloppstyp()));
-      ersattning.setErsattningstyp(enumMapper.toErsattningstyp(ersattningDTO.produktvariant()));
-      ersattning.setPeriodisering(enumMapper.toPeriodisering(ersattningDTO.periodisering()));
-      ersattning.setOmfattning(ersattningDTO.omfattning());
-      ersattning.setBeslutsutfall(enumMapper.toBeslutsutfallEnum(ersattningDTO.beslutsutfall()));
-      ersattning.setAvslagsanledning(ersattningDTO.avslagsanledning());
-      ersattning.setProduceratResultat(toProduceratResultat(ersattningDTO.produceratResultat()));
-      return ersattning;
-   }
-
    public ProduceratResultat toProduceratResultat(ProduceratResultatDTO produceratResultatDTO)
    {
-      if (produceratResultatDTO == null)
-      {
-         return null;
-      }
-
       ProduceratResultat produceratResultat = new ProduceratResultat();
       produceratResultat.setId(produceratResultatDTO.id());
       produceratResultat.setVersion(produceratResultatDTO.version());
       produceratResultat.setFrom(produceratResultatDTO.franOchMed());
       produceratResultat.setTom(produceratResultatDTO.tillOchMed());
-      produceratResultat.setStatus(enumMapper.toErsattningsstatus(produceratResultatDTO.status()));
+      produceratResultat.setTyp(produceratResultatDTO.typ());
+      produceratResultat.setData(produceratResultatDTO.data());
       return produceratResultat;
    }
 
-   public HandlaggningCreateRequest toHandlaggningCreateRequest(PostHandlaggningRequest PostYrkandeRequest)
+   public ProduceratResultatDTO toProduceratResultatDTO(ProduceratResultat produceratResultat)
    {
-      if (PostYrkandeRequest == null)
-      {
-         return null;
-      }
 
+      return ImmutableProduceratResultatDTO.builder()
+            .id(produceratResultat.getId())
+            .version(produceratResultat.getVersion())
+            .franOchMed(produceratResultat.getFrom())
+            .tillOchMed(produceratResultat.getTom())
+            .typ(produceratResultat.getTyp())
+            .data(produceratResultat.getData())
+            .build();
+   }
+
+   public HandlaggningCreateRequest toHandlaggningCreateRequest(PostHandlaggningRequest postYrkandeRequest)
+   {
       HandlaggningCreateRequest request = ImmutableHandlaggningCreateRequest.builder()
-            .yrkandeId(PostYrkandeRequest.getYrkandeId())
+            .yrkandeId(postYrkandeRequest.getYrkandeId())
+            .processInstansId(postYrkandeRequest.getProcessInstansId())
+            .handlaggningspecifikationId(postYrkandeRequest.getHandlaggningspecifikationId())
             .build();
       return request;
    }
 
    public PostHandlaggningResponse toPostHandlaggningResponse(HandlaggningCreateResponse handlaggningCreateResponse)
    {
-      if (handlaggningCreateResponse == null)
-      {
-         return null;
-      }
-
       PostHandlaggningResponse postHandlaggningResponse = new PostHandlaggningResponse();
       postHandlaggningResponse.setHandlaggning(toHandlaggning(handlaggningCreateResponse.handlaggning()));
-
       return postHandlaggningResponse;
    }
 
    public HandlaggningGetRequest toHandlaggningGetRequest(UUID HandlaggningId)
    {
-      if (HandlaggningId == null)
-      {
-         return null;
-      }
       HandlaggningGetRequest handlaggningGetRequest = ImmutableHandlaggningGetRequest.builder()
             .handlaggningId(HandlaggningId)
             .build();
@@ -246,53 +141,116 @@ public class PresentationMapper
 
    public GetHandlaggningResponse toGetHandlaggningResponse(HandlaggningGetResponse handlaggningGetResponse)
    {
-      if (handlaggningGetResponse == null)
-      {
-         return null;
-      }
-
       GetHandlaggningResponse response = new GetHandlaggningResponse();
-      response.setHandlaggning(toHandlaggning(handlaggningGetResponse.handlaggning()));
+      response.setHandlaggning(toHandlaggningResponse(handlaggningGetResponse.handlaggning()));
 
       return response;
    }
 
-   public HandlaggningPutRequest toHandlaggningPutRequest(UUID HandlaggningId,
+   public HandlaggningPutRequest toHandlaggningPutRequest(UUID handlaggningId,
          PutHandlaggningRequest putHandlaggningRequest)
    {
-      if (HandlaggningId == null || putHandlaggningRequest == null)
-      {
-         return null;
-      }
-
       HandlaggningPutRequest request = ImmutableHandlaggningPutRequest.builder()
-            .handlaggningId(HandlaggningId)
-            .uppgift(toUppgiftDTO(putHandlaggningRequest.getUppgift()))
+            .handlaggning(toHandlaggningDTO(putHandlaggningRequest.getHandlaggning()))
             .build();
 
       return request;
    }
 
-   private UppgiftDTO toUppgiftDTO(Uppgift uppgift)
+   private HandlaggningDTO toHandlaggningDTO(Handlaggning handlaggning)
+   {
+
+      return ImmutableHandlaggningDTO.builder()
+            .id(handlaggning.getId())
+            .yrkande(toYrkandeDTO(handlaggning.getYrkande()))
+            .version(handlaggning.getVersion())
+            .processinstansId(handlaggning.getProcessinstansId())
+            .skapadTS(handlaggning.getSkapadTS())
+            .avslutadTS(handlaggning.getAvslutadTS())
+            .handlaggningspecifikationId(handlaggning.getHandlaggningspecifikationId())
+            .uppgift(toUppgiftDTO(handlaggning.getId(), handlaggning.getUppgift()))
+            .underlag(handlaggning.getUnderlag()
+                  .stream()
+                  .map(this::toUnderlagDTO)
+                  .toList())
+            .build();
+   }
+
+   private YrkandeDTO toYrkandeDTO(Yrkande yrkande)
+   {
+      return ImmutableYrkandeDTO.builder()
+            .id(yrkande.getId())
+            .version(yrkande.getVersion())
+            .erbjudandeId(yrkande.getErbjudandeId())
+            .yrkandeFrom(yrkande.getYrkandeFrom())
+            .yrkandeTom(yrkande.getYrkandeTom())
+            .yrkandedatum(yrkande.getYrkandedatum())
+            .yrkandestatus(mapYrkandeStatus(yrkande.getYrkandestatus()))
+            .avsikt(mapAvsikt(yrkande.getAvsikt()))
+            .produceradeResultat(yrkande.getProduceradeResultat()
+                  .stream()
+                  .map(this::toProduceratResultatDTO)
+                  .toList())
+            .individYrkandeRoll(yrkande.getIndividYrkandeRoller()
+                  .stream()
+                  .map(this::toIndividYrkandeRollDTO)
+                  .toList())
+            .build();
+
+   }
+
+   private YrkandestatusDTO mapYrkandeStatus(Yrkandestatus yrkandestatus) {
+      return switch (yrkandestatus) {
+         case PLANERAT -> YrkandestatusDTO.PLANERAT;
+         case YRKAT -> YrkandestatusDTO.YRKAT;
+         case UNDER_UTREDNING -> YrkandestatusDTO.UNDER_UTREDNING;
+         case FASTSTALLT_UNDER_UTREDNING -> YrkandestatusDTO.FASTSTALLT_UNDER_UTREDNING;
+         case FASTSTALLT -> YrkandestatusDTO.FASTSTALLT;
+      };
+   }
+
+   private Yrkandestatus mapYrkandeStatus(YrkandestatusDTO yrkandestatus) {
+      return switch (yrkandestatus) {
+         case PLANERAT -> Yrkandestatus.PLANERAT;
+         case YRKAT -> Yrkandestatus.YRKAT;
+         case UNDER_UTREDNING -> Yrkandestatus.UNDER_UTREDNING;
+         case FASTSTALLT_UNDER_UTREDNING -> Yrkandestatus.FASTSTALLT_UNDER_UTREDNING;
+         case FASTSTALLT -> Yrkandestatus.FASTSTALLT;
+      };
+   }
+
+   private AvsiktDTO mapAvsikt(Avsiktstyp avsiktsTyp) {
+         return switch (avsiktsTyp) {
+            case NY -> AvsiktDTO.NY;
+            case ANDRING -> AvsiktDTO.ANDRING;
+            case BORTTAG -> AvsiktDTO.BORTTAG;
+            case ATERTAGEN -> AvsiktDTO.ATERTAGEN;
+         };
+   }
+
+   private UppgiftDTO toUppgiftDTO(UUID handlaggningId, Uppgift uppgift)
    {
 
       var builder = ImmutableUppgiftDTO.builder()
             .uppgiftId(uppgift.getId())
+            .handlaggningId(handlaggningId)
             .utforarId(uppgift.getUtforarId())
             .skapadTs(uppgift.getSkapadTs())
             .planeradTs(uppgift.getPlaneradTs())
             .utfordTs(uppgift.getUtfordTs())
-            .handlaggningId(uppgift.getHandlaggningId())
             .uppgiftSpecifikation(toUppgiftspecifikationDTO(uppgift.getUppgiftspecifikation()))
             .version(uppgift.getVersion())
             .uppgiftStatus(toUppgiftStatus(uppgift.getUppgiftStatus()))
             .fssaInformation(toFSSAInformation(uppgift.getFsSAinformation()));
-
-      for (var underlag : uppgift.getUnderlag())
-      {
-         builder.addUnderlag(toUnderlagDTO(underlag));
-      }
       return builder.build();
+   }
+
+   private UppgiftspecifikationDTO toUppgiftspecifikationDTO(UppgiftSpecifikation uppgiftspecifikation)
+   {
+      return ImmutableUppgiftspecifikationDTO.builder()
+            .id(uppgiftspecifikation.getId())
+            .version(uppgiftspecifikation.getVersion())
+            .build();
    }
 
    private UnderlagDTO toUnderlagDTO(Underlag underlag)
@@ -336,14 +294,8 @@ public class PresentationMapper
 
    public PutHandlaggningResponse toPutHandlaggningResponse(HandlaggningPutResponse handlaggningPutResponse)
    {
-      if (handlaggningPutResponse == null)
-      {
-         return null;
-      }
-
       PutHandlaggningResponse response = new PutHandlaggningResponse();
-      response.setUppgift(toUppgift(handlaggningPutResponse.uppgift()));
-
+      response.handlaggning(toHandlaggning(handlaggningPutResponse.handlaggning()));
       return response;
    }
 
@@ -352,7 +304,6 @@ public class PresentationMapper
       var uppgift = new Uppgift();
       uppgift.setId(uppgiftDTO.uppgiftId());
       uppgift.setVersion(uppgiftDTO.version());
-      uppgift.setHandlaggningId(uppgiftDTO.handlaggningId());
       uppgift.setPlaneradTs(uppgiftDTO.planeradTs());
       uppgift.setUtfordTs(uppgiftDTO.utfordTs());
       uppgift.setSkapadTs(uppgiftDTO.skapadTs());
@@ -360,15 +311,15 @@ public class PresentationMapper
       uppgift.setUppgiftspecifikation(toUppgiftspecifikation(uppgiftDTO.uppgiftSpecifikation()));
       uppgift.setFsSAinformation(toFSSAInformation(uppgiftDTO.fssaInformation()));
       uppgift.setUppgiftStatus(toUppgiftStatus(uppgiftDTO.uppgiftStatus()));
-
-      var underlag = new ArrayList<Underlag>();
-      for (var underlagDTO : uppgiftDTO.underlag())
-      {
-         underlag.add(toUnderlag(underlagDTO));
-      }
-      uppgift.setUnderlag(underlag);
-
       return uppgift;
+   }
+
+   private UppgiftSpecifikation toUppgiftspecifikation(UppgiftspecifikationDTO uppgiftSpecifikationDto)
+   {
+      var uppgiftSpecifikation = new UppgiftSpecifikation();
+      uppgiftSpecifikation.setId(uppgiftSpecifikationDto.id());
+      uppgiftSpecifikation.setVersion(uppgiftSpecifikationDto.version());
+      return uppgiftSpecifikation;
    }
 
    private UppgiftStatus toUppgiftStatus(UppgiftStatusDTO uppgiftStatus)
@@ -413,10 +364,6 @@ public class PresentationMapper
 
    public Handlaggning toHandlaggning(HandlaggningDTO handlaggningDTO)
    {
-      if (handlaggningDTO == null)
-      {
-         return null;
-      }
 
       Handlaggning handlaggning = new Handlaggning();
       handlaggning.setId(handlaggningDTO.id());
@@ -425,203 +372,41 @@ public class PresentationMapper
       handlaggning.setProcessinstansId(handlaggningDTO.processinstansId());
       handlaggning.setSkapadTS(handlaggningDTO.skapadTS());
       handlaggning.setAvslutadTS(handlaggningDTO.avslutadTS());
-      handlaggning.setHandlaggningspecifikation(toHandlaggningspecifikation(handlaggningDTO.handlaggningspecifikation()));
-
+      handlaggning.setHandlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId());
+      handlaggning.uppgift(toUppgift(handlaggningDTO.uppgift()));
+      handlaggning.underlag(handlaggningDTO.underlag().stream()
+            .map(this::toUnderlag)
+            .toList());
       return handlaggning;
    }
 
-   public Handlaggningspecifikation toHandlaggningspecifikation(
-         HandlaggningspecifikationDTO handlaggningspecifikationDTO)
+   private HandlaggningResponse toHandlaggningResponse(HandlaggningDTO handlaggningDTO)
    {
-      if (handlaggningspecifikationDTO == null)
-      {
-         return null;
-      }
-      Handlaggningspecifikation handlaggningspecifikation = new Handlaggningspecifikation();
-      handlaggningspecifikation.setId(handlaggningspecifikationDTO.id());
-      handlaggningspecifikation.setVersion(handlaggningspecifikationDTO.version());
-      handlaggningspecifikation.setBpmn(handlaggningspecifikationDTO.bpmn());
-      handlaggningspecifikation.setNamn(handlaggningspecifikationDTO.namn());
-      handlaggningspecifikation.setBeskrivning(handlaggningspecifikationDTO.beskrivning());
-      handlaggningspecifikation.setUppgiftspecifikation(
-            handlaggningspecifikationDTO.uppgiftspecifikation()
-                  .stream()
-                  .map(this::toUppgiftspecifikation)
-                  .toList());
-      return handlaggningspecifikation;
+      HandlaggningResponse handlagningResponse = new HandlaggningResponse();
+      handlagningResponse.setId(handlaggningDTO.id());
+      handlagningResponse.setYrkande(toYrkande(handlaggningDTO.yrkande()));
+      handlagningResponse.setVersion(handlaggningDTO.version());
+      handlagningResponse.setProcessinstansId(handlaggningDTO.processinstansId());
+      handlagningResponse.setSkapadTS(handlaggningDTO.skapadTS());
+      handlagningResponse.setAvslutadTS(handlaggningDTO.avslutadTS());
+      handlagningResponse.setHandlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId());
+
+      return handlagningResponse;
    }
 
-   public Uppgiftspecifikation toUppgiftspecifikation(UppgiftspecifikationDTO uppgiftspecifikationDTO)
+   private IndividYrkandeRoll toIndividYrkandeRoll(IndividYrkandeRollDTO individYrkandeRollDTO)
    {
-      if (uppgiftspecifikationDTO == null)
-      {
-         return null;
-      }
-
-      Uppgiftspecifikation uppgiftspecifikation = new Uppgiftspecifikation();
-      uppgiftspecifikation.setId(uppgiftspecifikationDTO.id());
-      uppgiftspecifikation.setVersion(uppgiftspecifikationDTO.version());
-      uppgiftspecifikation.setNamn(uppgiftspecifikationDTO.namn());
-      uppgiftspecifikation.setUppgiftbeskrivning(uppgiftspecifikationDTO.uppgiftbeskrivning());
-      uppgiftspecifikation.setVerksamhetslogik(enumMapper.toVerksamhetslogik(uppgiftspecifikationDTO.verksamhetslogik()));
-      uppgiftspecifikation.setRoll(toRoll(uppgiftspecifikationDTO.roll()));
-      uppgiftspecifikation.setApplikationsId(uppgiftspecifikationDTO.applikationsId());
-      uppgiftspecifikation.setApplikationsVersion(uppgiftspecifikationDTO.applikationsVersion());
-      uppgiftspecifikation.setRegel(toRegel(uppgiftspecifikationDTO.regel()));
-      uppgiftspecifikation.setUppgiftsGui(uppgiftspecifikationDTO.uppgiftsGui());
-
-      return uppgiftspecifikation;
+      var invidvidYrkandeRoll = new IndividYrkandeRoll();
+      invidvidYrkandeRoll.setIndividId(individYrkandeRollDTO.individId());
+      invidvidYrkandeRoll.setYrkandeRollId(individYrkandeRollDTO.yrkandeRollId());
+      return invidvidYrkandeRoll;
    }
 
-   public Regel toRegel(RegelDTO regelDTO)
+   private IndividYrkandeRollDTO toIndividYrkandeRollDTO(IndividYrkandeRoll individYrkandeRoll)
    {
-      if (regelDTO == null)
-      {
-         return null;
-      }
-      Regel regel = new Regel();
-      regel.setId(regelDTO.id());
-      regel.setVersion(regelDTO.version());
-      regel.setLagrum(toLagrum(regelDTO.lagrum()));
-
-      return regel;
-   }
-
-   public Lagrum toLagrum(LagrumDTO lagrumDTO)
-   {
-      if (lagrumDTO == null)
-      {
-         return null;
-      }
-
-      Lagrum lagrum = new Lagrum();
-      lagrum.setId(lagrumDTO.id());
-      lagrum.setVersion(lagrumDTO.version());
-      lagrum.setGiltigFrom(lagrumDTO.giltigFrom());
-      lagrum.setGiltigTom(lagrumDTO.giltigTom());
-      lagrum.setForfattning(lagrumDTO.forfattning());
-      lagrum.setKapitel(lagrumDTO.kapitel());
-      lagrum.setParagraf(lagrumDTO.paragraf());
-      lagrum.setStycke(lagrumDTO.stycke());
-      lagrum.setPunkt(lagrumDTO.punkt());
-
-      return lagrum;
-   }
-
-   public UppgiftspecifikationDTO toUppgiftspecifikationDTO(Uppgiftspecifikation uppgiftspecifikation)
-   {
-      if (uppgiftspecifikation == null)
-      {
-         return null;
-      }
-
-      UppgiftspecifikationDTO uppgiftspecifikationDTO = ImmutableUppgiftspecifikationDTO.builder()
-            .id(uppgiftspecifikation.getId())
-            .version(uppgiftspecifikation.getVersion())
-            .namn(uppgiftspecifikation.getNamn())
-            .uppgiftbeskrivning(uppgiftspecifikation.getUppgiftbeskrivning())
-            .verksamhetslogik(enumMapper.toVerksamhetslogikDTO(uppgiftspecifikation.getVerksamhetslogik()))
-            .roll(toRollDTO(uppgiftspecifikation.getRoll()))
-            .applikationsId(uppgiftspecifikation.getApplikationsId())
-            .applikationsVersion(uppgiftspecifikation.getApplikationsVersion())
-            .regel(toRegelDTO(uppgiftspecifikation.getRegel()))
-            .uppgiftsGui(uppgiftspecifikation.getUppgiftsGui())
-            .build();
-
-      return uppgiftspecifikationDTO;
-   }
-
-   public RegelDTO toRegelDTO(Regel regel)
-   {
-      if (regel == null)
-      {
-         return null;
-      }
-
-      RegelDTO regelDTO = ImmutableRegelDTO.builder()
-            .id(regel.getId())
-            .version(regel.getVersion())
-            .lagrum(toLagrumDTO(regel.getLagrum()))
-            .build();
-
-      return regelDTO;
-   }
-
-   public LagrumDTO toLagrumDTO(Lagrum lagrum)
-   {
-      if (lagrum == null)
-      {
-         return null;
-      }
-
-      LagrumDTO lagrumDTO = ImmutableLagrumDTO.builder()
-            .id(lagrum.getId())
-            .version(lagrum.getVersion())
-            .giltigFrom(lagrum.getGiltigFrom())
-            .giltigTom(lagrum.getGiltigTom())
-            .forfattning(lagrum.getForfattning())
-            .kapitel(lagrum.getKapitel())
-            .paragraf(lagrum.getParagraf())
-            .stycke(lagrum.getStycke())
-            .punkt(lagrum.getPunkt())
-            .build();
-
-      return lagrumDTO;
-   }
-
-   public HandlaggningPatchRequest toHandlaggningPatchRequest(UUID handlaggningId,
-         List<UpdateErsattning> updateErsattning)
-   {
-      return ImmutableHandlaggningPatchRequest.builder()
-            .handlaggningId(handlaggningId)
-            .addAllUpdateErsattning(updateErsattning.stream().map(this::toUpdateErsattningDTO).toList())
-            .build();
-   }
-
-   public UpdateErsattningDTO toUpdateErsattningDTO(UpdateErsattning updateErsattning)
-   {
-      if (updateErsattning == null)
-      {
-         return null;
-      }
-
-      return ImmutableUpdateErsattningDTO.builder()
-            .ersattningsId(updateErsattning.getErsattningId())
-            .beslutsutfall(enumMapper.toBeslutsutfallDTO(updateErsattning.getBeslutsutfall()))
-            .ersattningsStatus(enumMapper.toErsattningsstatusDTO(updateErsattning.getErsattningsStatus()))
-            .avslagsanledning(updateErsattning.getAvslagsanledning())
-            .build();
-   }
-
-   public PatchHandlaggningResponse toPatchHandlaggningResponse(HandlaggningPatchResponse handlaggningPatchResponse)
-   {
-      if (handlaggningPatchResponse == null)
-      {
-         return null;
-      }
-
-      PatchHandlaggningResponse response = new PatchHandlaggningResponse();
-      response.setHandlaggning(toHandlaggning(handlaggningPatchResponse.handlaggning()));
-
-      return response;
-   }
-
-   public Roll toRoll(RollDTO rollDTO)
-   {
-      Roll out = new Roll();
-      out.setId(rollDTO.id());
-      out.namn(rollDTO.namn());
-      out.version(rollDTO.version());
-
-      return out;
-   }
-
-   public RollDTO toRollDTO(Roll roll)
-   {
-      return ImmutableRollDTO.builder()
-            .id(roll.getId())
-            .namn(roll.getNamn())
-            .version(roll.getVersion())
+      return ImmutableIndividYrkandeRollDTO.builder()
+            .individId(individYrkandeRoll.getIndividId())
+            .yrkandeRollId(individYrkandeRoll.getYrkandeRollId())
             .build();
    }
 

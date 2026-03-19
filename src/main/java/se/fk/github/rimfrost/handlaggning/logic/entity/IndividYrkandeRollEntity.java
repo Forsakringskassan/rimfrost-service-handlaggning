@@ -1,12 +1,15 @@
 package se.fk.github.rimfrost.handlaggning.logic.entity;
 
-import java.time.OffsetDateTime;
+import java.util.UUID;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface PeriodEntity
+public interface IndividYrkandeRollEntity
 {
-   OffsetDateTime start();
 
-   OffsetDateTime slut();
+   UUID individId();
+
+   UUID yrkandeRollId();
+
 }

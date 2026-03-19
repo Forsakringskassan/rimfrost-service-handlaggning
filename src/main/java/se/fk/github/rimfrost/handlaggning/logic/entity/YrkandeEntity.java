@@ -4,6 +4,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
+
+import jakarta.annotation.Nullable;
 import se.fk.github.rimfrost.handlaggning.logic.enums.AvsiktEntity;
 import se.fk.github.rimfrost.handlaggning.logic.enums.YrkandestatusEntity;
 
@@ -12,28 +14,31 @@ public interface YrkandeEntity
 {
    UUID id();
 
-   String formanstyp();
+   UUID erbjudandeId();
 
-   String version();
+   int version();
 
    OffsetDateTime yrkandedatum();
 
-   YrkandestatusEntity yrkandestatus();
+   OffsetDateTime yrkandeFrom();
 
-   PeriodEntity period();
+   OffsetDateTime yrkandeTom();
+
+   YrkandestatusEntity yrkandestatus();
 
    AvsiktEntity avsikt();
 
+   @Nullable
    String andringsorsak();
 
    @Value.Default
-   default List<YrkanderollEntity> yrkanderoll()
+   default List<IndividYrkandeRollEntity> individYrkandeRoll()
    {
       return List.of();
    }
 
    @Value.Default
-   default List<ErsattningEntity> ersattning()
+   default List<ProduceratResultatEntity> produceradeResultat()
    {
       return List.of();
    }

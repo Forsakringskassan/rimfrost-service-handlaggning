@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -12,32 +14,34 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
-import se.fk.github.rimfrost.handlaggning.logic.dto.HandlaggningCreateRequest;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
+import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
 import se.fk.github.rimfrost.handlaggning.presentation.util.PresentationMapper;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.HandlaggningControllerApi;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PatchHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UpdateErsattning;
 
 @SuppressWarnings("unused")
 @ApplicationScoped
-@Path("/handlaggning")
 public class HandlaggningController implements HandlaggningControllerApi
 {
    @Inject
    HandlaggningService handlaggningService;
 
    @Inject
+   YrkandeService yrkandeService;
+
+   @Inject
    PresentationMapper mapper;
 
    @Override
    @GET
-   @Path("/{handlaggningId}")
+   @Path("/handlaggning/{handlaggningId}")
    @Produces(
    {
          "application/json"
@@ -53,6 +57,7 @@ public class HandlaggningController implements HandlaggningControllerApi
 
    @Override
    @POST
+   @Path("/handlaggning")
    @Consumes(
    {
          "application/json"
@@ -73,7 +78,7 @@ public class HandlaggningController implements HandlaggningControllerApi
 
    @Override
    @PUT
-   @Path("/{handlaggningId}")
+   @Path("/handlaggning/{handlaggningId}")
    @Consumes(
    {
          "application/json"
@@ -94,8 +99,8 @@ public class HandlaggningController implements HandlaggningControllerApi
    }
 
    @Override
-   @PATCH
-   @Path("/{handlaggningId}/ersattning")
+   @POST
+   @Path("/yrkande")
    @Consumes(
    {
          "application/json"
@@ -104,13 +109,11 @@ public class HandlaggningController implements HandlaggningControllerApi
    {
          "application/json"
    })
-   public PatchHandlaggningResponse patchHandlaggning(UUID handlaggningId,
-         List<UpdateErsattning> updateErsattning)
+   public PostYrkandeResponse postYrkande(PostYrkandeRequest postYrkandeRequest)
    {
-      HandlaggningPatchRequest handlaggningPatchRequest = mapper.toHandlaggningPatchRequest(handlaggningId,
-            updateErsattning);
-      HandlaggningPatchResponse handlaggningPatchResponse = handlaggningService
-            .patchHandlaggning(handlaggningPatchRequest);
-      return mapper.toPatchHandlaggningResponse(handlaggningPatchResponse);
+      YrkandeCreateRequest yrkandeCreateRequest = mapper.toYrkandeCreateRequest(postYrkandeRequest);
+      YrkandeCreateResponse yrkandeCreateResponse = yrkandeService.createYrkande(yrkandeCreateRequest);
+      PostYrkandeResponse response = mapper.toPostYrkandeResponse(yrkandeCreateResponse);
+      return response;
    }
 }

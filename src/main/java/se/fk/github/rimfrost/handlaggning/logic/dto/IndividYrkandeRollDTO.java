@@ -1,12 +1,15 @@
 package se.fk.github.rimfrost.handlaggning.logic.dto;
 
-import java.time.OffsetDateTime;
+import java.util.UUID;
+
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface PeriodDTO
+public interface IndividYrkandeRollDTO
 {
-   OffsetDateTime start();
 
-   OffsetDateTime slut();
+   UUID individId();
+
+   UUID yrkandeRollId();
+
 }

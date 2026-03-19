@@ -9,13 +9,14 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface YrkandeCreateRequest
 {
-   public List<YrkandePerson> person();
 
-   public String formanstyp();
+   UUID erbjudandedId();
 
-   public OffsetDateTime start();
+   public OffsetDateTime yrkandeFrom();
 
-   public OffsetDateTime slut();
+   public OffsetDateTime yrkandeTom();
 
-   public List<YrkandeErsattning> ersattning();
+   public List<IndividYrkandeRollDTO> individYrkandeRoller();
+
+   public List<ProduceratResultatDTO> produceradeResultat();
 }

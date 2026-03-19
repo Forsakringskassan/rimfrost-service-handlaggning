@@ -12,7 +12,5 @@ public interface HandlaggningService
 
    HandlaggningPutResponse putHandlaggning(HandlaggningPutRequest request);
 
-   HandlaggningPatchResponse patchHandlaggning(HandlaggningPatchRequest request);
-
    void sendHandlaggningDoneMessage(UUID handlaggningID);
 }

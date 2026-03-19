@@ -3,18 +3,19 @@ package se.fk.github.rimfrost.handlaggning.logic.entity;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.immutables.value.Value;
-import se.fk.github.rimfrost.handlaggning.logic.enums.ErsattningsstatusEntity;
 
 @Value.Immutable
 public interface ProduceratResultatEntity
 {
    UUID id();
 
-   String version();
+   int version();
 
    OffsetDateTime franOchMed();
 
    OffsetDateTime tillOchMed();
 
-   ErsattningsstatusEntity status();
+   String typ();
+
+   String data();
 }
