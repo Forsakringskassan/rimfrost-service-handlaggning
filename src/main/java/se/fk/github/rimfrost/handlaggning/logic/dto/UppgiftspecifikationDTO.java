@@ -8,21 +8,5 @@ public interface UppgiftspecifikationDTO
 {
    UUID id();
 
-   String version();
-
-   String namn();
-
-   String uppgiftbeskrivning();
-
-   VerksamhetslogikDTO verksamhetslogik();
-
-   RollDTO roll();
-
-   String applikationsId();
-
-   String applikationsVersion();
-
-   RegelDTO regel();
-
-   String uppgiftsGui();
+   int version();
 }

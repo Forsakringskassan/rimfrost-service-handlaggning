@@ -1,6 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.enums;
 
-public enum BerakningsgrundEntity
+public enum Beslutsutfall
 {
-   LON, FASTBELOPP
+   JA, NEJ, FU
 }

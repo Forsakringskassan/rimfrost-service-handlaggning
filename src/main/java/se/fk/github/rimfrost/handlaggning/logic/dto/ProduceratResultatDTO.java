@@ -4,16 +4,27 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.immutables.value.Value;
 
+import jakarta.annotation.Nullable;
+import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
+
 @Value.Immutable
 public interface ProduceratResultatDTO
 {
    UUID id();
 
-   String version();
+   Integer version();
 
    OffsetDateTime franOchMed();
 
    OffsetDateTime tillOchMed();
 
-   ErsattningsstatusDTO status();
+   Yrkandestatus yrkandestatus();
+
+   @Nullable
+   String avslagsanledning();
+
+   String typ();
+
+   String data();
+
 }

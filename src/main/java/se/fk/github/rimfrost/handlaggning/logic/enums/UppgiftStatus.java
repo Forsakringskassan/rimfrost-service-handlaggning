@@ -1,6 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.enums;
 
-public enum VerksamhetslogikEntity
+public enum UppgiftStatus
 {
-   A, B, C
+   PLANERAD, TILLDELAD, AVSLUTAD
 }

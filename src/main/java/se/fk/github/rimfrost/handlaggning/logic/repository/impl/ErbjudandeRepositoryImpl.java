@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.yaml.snakeyaml.Yaml;
 import se.fk.github.rimfrost.handlaggning.logic.entity.ErbjudandeFlowInfoEntity;
 import se.fk.github.rimfrost.handlaggning.logic.entity.ImmutableErbjudandeFlowInfoEntity;
@@ -20,7 +22,7 @@ import se.fk.github.rimfrost.handlaggning.logic.repository.ErbjudandeRepository;
 @Startup
 public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
 {
-   private final Map<String, ErbjudandeFlowInfoEntity> erbjudandeFlowInfoMap = new HashMap<>();
+   private final Map<UUID, ErbjudandeFlowInfoEntity> erbjudandeFlowInfoMap = new HashMap<>();
 
    @PostConstruct
    void init()
@@ -34,6 +36,7 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
             {
                ErbjudandeFlowInfo erbjudandeFlowInfo = new Yaml().loadAs(inputStream, ErbjudandeFlowInfo.class);
                ErbjudandeFlowInfoEntity erbjudandeFlowInfoEntity = ImmutableErbjudandeFlowInfoEntity.builder()
+                     .id(erbjudandeFlowInfo.getId())
                      .erbjudandetyp(erbjudandeFlowInfo.getErbjudandetyp())
                      .bpmn(erbjudandeFlowInfo.getBpmn())
                      .namn(erbjudandeFlowInfo.getNamn())
@@ -41,21 +44,22 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
                      .kafkaTopic(erbjudandeFlowInfo.getKafkaTopic())
                      .kafkaRequestType(erbjudandeFlowInfo.getKafkaRequestType())
                      .build();
-               erbjudandeFlowInfoMap.put(erbjudandeFlowInfoEntity.erbjudandetyp(), erbjudandeFlowInfoEntity);
+               erbjudandeFlowInfoMap.put(erbjudandeFlowInfoEntity.id(), erbjudandeFlowInfoEntity);
             }
          });
       }
    }
 
    @Override
-   public Optional<ErbjudandeFlowInfoEntity> getErbjudandeFlowInfoByErbjudandetyp(String erbjudandetyp)
+   public Optional<ErbjudandeFlowInfoEntity> getErbjudandeFlowInfoById(UUID erbjudandeId)
    {
-      return erbjudandeFlowInfoMap.containsKey(erbjudandetyp) ? Optional.of(erbjudandeFlowInfoMap.get(erbjudandetyp))
+      return erbjudandeFlowInfoMap.containsKey(erbjudandeId) ? Optional.of(erbjudandeFlowInfoMap.get(erbjudandeId))
             : Optional.empty();
    }
 
    public static class ErbjudandeFlowInfo
    {
+      private UUID id;
       private String erbjudandetyp;
       private String bpmn;
       private String namn;
@@ -65,6 +69,11 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
 
       public ErbjudandeFlowInfo()
       {
+      }
+
+      public void setId(UUID id)
+      {
+         this.id = id;
       }
 
       public void setErbjudandetyp(String erbjudandetyp)
@@ -97,6 +106,11 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
          this.kafkaRequestType = kafkaRequestType;
       }
 
+      public UUID getId()
+      {
+         return this.id;
+      }
+
       public String getErbjudandetyp()
       {
          return erbjudandetyp;
@@ -127,4 +141,5 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
          return kafkaRequestType;
       }
    }
+
 }

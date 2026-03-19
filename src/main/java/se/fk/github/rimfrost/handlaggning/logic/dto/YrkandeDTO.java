@@ -5,33 +5,38 @@ import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
 
+import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
+import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
+
 @Value.Immutable
 public interface YrkandeDTO
 {
    UUID id();
 
-   String formanstyp();
+   UUID erbjudandeId();
 
-   String version();
+   Integer version();
 
    OffsetDateTime yrkandedatum();
 
-   YrkandestatusDTO yrkandestatus();
+   OffsetDateTime yrkandeFrom();
 
-   PeriodDTO period();
+   OffsetDateTime yrkandeTom();
 
-   AvsiktDTO avsikt();
+   Yrkandestatus yrkandestatus();
+
+   Avsikt avsikt();
 
    String andringsorsak();
 
    @Value.Default
-   default List<YrkanderollDTO> yrkanderoll()
+   default List<IndividYrkandeRollDTO> individYrkandeRoll()
    {
       return List.of();
    }
 
    @Value.Default
-   default List<ErsattningDTO> ersattning()
+   default List<ProduceratResultatDTO> produceradeResultat()
    {
       return List.of();
    }

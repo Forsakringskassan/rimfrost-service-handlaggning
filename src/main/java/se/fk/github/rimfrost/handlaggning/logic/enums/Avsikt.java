@@ -1,6 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.enums;
 
-public enum BeslutsutfallEntity
+public enum Avsikt
 {
-   JA, NEJ, FU
+   NY, ANDRING, BORTTAG, ATERTAGEN
 }

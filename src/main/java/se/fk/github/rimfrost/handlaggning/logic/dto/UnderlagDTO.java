@@ -8,7 +8,7 @@ public interface UnderlagDTO
 
    String typ();
 
-   String version();
+   int version();
 
    String data();
 

@@ -1,10 +1,11 @@
 package se.fk.github.rimfrost.handlaggning.logic.dto;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
 import jakarta.annotation.Nullable;
+import se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation;
+import se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus;
 
 @Value.Immutable
 public interface UppgiftDTO
@@ -12,7 +13,7 @@ public interface UppgiftDTO
 
    UUID uppgiftId();
 
-   String version();
+   int version();
 
    OffsetDateTime skapadTs();
 
@@ -27,12 +28,12 @@ public interface UppgiftDTO
 
    UUID handlaggningId();
 
-   UppgiftStatusDTO uppgiftStatus();
+   UUID aktivitetId();
 
-   FSSAInformationDTO fssaInformation();
+   UppgiftStatus uppgiftStatus();
+
+   FSSAInformation fssaInformation();
 
    UppgiftspecifikationDTO uppgiftSpecifikation();
-
-   List<UnderlagDTO> underlag();
 
 }

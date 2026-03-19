@@ -12,7 +12,7 @@ public interface HandlaggningEntity
 
    YrkandeEntity yrkande();
 
-   String version();
+   int version();
 
    UUID processinstansId();
 
@@ -21,5 +21,5 @@ public interface HandlaggningEntity
    @Nullable
    OffsetDateTime avslutadTS();
 
-   HandlaggningspecifikationEntity handlaggningspecifikation();
+   UUID handlaggningspecifikationId();
 }
