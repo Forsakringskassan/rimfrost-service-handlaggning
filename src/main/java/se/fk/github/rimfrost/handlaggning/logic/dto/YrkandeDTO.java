@@ -27,8 +27,6 @@ public interface YrkandeDTO
 
    Avsikt avsikt();
 
-   String andringsorsak();
-
    @Value.Default
    default List<IndividYrkandeRollDTO> individYrkandeRoll()
    {
