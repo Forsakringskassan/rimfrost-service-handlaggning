@@ -19,7 +19,6 @@ public class LogicMapper
             .yrkandeTom(yrkandeEntity.yrkandeTom())
             .yrkandestatus(yrkandeEntity.yrkandestatus())
             .avsikt(yrkandeEntity.avsikt())
-            .andringsorsak(yrkandeEntity.andringsorsak())
             .individYrkandeRoll(yrkandeEntity.individYrkandeRoll()
                   .stream()
                   .map(this::toIndividYrkandeRollDTO)
@@ -34,6 +33,7 @@ public class LogicMapper
    public IndividYrkandeRollDTO toIndividYrkandeRollDTO(IndividYrkandeRollEntity individYrkandeRollEntity)
    {
       return ImmutableIndividYrkandeRollDTO.builder()
+            .id(individYrkandeRollEntity.id())
             .individId(individYrkandeRollEntity.individId())
             .yrkandeRollId(individYrkandeRollEntity.yrkandeRollId())
             .build();
@@ -77,7 +77,6 @@ public class LogicMapper
             .yrkandeTom(yrkandeDTO.yrkandeTom())
             .yrkandestatus(yrkandeDTO.yrkandestatus())
             .avsikt(yrkandeDTO.avsikt())
-            .andringsorsak(yrkandeDTO.andringsorsak())
             .individYrkandeRoll(
                   yrkandeDTO.individYrkandeRoll()
                         .stream()

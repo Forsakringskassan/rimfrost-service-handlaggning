@@ -28,9 +28,6 @@ public interface YrkandeEntity
 
    Avsikt avsikt();
 
-   @Nullable
-   String andringsorsak();
-
    @Value.Default
    default List<IndividYrkandeRollEntity> individYrkandeRoll()
    {

@@ -129,7 +129,7 @@ public class PresentationMapper
    public PostHandlaggningResponse toPostHandlaggningResponse(HandlaggningCreateResponse handlaggningCreateResponse)
    {
       PostHandlaggningResponse postHandlaggningResponse = new PostHandlaggningResponse();
-      postHandlaggningResponse.setHandlaggning(toHandlaggning(handlaggningCreateResponse.handlaggning()));
+      postHandlaggningResponse.setHandlaggning(toHandlaggningResponse(handlaggningCreateResponse.handlaggning()));
       return postHandlaggningResponse;
    }
 

@@ -28,6 +28,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggnin
 
 @SuppressWarnings("unused")
 @ApplicationScoped
+@Path("")
 public class HandlaggningController implements HandlaggningControllerApi
 {
    @Inject
