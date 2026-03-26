@@ -10,7 +10,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggnin
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
@@ -129,7 +129,7 @@ public class PresentationMapper
    public PostHandlaggningResponse toPostHandlaggningResponse(HandlaggningCreateResponse handlaggningCreateResponse)
    {
       PostHandlaggningResponse postHandlaggningResponse = new PostHandlaggningResponse();
-      postHandlaggningResponse.setHandlaggning(toHandlaggningResponse(handlaggningCreateResponse.handlaggning()));
+      postHandlaggningResponse.setHandlaggning(toHandlaggning(handlaggningCreateResponse.handlaggning()));
       return postHandlaggningResponse;
    }
 
@@ -145,7 +145,7 @@ public class PresentationMapper
    public GetHandlaggningResponse toGetHandlaggningResponse(HandlaggningGetResponse handlaggningGetResponse)
    {
       GetHandlaggningResponse response = new GetHandlaggningResponse();
-      response.setHandlaggning(toHandlaggningResponse(handlaggningGetResponse.handlaggning()));
+      response.setHandlaggning(toHandlaggning(handlaggningGetResponse.handlaggning()));
 
       return response;
    }
@@ -160,7 +160,7 @@ public class PresentationMapper
       return request;
    }
 
-   private HandlaggningDTO toHandlaggningDTO(Handlaggning handlaggning)
+   private HandlaggningDTO toHandlaggningDTO(HandlaggningUpdate handlaggning)
    {
 
       return ImmutableHandlaggningDTO.builder()
@@ -298,7 +298,7 @@ public class PresentationMapper
    public PutHandlaggningResponse toPutHandlaggningResponse(HandlaggningPutResponse handlaggningPutResponse)
    {
       PutHandlaggningResponse response = new PutHandlaggningResponse();
-      response.handlaggning(toHandlaggning(handlaggningPutResponse.handlaggning()));
+      response.handlaggning(toHandlaggningUpdate(handlaggningPutResponse.handlaggning()));
       return response;
    }
 
@@ -365,36 +365,36 @@ public class PresentationMapper
       return underlag;
    }
 
-   public Handlaggning toHandlaggning(HandlaggningDTO handlaggningDTO)
+   public HandlaggningUpdate toHandlaggningUpdate(HandlaggningDTO handlaggningDTO)
    {
 
-      Handlaggning handlaggning = new Handlaggning();
-      handlaggning.setId(handlaggningDTO.id());
-      handlaggning.setYrkande(toYrkande(handlaggningDTO.yrkande()));
-      handlaggning.setVersion(handlaggningDTO.version());
-      handlaggning.setProcessinstansId(handlaggningDTO.processinstansId());
-      handlaggning.setSkapadTS(handlaggningDTO.skapadTS());
-      handlaggning.setAvslutadTS(handlaggningDTO.avslutadTS());
-      handlaggning.setHandlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId());
-      handlaggning.uppgift(toUppgift(handlaggningDTO.uppgift()));
-      handlaggning.underlag(handlaggningDTO.underlag().stream()
+      HandlaggningUpdate handlaggningUpdate = new HandlaggningUpdate();
+      handlaggningUpdate.setId(handlaggningDTO.id());
+      handlaggningUpdate.setYrkande(toYrkande(handlaggningDTO.yrkande()));
+      handlaggningUpdate.setVersion(handlaggningDTO.version());
+      handlaggningUpdate.setProcessinstansId(handlaggningDTO.processinstansId());
+      handlaggningUpdate.setSkapadTS(handlaggningDTO.skapadTS());
+      handlaggningUpdate.setAvslutadTS(handlaggningDTO.avslutadTS());
+      handlaggningUpdate.setHandlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId());
+      handlaggningUpdate.uppgift(toUppgift(handlaggningDTO.uppgift()));
+      handlaggningUpdate.underlag(handlaggningDTO.underlag().stream()
             .map(this::toUnderlag)
             .toList());
-      return handlaggning;
+      return handlaggningUpdate;
    }
 
-   private HandlaggningResponse toHandlaggningResponse(HandlaggningDTO handlaggningDTO)
+   private Handlaggning toHandlaggning(HandlaggningDTO handlaggningDTO)
    {
-      HandlaggningResponse handlagningResponse = new HandlaggningResponse();
-      handlagningResponse.setId(handlaggningDTO.id());
-      handlagningResponse.setYrkande(toYrkande(handlaggningDTO.yrkande()));
-      handlagningResponse.setVersion(handlaggningDTO.version());
-      handlagningResponse.setProcessinstansId(handlaggningDTO.processinstansId());
-      handlagningResponse.setSkapadTS(handlaggningDTO.skapadTS());
-      handlagningResponse.setAvslutadTS(handlaggningDTO.avslutadTS());
-      handlagningResponse.setHandlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId());
+      Handlaggning handlagning = new Handlaggning();
+      handlagning.setId(handlaggningDTO.id());
+      handlagning.setYrkande(toYrkande(handlaggningDTO.yrkande()));
+      handlagning.setVersion(handlaggningDTO.version());
+      handlagning.setProcessinstansId(handlaggningDTO.processinstansId());
+      handlagning.setSkapadTS(handlaggningDTO.skapadTS());
+      handlagning.setAvslutadTS(handlaggningDTO.avslutadTS());
+      handlagning.setHandlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId());
 
-      return handlagningResponse;
+      return handlagning;
    }
 
    private IndividYrkandeRoll toIndividYrkandeRoll(IndividYrkandeRollDTO individYrkandeRollDTO)

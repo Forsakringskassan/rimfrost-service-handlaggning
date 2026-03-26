@@ -52,8 +52,7 @@ public class HandlaggningController implements HandlaggningControllerApi
       HandlaggningGetRequest handlaggningGetRequest = mapper.toHandlaggningGetRequest(handlaggningId);
       HandlaggningGetResponse handlaggningGetResponse = handlaggningService
             .getHandlaggning(handlaggningGetRequest);
-      GetHandlaggningResponse response = mapper.toGetHandlaggningResponse(handlaggningGetResponse);
-      return response;
+      return mapper.toGetHandlaggningResponse(handlaggningGetResponse);
    }
 
    @Override
@@ -73,8 +72,7 @@ public class HandlaggningController implements HandlaggningControllerApi
             .toHandlaggningCreateRequest(postHandlaggningRequest);
       HandlaggningCreateResponse handlaggningCreateResponse = handlaggningService
             .createHandlaggning(handlaggningCreateRequest);
-      PostHandlaggningResponse response = mapper.toPostHandlaggningResponse(handlaggningCreateResponse);
-      return response;
+      return mapper.toPostHandlaggningResponse(handlaggningCreateResponse);
    }
 
    @Override
@@ -95,8 +93,7 @@ public class HandlaggningController implements HandlaggningControllerApi
             .toHandlaggningPutRequest(handlaggningId, putHandlaggningRequest);
       HandlaggningPutResponse handlaggningPutResponse = handlaggningService
             .putHandlaggning(handlaggningPutRequest);
-      PutHandlaggningResponse response = mapper.toPutHandlaggningResponse(handlaggningPutResponse);
-      return response;
+      return mapper.toPutHandlaggningResponse(handlaggningPutResponse);
    }
 
    @Override
@@ -114,7 +111,6 @@ public class HandlaggningController implements HandlaggningControllerApi
    {
       YrkandeCreateRequest yrkandeCreateRequest = mapper.toYrkandeCreateRequest(postYrkandeRequest);
       YrkandeCreateResponse yrkandeCreateResponse = yrkandeService.createYrkande(yrkandeCreateRequest);
-      PostYrkandeResponse response = mapper.toPostYrkandeResponse(yrkandeCreateResponse);
-      return response;
+      return mapper.toPostYrkandeResponse(yrkandeCreateResponse);
    }
 }
