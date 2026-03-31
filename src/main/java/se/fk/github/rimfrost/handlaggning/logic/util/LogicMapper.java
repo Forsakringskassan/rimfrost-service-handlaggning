@@ -33,7 +33,6 @@ public class LogicMapper
    public IndividYrkandeRollDTO toIndividYrkandeRollDTO(IndividYrkandeRollEntity individYrkandeRollEntity)
    {
       return ImmutableIndividYrkandeRollDTO.builder()
-            .id(individYrkandeRollEntity.id())
             .individId(individYrkandeRollEntity.individId())
             .yrkandeRollId(individYrkandeRollEntity.yrkandeRollId())
             .build();
@@ -105,6 +104,7 @@ public class LogicMapper
             .version(produceratResultatDTO.version())
             .franOchMed(produceratResultatDTO.franOchMed())
             .tillOchMed(produceratResultatDTO.tillOchMed())
+            .yrkandeStatus(produceratResultatDTO.yrkandestatus())
             .typ(produceratResultatDTO.typ())
             .data(produceratResultatDTO.data())
             .build();
