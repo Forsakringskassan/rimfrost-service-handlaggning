@@ -4,6 +4,7 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
+import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Avsiktstyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
@@ -74,6 +75,7 @@ public class PresentationMapper
       yrkande.setYrkandeFrom(yrkandeDTO.yrkandeFrom());
       yrkande.setYrkandeTom(yrkandeDTO.yrkandeTom());
       yrkande.setYrkandestatus(mapYrkandeStatus(yrkandeDTO.yrkandestatus()));
+      yrkande.setAvsikt(mapAvsiktstyp(yrkandeDTO.avsikt()));
       yrkande.setIndividYrkandeRoller(
             yrkandeDTO.individYrkandeRoll()
                   .stream()
@@ -231,6 +233,11 @@ public class PresentationMapper
          };
    }
 
+   private Avsiktstyp mapAvsiktstyp(se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt avsiktsTyp)
+   {
+      return switch(avsiktsTyp){case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.NY->Avsiktstyp.NY;case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ANDRING->Avsiktstyp.ANDRING;case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.BORTTAG->Avsiktstyp.BORTTAG;case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ATERTAGEN->Avsiktstyp.ATERTAGEN;};
+   }
+
    private UppgiftDTO toUppgiftDTO(UUID handlaggningId, Uppgift uppgift)
    {
 
@@ -244,7 +251,8 @@ public class PresentationMapper
             .uppgiftSpecifikation(toUppgiftspecifikationDTO(uppgift.getUppgiftspecifikation()))
             .version(uppgift.getVersion())
             .uppgiftStatus(toUppgiftStatus(uppgift.getUppgiftStatus()))
-            .fssaInformation(toFSSAInformation(uppgift.getFsSAinformation()));
+            .fssaInformation(toFSSAInformation(uppgift.getFsSAinformation()))
+            .aktivitetId(uppgift.getAktivitetId());
       return builder.build();
    }
 

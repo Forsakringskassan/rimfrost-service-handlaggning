@@ -7,9 +7,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface IndividYrkandeRollEntity
 {
-
-   UUID id();
-
    UUID individId();
 
    UUID yrkandeRollId();

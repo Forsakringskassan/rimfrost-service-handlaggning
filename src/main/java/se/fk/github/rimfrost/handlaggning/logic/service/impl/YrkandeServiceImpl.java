@@ -1,7 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.service.impl;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
 import se.fk.github.rimfrost.handlaggning.logic.enums.*;
-import se.fk.github.rimfrost.handlaggning.logic.repository.IndividYrkandeRollRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.ProduceratResultatRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
@@ -25,9 +23,6 @@ public class YrkandeServiceImpl implements YrkandeService
    private YrkandeRepository yrkandeRepository;
 
    @Inject
-   private IndividYrkandeRollRepository individYrkandeRollRepository;
-
-   @Inject
    private ProduceratResultatRepository produceratResultatRepository;
 
    @Inject
@@ -38,7 +33,6 @@ public class YrkandeServiceImpl implements YrkandeService
    {
       var individYrkandeRoller = request.individYrkandeRoller().stream()
             .map(e -> (IndividYrkandeRollEntity) ImmutableIndividYrkandeRollEntity.builder()
-                  .id(UUID.randomUUID())
                   .individId(e.individId())
                   .yrkandeRollId(e.yrkandeRollId())
                   .build())
@@ -69,7 +63,6 @@ public class YrkandeServiceImpl implements YrkandeService
             .produceradeResultat(produceradeResultat)
             .build();
 
-      individYrkandeRollRepository.save(individYrkandeRoller);
       produceratResultatRepository.save(produceradeResultat);
       yrkandeRepository.save(yrkandeEntity);
 
