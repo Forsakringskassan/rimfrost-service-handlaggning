@@ -79,8 +79,14 @@ public class HandlaggningServiceImpl implements HandlaggningService
 
       handlaggningRepository.save(entity);
 
+      var yrkande = ImmutableYrkandeDTO.builder()
+            .from(mapper.toYrkandeDTO(entity.yrkande()))
+            .beslut(request.handlaggning().yrkande().beslut())
+            .build();
+
       var handlaggning = ImmutableHandlaggningDTO.builder()
             .from(mapper.toHandlaggningDTO(entity))
+            .yrkande(yrkande)
             .uppgift(request.handlaggning().uppgift())
             .underlag(request.handlaggning().underlag())
             .build();

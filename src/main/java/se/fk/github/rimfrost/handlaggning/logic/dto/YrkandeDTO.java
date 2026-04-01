@@ -3,6 +3,8 @@ package se.fk.github.rimfrost.handlaggning.logic.dto;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.annotation.Nullable;
 import org.immutables.value.Value;
 
 import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
@@ -26,6 +28,9 @@ public interface YrkandeDTO
    Yrkandestatus yrkandestatus();
 
    Avsikt avsikt();
+
+   @Nullable
+   BeslutDTO beslut();
 
    @Value.Default
    default List<IndividYrkandeRollDTO> individYrkandeRoll()

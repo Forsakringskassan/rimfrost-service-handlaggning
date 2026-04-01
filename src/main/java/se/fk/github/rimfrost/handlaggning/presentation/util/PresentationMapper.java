@@ -6,6 +6,8 @@ import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Avsiktstyp;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
@@ -200,8 +202,36 @@ public class PresentationMapper
                   .stream()
                   .map(this::toIndividYrkandeRollDTO)
                   .toList())
+            .beslut(toBeslutDTO(yrkande.getBeslut()))
             .build();
 
+   }
+
+   private BeslutDTO toBeslutDTO(Beslut beslut)
+   {
+      if (beslut == null)
+      {
+         return null;
+      }
+
+      return ImmutableBeslutDTO.builder()
+            .id(beslut.getId())
+            .version(beslut.getVersion())
+            .datum(beslut.getDatum())
+            .beslutsfattare(beslut.getBeslutsfattare())
+            .beslutsrader(beslut.getBeslutsrader().stream().map(this::toBeslutsradDTO).toList())
+            .build();
+   }
+
+   private BeslutsradDTO toBeslutsradDTO(Beslutsrad beslutsrad)
+   {
+      return ImmutableBeslutsradDTO.builder()
+            .id(beslutsrad.getId())
+            .version(beslutsrad.getVersion())
+            .beslutsTyp(beslutsrad.getBeslutsTyp())
+            .beslutsUtfall(beslutsrad.getBeslutsUtfall())
+            .avslutsTyp(beslutsrad.getAvslutsTyp())
+            .build();
    }
 
    private se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus mapYrkandeStatus(Yrkandestatus yrkandestatus) {
