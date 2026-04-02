@@ -345,6 +345,7 @@ public class PresentationMapper
       var uppgift = new Uppgift();
       uppgift.setId(uppgiftDTO.uppgiftId());
       uppgift.setVersion(uppgiftDTO.version());
+      uppgift.setAktivitetId(uppgiftDTO.aktivitetId());
       uppgift.setPlaneradTs(uppgiftDTO.planeradTs());
       uppgift.setUtfordTs(uppgiftDTO.utfordTs());
       uppgift.setSkapadTs(uppgiftDTO.skapadTs());
