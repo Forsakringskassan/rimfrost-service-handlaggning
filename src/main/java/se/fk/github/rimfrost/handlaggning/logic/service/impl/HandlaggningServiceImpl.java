@@ -47,7 +47,6 @@ public class HandlaggningServiceImpl implements HandlaggningService
             .id(UUID.randomUUID())
             .yrkande(yrkandeEntity)
             .version(1)
-            .processinstansId(request.processInstansId())
             .skapadTS(OffsetDateTime.now())
             .handlaggningspecifikationId(request.handlaggningspecifikationId())
             .build();

@@ -15,6 +15,8 @@ import se.fk.rimfrost.HandlaggningDoneMessage;
 import se.fk.rimfrost.HandlaggningRequestMessagePayload;
 import se.fk.rimfrost.HandlaggningResponseMessageData;
 import se.fk.rimfrost.HandlaggningResponseMessagePayload;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
@@ -25,6 +27,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggni
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultatRef;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
@@ -90,7 +93,6 @@ public class HandlaggningTest
    {
       PostHandlaggningRequest request = new PostHandlaggningRequest();
       request.yrkandeId(yrkandeId);
-      request.processInstansId(UUID.randomUUID());
       request.handlaggningspecifikationId(UUID.randomUUID());
 
       return given().contentType(ContentType.JSON).body(request).post("/handlaggning").then().statusCode(200).extract().body()
@@ -124,6 +126,25 @@ public class HandlaggningTest
 
    private HandlaggningUpdate createHandlaggningUpdate(Handlaggning handlaggning)
    {
+      ProduceratResultatRef produceratResultat = new ProduceratResultatRef();
+      produceratResultat.id(UUID.randomUUID());
+      produceratResultat.version(1);
+
+      Beslutsrad beslutsrad = new Beslutsrad();
+      beslutsrad.id(UUID.randomUUID());
+      beslutsrad.version(1);
+      beslutsrad.avslutsTyp(UUID.randomUUID());
+      beslutsrad.beslutsTyp(UUID.randomUUID());
+      beslutsrad.beslutsUtfall(UUID.randomUUID());
+      beslutsrad.produceradeResultatRef(List.of(produceratResultat));
+
+      Beslut beslut = new Beslut();
+      beslut.id(UUID.randomUUID());
+      beslut.version(1);
+      beslut.datum(OffsetDateTime.now());
+      beslut.beslutsfattare(UUID.randomUUID());
+      beslut.beslutsrader(List.of(beslutsrad));
+
       UppgiftSpecifikation uppgiftSpecifikation = new UppgiftSpecifikation();
       uppgiftSpecifikation.id(UUID.randomUUID());
       uppgiftSpecifikation.version(1);
@@ -142,11 +163,14 @@ public class HandlaggningTest
       underlag.version(1);
       underlag.data("test data");
 
+      var yrkande = handlaggning.getYrkande();
+      yrkande.beslut(beslut);
+
       HandlaggningUpdate handlaggningUpdate = new HandlaggningUpdate();
       handlaggningUpdate.id(handlaggning.getId());
       handlaggningUpdate.version(handlaggning.getVersion() + 1);
-      handlaggningUpdate.yrkande(handlaggning.getYrkande());
-      handlaggningUpdate.processinstansId(handlaggning.getProcessinstansId());
+      handlaggningUpdate.yrkande(yrkande);
+      handlaggningUpdate.processinstansId(UUID.randomUUID());
       handlaggningUpdate.skapadTS(handlaggning.getSkapadTS());
       handlaggningUpdate.avslutadTS(handlaggning.getAvslutadTS());
       handlaggningUpdate.handlaggningspecifikationId(handlaggning.getHandlaggningspecifikationId());
@@ -218,7 +242,6 @@ public class HandlaggningTest
       assertNotNull(handlaggning);
       assertNotNull(handlaggning.getId());
       assertNotNull(handlaggning.getHandlaggningspecifikationId());
-      assertNotNull(handlaggning.getProcessinstansId());
       assertNotNull(handlaggning.getSkapadTS());
       verifyYrkande(handlaggning.getYrkande());
    }
@@ -255,13 +278,54 @@ public class HandlaggningTest
       verifyHandlaggningPutResponse(putResponse);
    }
 
+   private void verifyProduceratResultatRef(ProduceratResultatRef produceratResultatRef)
+   {
+      assertNotNull(produceratResultatRef);
+      assertNotNull(produceratResultatRef.getId());
+      assertEquals(1, produceratResultatRef.getVersion());
+   }
+
+   private void verifyBeslutsrad(Beslutsrad beslutsrad)
+   {
+      assertNotNull(beslutsrad);
+      assertNotNull(beslutsrad.getId());
+      assertEquals(1, beslutsrad.getVersion());
+      assertNotNull(beslutsrad.getAvslutsTyp());
+      assertNotNull(beslutsrad.getBeslutsTyp());
+      assertNotNull(beslutsrad.getBeslutsUtfall());
+      assertFalse(beslutsrad.getProduceradeResultatRef().isEmpty());
+
+      for (var produceratResultatRef : beslutsrad.getProduceradeResultatRef())
+      {
+         verifyProduceratResultatRef(produceratResultatRef);
+      }
+   }
+
+   private void verifyBeslut(Beslut beslut)
+   {
+      assertNotNull(beslut);
+      assertNotNull(beslut.getId());
+      assertEquals(1, beslut.getVersion());
+      assertNotNull(beslut.getDatum());
+      assertNotNull(beslut.getBeslutsfattare());
+      assertFalse(beslut.getBeslutsrader().isEmpty());
+
+      for (var beslutsrad : beslut.getBeslutsrader())
+      {
+         verifyBeslutsrad(beslutsrad);
+      }
+   }
+
    private void verifyHandlaggningPutResponse(PutHandlaggningResponse putHandlaggningResponse)
    {
       assertNotNull(putHandlaggningResponse);
       assertNotNull(putHandlaggningResponse.getHandlaggning());
       verifyHandlaggningResponse(createHandlaggning(putHandlaggningResponse.getHandlaggning()));
       assertNotNull(putHandlaggningResponse.getHandlaggning().getUppgift());
-      assertEquals(1, putHandlaggningResponse.getHandlaggning().getUnderlag().size());
+      assertFalse(putHandlaggningResponse.getHandlaggning().getUnderlag().isEmpty());
+      assertNotNull(putHandlaggningResponse.getHandlaggning().getProcessinstansId());
+      assertNotNull(putHandlaggningResponse.getHandlaggning().getYrkande().getBeslut());
+      verifyBeslut(putHandlaggningResponse.getHandlaggning().getYrkande().getBeslut());
    }
 
    private void verifyHandlaggningDoneMsg(UUID handlaggningId)
