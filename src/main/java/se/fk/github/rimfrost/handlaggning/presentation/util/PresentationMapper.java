@@ -10,6 +10,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultatRef;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
@@ -88,6 +89,7 @@ public class PresentationMapper
                   .stream()
                   .map(this::toProduceratResultat)
                   .toList());
+      yrkande.setBeslut(toBeslut(yrkandeDTO.beslut()));
       return yrkande;
    }
 
@@ -124,7 +126,6 @@ public class PresentationMapper
    {
       HandlaggningCreateRequest request = ImmutableHandlaggningCreateRequest.builder()
             .yrkandeId(postYrkandeRequest.getYrkandeId())
-            .processInstansId(postYrkandeRequest.getProcessInstansId())
             .handlaggningspecifikationId(postYrkandeRequest.getHandlaggningspecifikationId())
             .build();
       return request;
@@ -223,6 +224,23 @@ public class PresentationMapper
             .build();
    }
 
+   private Beslut toBeslut(BeslutDTO beslutDTO)
+   {
+      if (beslutDTO == null)
+      {
+         return null;
+      }
+
+      Beslut beslut = new Beslut();
+      beslut.setId(beslutDTO.id());
+      beslut.setVersion(beslutDTO.version());
+      beslut.setDatum(beslutDTO.datum());
+      beslut.setBeslutsfattare(beslutDTO.beslutsfattare());
+      beslut.setBeslutsrader(beslutDTO.beslutsrader().stream().map(this::toBeslutsrad).toList());
+
+      return beslut;
+   }
+
    private BeslutsradDTO toBeslutsradDTO(Beslutsrad beslutsrad)
    {
       return ImmutableBeslutsradDTO.builder()
@@ -231,7 +249,55 @@ public class PresentationMapper
             .beslutsTyp(beslutsrad.getBeslutsTyp())
             .beslutsUtfall(beslutsrad.getBeslutsUtfall())
             .avslutsTyp(beslutsrad.getAvslutsTyp())
+            .produceratResultatRefs(
+                  beslutsrad.getProduceradeResultatRef().stream().map(this::toProduceratResultatRefDTO).toList())
             .build();
+   }
+
+   private Beslutsrad toBeslutsrad(BeslutsradDTO beslutsradDTO)
+   {
+      if (beslutsradDTO == null)
+      {
+         return null;
+      }
+
+      Beslutsrad beslutsrad = new Beslutsrad();
+      beslutsrad.setId(beslutsradDTO.id());
+      beslutsrad.setVersion(beslutsradDTO.version());
+      beslutsrad.setAvslutsTyp(beslutsradDTO.avslutsTyp());
+      beslutsrad.setBeslutsTyp(beslutsradDTO.beslutsTyp());
+      beslutsrad.setBeslutsUtfall(beslutsradDTO.beslutsUtfall());
+      beslutsrad.setProduceradeResultatRef(
+            beslutsradDTO.produceratResultatRefs().stream().map(this::toProduceratResultatRef).toList());
+
+      return beslutsrad;
+   }
+
+   private ProduceratResultatRefDTO toProduceratResultatRefDTO(ProduceratResultatRef produceratResultatRef)
+   {
+      if (produceratResultatRef == null)
+      {
+         return null;
+      }
+
+      return ImmutableProduceratResultatRefDTO.builder()
+            .id(produceratResultatRef.getId())
+            .version(produceratResultatRef.getVersion())
+            .build();
+   }
+
+   private ProduceratResultatRef toProduceratResultatRef(ProduceratResultatRefDTO produceratResultatRefDTO)
+   {
+      if (produceratResultatRefDTO == null)
+      {
+         return null;
+      }
+
+      ProduceratResultatRef produceratResultatRef = new ProduceratResultatRef();
+      produceratResultatRef.setId(produceratResultatRefDTO.id());
+      produceratResultatRef.setVersion(produceratResultatRefDTO.version());
+
+      return produceratResultatRef;
    }
 
    private se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus mapYrkandeStatus(Yrkandestatus yrkandestatus) {

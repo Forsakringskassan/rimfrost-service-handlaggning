@@ -14,6 +14,7 @@ public interface HandlaggningEntity
 
    int version();
 
+   @Nullable
    UUID processinstansId();
 
    OffsetDateTime skapadTS();

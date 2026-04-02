@@ -8,8 +8,6 @@ public interface HandlaggningCreateRequest
 {
    UUID yrkandeId();
 
-   UUID processInstansId();
-
    UUID handlaggningspecifikationId();
 
 }

@@ -15,6 +15,7 @@ public interface HandlaggningDTO
 
    Integer version();
 
+   @Nullable
    UUID processinstansId();
 
    UUID handlaggningspecifikationId();
