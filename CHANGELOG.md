@@ -2,6 +2,32 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 0.3.0 (2026-04-02)
+
+### Bug Fixes
+
+-  Add support for ProduceratResultatRef ([0ed39](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/0ed39d7dd26a990) Lars Persson)  
+-  Set aktivitetId on uppgift in PUT response ([316a1](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/316a115628fde8c) Lars Persson)  
+-  Add support for beslut being included with Yrkande ([58763](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/58763490e0badaa) Lars Persson)  
+-  Fix bugs introduced by latest refactor of service ([d85e6](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/d85e63ec2d607f7) Lars Persson)  
+-  Bump openapi version ([2115a](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/2115a7b5cdacc0f) Lars Persson)  
+-  Fix bugs introduced by latest refactor of service ([1c4b8](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/1c4b82e61c005f3) Lars Persson)  
+-  added id to vah.yaml (#20) ([bdff9](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/bdff9bf66fff4a4) NilsElveros)  
+-  Add support for sending process request over different topics based on formanstyp ([4c7ad](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/4c7ad7a6a7e71f1) Lars Persson)  
+-  Replace hardcoded values with yaml based ones ([edef2](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/edef299c18e3eca) Lars Persson)  
+-  allow update of ersattnings status (#16) ([dfb27](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/dfb276b1e37eddd) NilsElveros)  
+
+### Other changes
+
+**Feat/refactor handlaggning service (#19)**
+
+* feat: refactor handlaggning service with new objectmodel 
+* added repos and some more stuff 
+* fix: avslagsanledning and yrkandestatus on producceraderesultat 
+
+[be542](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/be542a04c3b34f8) NilsElveros *2026-03-19 14:05:48*
+
+
 ## 0.2.3 (2026-03-04)
 
 ### Bug Fixes
