@@ -2,17 +2,13 @@ package se.fk.github.rimfrost.handlaggning.presentation.util;
 
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.InternalServerErrorException;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
-import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Avsiktstyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Idtyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultatRef;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
@@ -26,7 +22,6 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggnin
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 
 @ApplicationScoped
 public class PresentationMapper
@@ -36,7 +31,7 @@ public class PresentationMapper
    {
       var individYrkandeRoller = postYrkandeRequest.getIndividYrkandeRoller().stream()
             .map(e -> ImmutableIndividYrkandeRollCreateRequest.builder()
-                  .individId(e.getIndividId())
+                  .individ(toIdtypDTO(e.getIndivid()))
                   .yrkandeRollId(e.getYrkandeRollId())
                   .build())
             .toList();
@@ -77,8 +72,8 @@ public class PresentationMapper
       yrkande.setYrkandedatum(yrkandeDTO.yrkandedatum());
       yrkande.setYrkandeFrom(yrkandeDTO.yrkandeFrom());
       yrkande.setYrkandeTom(yrkandeDTO.yrkandeTom());
-      yrkande.setYrkandestatus(mapYrkandeStatus(yrkandeDTO.yrkandestatus()));
-      yrkande.setAvsikt(mapAvsiktstyp(yrkandeDTO.avsikt()));
+      yrkande.setYrkandestatus(yrkandeDTO.yrkandestatus());
+      yrkande.setAvsikt(yrkandeDTO.avsikt());
       yrkande.setIndividYrkandeRoller(
             yrkandeDTO.individYrkandeRoll()
                   .stream()
@@ -101,7 +96,7 @@ public class PresentationMapper
       produceratResultat.setFrom(produceratResultatDTO.franOchMed());
       produceratResultat.setTom(produceratResultatDTO.tillOchMed());
       produceratResultat.setAvslagsanledning(produceratResultatDTO.avslagsanledning());
-      produceratResultat.setYrkandestatus(mapYrkandeStatus(produceratResultatDTO.yrkandestatus()));
+      produceratResultat.setYrkandestatus(produceratResultatDTO.yrkandestatus());
       produceratResultat.setTyp(produceratResultatDTO.typ());
       produceratResultat.setData(produceratResultatDTO.data());
       return produceratResultat;
@@ -116,7 +111,7 @@ public class PresentationMapper
             .franOchMed(produceratResultat.getFrom())
             .tillOchMed(produceratResultat.getTom())
             .avslagsanledning(produceratResultat.getAvslagsanledning())
-            .yrkandestatus(mapYrkandeStatus(produceratResultat.getYrkandestatus()))
+            .yrkandestatus(produceratResultat.getYrkandestatus())
             .typ(produceratResultat.getTyp())
             .data(produceratResultat.getData())
             .build();
@@ -193,8 +188,8 @@ public class PresentationMapper
             .yrkandeFrom(yrkande.getYrkandeFrom())
             .yrkandeTom(yrkande.getYrkandeTom())
             .yrkandedatum(yrkande.getYrkandedatum())
-            .yrkandestatus(mapYrkandeStatus(yrkande.getYrkandestatus()))
-            .avsikt(mapAvsikt(yrkande.getAvsikt()))
+            .yrkandestatus(yrkande.getYrkandestatus())
+            .avsikt(yrkande.getAvsikt())
             .produceradeResultat(yrkande.getProduceradeResultat()
                   .stream()
                   .map(this::toProduceratResultatDTO)
@@ -219,7 +214,7 @@ public class PresentationMapper
             .id(beslut.getId())
             .version(beslut.getVersion())
             .datum(beslut.getDatum())
-            .beslutsfattare(beslut.getBeslutsfattare())
+            .beslutsfattare(toIdtypDTO(beslut.getBeslutsfattare()))
             .beslutsrader(beslut.getBeslutsrader().stream().map(this::toBeslutsradDTO).toList())
             .build();
    }
@@ -235,7 +230,7 @@ public class PresentationMapper
       beslut.setId(beslutDTO.id());
       beslut.setVersion(beslutDTO.version());
       beslut.setDatum(beslutDTO.datum());
-      beslut.setBeslutsfattare(beslutDTO.beslutsfattare());
+      beslut.setBeslutsfattare(toIdtyp(beslutDTO.beslutsfattare()));
       beslut.setBeslutsrader(beslutDTO.beslutsrader().stream().map(this::toBeslutsrad).toList());
 
       return beslut;
@@ -300,54 +295,20 @@ public class PresentationMapper
       return produceratResultatRef;
    }
 
-   private se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus mapYrkandeStatus(Yrkandestatus yrkandestatus) {
-      return switch (yrkandestatus) {
-         case PLANERAT -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.PLANERAT;
-         case YRKAT -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.YRKAT;
-         case UNDER_UTREDNING -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.UNDER_UTREDNING;
-         case FASTSTALLT_UNDER_UTREDNING -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.FASTSTALLT_UNDER_UTREDNING;
-         case FASTSTALLT -> se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus.FASTSTALLT;
-      };
-   }
-
-   private Yrkandestatus mapYrkandeStatus(se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus yrkandestatus) {
-      return switch (yrkandestatus) {
-         case PLANERAT -> Yrkandestatus.PLANERAT;
-         case YRKAT -> Yrkandestatus.YRKAT;
-         case UNDER_UTREDNING -> Yrkandestatus.UNDER_UTREDNING;
-         case FASTSTALLT_UNDER_UTREDNING -> Yrkandestatus.FASTSTALLT_UNDER_UTREDNING;
-         case FASTSTALLT -> Yrkandestatus.FASTSTALLT;
-      };
-   }
-
-   private se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt mapAvsikt(Avsiktstyp avsiktsTyp) {
-         return switch (avsiktsTyp) {
-            case NY -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.NY;
-            case ANDRING -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ANDRING;
-            case BORTTAG -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.BORTTAG;
-            case ATERTAGEN -> se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ATERTAGEN;
-         };
-   }
-
-   private Avsiktstyp mapAvsiktstyp(se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt avsiktsTyp)
-   {
-      return switch(avsiktsTyp){case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.NY->Avsiktstyp.NY;case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ANDRING->Avsiktstyp.ANDRING;case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.BORTTAG->Avsiktstyp.BORTTAG;case se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt.ATERTAGEN->Avsiktstyp.ATERTAGEN;};
-   }
-
    private UppgiftDTO toUppgiftDTO(UUID handlaggningId, Uppgift uppgift)
    {
 
       var builder = ImmutableUppgiftDTO.builder()
             .uppgiftId(uppgift.getId())
             .handlaggningId(handlaggningId)
-            .utforarId(uppgift.getUtforarId())
+            .utforarId(toIdtypDTO(uppgift.getUtforarId()))
             .skapadTs(uppgift.getSkapadTs())
             .planeradTs(uppgift.getPlaneradTs())
             .utfordTs(uppgift.getUtfordTs())
             .uppgiftSpecifikation(toUppgiftspecifikationDTO(uppgift.getUppgiftspecifikation()))
             .version(uppgift.getVersion())
-            .uppgiftStatus(toUppgiftStatus(uppgift.getUppgiftStatus()))
-            .fssaInformation(toFSSAInformation(uppgift.getFsSAinformation()))
+            .uppgiftStatus(uppgift.getUppgiftStatus())
+            .fssaInformation(uppgift.getFsSAinformation())
             .aktivitetId(uppgift.getAktivitetId());
       return builder.build();
    }
@@ -369,36 +330,6 @@ public class PresentationMapper
             .build();
    }
 
-   private se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation toFSSAInformation(FSSAinformation fssaInformation)
-   {
-      switch (fssaInformation)
-      {
-         case HANDLAGGNING_PAGAR:
-            return se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation.HANDLAGGNING_PAGAR;
-         case VANTAR_PA_INFO_FRAN_ANNAN_PART:
-            return se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation.VANTAR_PA_INFO_FRAN_ANNAN_PART;
-         case VANTAR_PA_INFO_FRAN_KUND:
-            return se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation.VANTAR_PA_INFO_FRAN_KUND;
-         default:
-            throw new InternalServerErrorException("Could not map fssaInformation: " + fssaInformation);
-      }
-   }
-
-   private UppgiftStatus toUppgiftStatus(se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus uppgiftStatus)
-   {
-      switch (uppgiftStatus)
-      {
-         case PLANERAD:
-            return UppgiftStatus.PLANERAD;
-         case TILLDELAD:
-            return UppgiftStatus.TILLDELAD;
-         case AVSLUTAD:
-            return UppgiftStatus.AVSLUTAD;
-         default:
-            throw new InternalServerErrorException("Could not map UppgiftStatus: " + uppgiftStatus);
-      }
-   }
-
    public PutHandlaggningResponse toPutHandlaggningResponse(HandlaggningPutResponse handlaggningPutResponse)
    {
       PutHandlaggningResponse response = new PutHandlaggningResponse();
@@ -415,10 +346,10 @@ public class PresentationMapper
       uppgift.setPlaneradTs(uppgiftDTO.planeradTs());
       uppgift.setUtfordTs(uppgiftDTO.utfordTs());
       uppgift.setSkapadTs(uppgiftDTO.skapadTs());
-      uppgift.setUtforarId(uppgiftDTO.utforarId());
+      uppgift.setUtforarId(toIdtyp(uppgiftDTO.utforarId()));
       uppgift.setUppgiftspecifikation(toUppgiftspecifikation(uppgiftDTO.uppgiftSpecifikation()));
-      uppgift.setFsSAinformation(toFSSAInformation(uppgiftDTO.fssaInformation()));
-      uppgift.setUppgiftStatus(toUppgiftStatus(uppgiftDTO.uppgiftStatus()));
+      uppgift.setFsSAinformation(uppgiftDTO.fssaInformation());
+      uppgift.setUppgiftStatus(uppgiftDTO.uppgiftStatus());
       return uppgift;
    }
 
@@ -428,37 +359,6 @@ public class PresentationMapper
       uppgiftSpecifikation.setId(uppgiftSpecifikationDto.id());
       uppgiftSpecifikation.setVersion(uppgiftSpecifikationDto.version());
       return uppgiftSpecifikation;
-   }
-
-   private se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus toUppgiftStatus(UppgiftStatus uppgiftStatus)
-   {
-      switch (uppgiftStatus)
-      {
-         case PLANERAD:
-            return se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus.PLANERAD;
-         case TILLDELAD:
-            return se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus.TILLDELAD;
-         case AVSLUTAD:
-            return se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus.AVSLUTAD;
-         default:
-            throw new InternalServerErrorException("Could not map uppgiftStatus: " + uppgiftStatus);
-      }
-   }
-
-   private FSSAinformation toFSSAInformation(se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation fssaInformation)
-   {
-      switch (fssaInformation)
-      {
-         case HANDLAGGNING_PAGAR:
-            return FSSAinformation.HANDLAGGNING_PAGAR;
-         case VANTAR_PA_INFO_FRAN_ANNAN_PART:
-            return FSSAinformation.VANTAR_PA_INFO_FRAN_ANNAN_PART;
-         case VANTAR_PA_INFO_FRAN_KUND:
-            return FSSAinformation.VANTAR_PA_INFO_FRAN_KUND;
-
-         default:
-            throw new InternalServerErrorException("Could not map fssaInformation: " + fssaInformation);
-      }
    }
 
    private Underlag toUnderlag(UnderlagDTO underlagDTO)
@@ -505,7 +405,7 @@ public class PresentationMapper
    private IndividYrkandeRoll toIndividYrkandeRoll(IndividYrkandeRollDTO individYrkandeRollDTO)
    {
       var invidvidYrkandeRoll = new IndividYrkandeRoll();
-      invidvidYrkandeRoll.setIndividId(individYrkandeRollDTO.individId());
+      invidvidYrkandeRoll.setIndivid(toIdtyp(individYrkandeRollDTO.individ()));
       invidvidYrkandeRoll.setYrkandeRollId(individYrkandeRollDTO.yrkandeRollId());
       return invidvidYrkandeRoll;
    }
@@ -513,9 +413,36 @@ public class PresentationMapper
    private IndividYrkandeRollDTO toIndividYrkandeRollDTO(IndividYrkandeRoll individYrkandeRoll)
    {
       return ImmutableIndividYrkandeRollDTO.builder()
-            .individId(individYrkandeRoll.getIndividId())
+            .individ(toIdtypDTO(individYrkandeRoll.getIndivid()))
             .yrkandeRollId(individYrkandeRoll.getYrkandeRollId())
             .build();
+   }
+
+   private IdtypDTO toIdtypDTO(Idtyp idtyp)
+   {
+      if (idtyp == null)
+      {
+         return null;
+      }
+
+      return ImmutableIdtypDTO.builder()
+            .typId(idtyp.getTypId())
+            .varde(idtyp.getVarde())
+            .build();
+   }
+
+   private Idtyp toIdtyp(IdtypDTO idtypDTO)
+   {
+      if (idtypDTO == null)
+      {
+         return null;
+      }
+
+      Idtyp idtyp = new Idtyp();
+      idtyp.setTypId(idtypDTO.typId());
+      idtyp.setVarde(idtypDTO.varde());
+
+      return idtyp;
    }
 
 }

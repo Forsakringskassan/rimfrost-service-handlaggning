@@ -33,7 +33,7 @@ public class LogicMapper
    public IndividYrkandeRollDTO toIndividYrkandeRollDTO(IndividYrkandeRollEntity individYrkandeRollEntity)
    {
       return ImmutableIndividYrkandeRollDTO.builder()
-            .individId(individYrkandeRollEntity.individId())
+            .individ(toIdtypDTO(individYrkandeRollEntity.individ()))
             .yrkandeRollId(individYrkandeRollEntity.yrkandeRollId())
             .build();
    }
@@ -92,7 +92,7 @@ public class LogicMapper
    public IndividYrkandeRollEntity toIndividYrkandeRollEntity(IndividYrkandeRollDTO yrkanderollDTO)
    {
       return ImmutableIndividYrkandeRollEntity.builder()
-            .individId(yrkanderollDTO.individId())
+            .individ(toIdtypEntity(yrkanderollDTO.individ()))
             .yrkandeRollId(yrkanderollDTO.yrkandeRollId())
             .build();
    }
@@ -123,4 +123,19 @@ public class LogicMapper
             .build();
    }
 
+   public IdtypEntity toIdtypEntity(IdtypDTO idtyp)
+   {
+      return ImmutableIdtypEntity.builder()
+            .typId(idtyp.typId())
+            .varde(idtyp.varde())
+            .build();
+   }
+
+   public IdtypDTO toIdtypDTO(IdtypEntity idtyp)
+   {
+      return ImmutableIdtypDTO.builder()
+            .typId(idtyp.typId())
+            .varde(idtyp.varde())
+            .build();
+   }
 }

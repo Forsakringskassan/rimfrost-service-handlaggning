@@ -8,8 +8,8 @@ import org.immutables.value.Value;
 public interface IndividYrkandeRollCreateRequest
 {
 
-   UUID individId();
+   IdtypDTO individ();
 
-   UUID yrkandeRollId();
+   String yrkandeRollId();
 
 }

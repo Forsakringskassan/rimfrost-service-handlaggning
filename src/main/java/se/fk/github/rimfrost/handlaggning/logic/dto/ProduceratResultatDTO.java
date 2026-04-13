@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.immutables.value.Value;
 
 import jakarta.annotation.Nullable;
-import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
 
 @Value.Immutable
 public interface ProduceratResultatDTO
@@ -18,7 +17,7 @@ public interface ProduceratResultatDTO
 
    OffsetDateTime tillOchMed();
 
-   Yrkandestatus yrkandestatus();
+   String yrkandestatus();
 
    @Nullable
    String avslagsanledning();

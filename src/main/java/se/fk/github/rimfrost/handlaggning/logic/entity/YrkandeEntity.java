@@ -5,16 +5,12 @@ import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
 
-import jakarta.annotation.Nullable;
-import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
-import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
-
 @Value.Immutable
 public interface YrkandeEntity
 {
    UUID id();
 
-   UUID erbjudandeId();
+   String erbjudandeId();
 
    int version();
 
@@ -24,9 +20,9 @@ public interface YrkandeEntity
 
    OffsetDateTime yrkandeTom();
 
-   Yrkandestatus yrkandestatus();
+   String yrkandestatus();
 
-   Avsikt avsikt();
+   String avsikt();
 
    @Value.Default
    default List<IndividYrkandeRollEntity> individYrkandeRoll()

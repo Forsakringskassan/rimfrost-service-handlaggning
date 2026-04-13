@@ -12,11 +12,11 @@ public interface BeslutsradDTO
 
    int version();
 
-   UUID beslutsTyp();
+   String beslutsTyp();
 
-   UUID beslutsUtfall();
+   String beslutsUtfall();
 
-   UUID avslutsTyp();
+   String avslutsTyp();
 
    List<ProduceratResultatRefDTO> produceratResultatRefs();
 }

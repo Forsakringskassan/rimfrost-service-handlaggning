@@ -22,7 +22,7 @@ import se.fk.github.rimfrost.handlaggning.logic.repository.ErbjudandeRepository;
 @Startup
 public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
 {
-   private final Map<UUID, ErbjudandeFlowInfoEntity> erbjudandeFlowInfoMap = new HashMap<>();
+   private final Map<String, ErbjudandeFlowInfoEntity> erbjudandeFlowInfoMap = new HashMap<>();
 
    @PostConstruct
    void init()
@@ -51,7 +51,7 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
    }
 
    @Override
-   public Optional<ErbjudandeFlowInfoEntity> getErbjudandeFlowInfoById(UUID erbjudandeId)
+   public Optional<ErbjudandeFlowInfoEntity> getErbjudandeFlowInfoById(String erbjudandeId)
    {
       return erbjudandeFlowInfoMap.containsKey(erbjudandeId) ? Optional.of(erbjudandeFlowInfoMap.get(erbjudandeId))
             : Optional.empty();
@@ -59,7 +59,7 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
 
    public static class ErbjudandeFlowInfo
    {
-      private UUID id;
+      private String id;
       private String erbjudandetyp;
       private String bpmn;
       private String namn;
@@ -71,7 +71,7 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
       {
       }
 
-      public void setId(UUID id)
+      public void setId(String id)
       {
          this.id = id;
       }
@@ -106,7 +106,7 @@ public class ErbjudandeRepositoryImpl implements ErbjudandeRepository
          this.kafkaRequestType = kafkaRequestType;
       }
 
-      public UUID getId()
+      public String getId()
       {
          return this.id;
       }

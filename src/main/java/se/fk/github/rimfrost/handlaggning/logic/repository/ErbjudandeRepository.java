@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface ErbjudandeRepository
 {
-   Optional<ErbjudandeFlowInfoEntity> getErbjudandeFlowInfoById(UUID erbjudandeId);
+   Optional<ErbjudandeFlowInfoEntity> getErbjudandeFlowInfoById(String erbjudandeId);
 }

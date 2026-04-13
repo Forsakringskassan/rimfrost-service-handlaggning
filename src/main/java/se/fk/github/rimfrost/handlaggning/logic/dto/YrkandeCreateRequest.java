@@ -10,7 +10,7 @@ import org.immutables.value.Value;
 public interface YrkandeCreateRequest
 {
 
-   UUID erbjudandedId();
+   String erbjudandedId();
 
    public OffsetDateTime yrkandeFrom();
 
