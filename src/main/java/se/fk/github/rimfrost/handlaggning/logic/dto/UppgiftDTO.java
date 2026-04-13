@@ -4,8 +4,6 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.immutables.value.Value;
 import jakarta.annotation.Nullable;
-import se.fk.github.rimfrost.handlaggning.logic.enums.FSSAInformation;
-import se.fk.github.rimfrost.handlaggning.logic.enums.UppgiftStatus;
 
 @Value.Immutable
 public interface UppgiftDTO
@@ -24,15 +22,15 @@ public interface UppgiftDTO
    OffsetDateTime planeradTs();
 
    @Nullable
-   UUID utforarId();
+   IdtypDTO utforarId();
 
    UUID handlaggningId();
 
    UUID aktivitetId();
 
-   UppgiftStatus uppgiftStatus();
+   String uppgiftStatus();
 
-   FSSAInformation fssaInformation();
+   String fssaInformation();
 
    UppgiftspecifikationDTO uppgiftSpecifikation();
 

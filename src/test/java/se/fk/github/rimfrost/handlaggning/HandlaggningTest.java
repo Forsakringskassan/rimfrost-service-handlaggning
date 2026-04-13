@@ -17,10 +17,10 @@ import se.fk.rimfrost.HandlaggningResponseMessageData;
 import se.fk.rimfrost.HandlaggningResponseMessagePayload;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.FSSAinformation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Idtyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningResponse;
@@ -33,8 +33,6 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggnin
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 
 import static io.restassured.RestAssured.given;
@@ -65,21 +63,25 @@ public class HandlaggningTest
 
    private PostYrkandeResponse createYrkande()
    {
+      Idtyp idtyp = new Idtyp();
+      idtyp.setTypId("c5f2e2b4-9143-4160-8f4b-30c172f0ac05"); // PNR
+      idtyp.setVarde("19900101-1234");
+
       IndividYrkandeRoll individYrkandeRoll = new IndividYrkandeRoll();
-      individYrkandeRoll.setIndividId(UUID.fromString("6b7186ed-ac45-4674-91cf-5723a515b556"));
-      individYrkandeRoll.setYrkandeRollId(UUID.fromString("7ed1ee53-e53c-4303-b699-ab633eb1339a"));
+      individYrkandeRoll.setIndivid(idtyp);
+      individYrkandeRoll.setYrkandeRollId("80f5f41f-9e55-4fc2-a076-ad5a651e0a9d"); // SÖKANDE
 
       ProduceratResultat produceratResultat = new ProduceratResultat();
       produceratResultat.setId(UUID.fromString("34ec4e77-4aef-41f4-a3e3-e3b686e74aef"));
       produceratResultat.setVersion(1);
       produceratResultat.setFrom(OffsetDateTime.now());
       produceratResultat.setTom(OffsetDateTime.now());
-      produceratResultat.setYrkandestatus(Yrkandestatus.YRKAT);
+      produceratResultat.setYrkandestatus("e27da561-a8db-4513-8272-ef652b097b16"); // YRKAT
       produceratResultat.setTyp("ERSATTNING");
       produceratResultat.setData("{}");
 
       PostYrkandeRequest message = new PostYrkandeRequest();
-      message.erbjudandeId(UUID.fromString("43da1371-ad39-407f-adde-c332ef7d3662"));
+      message.erbjudandeId("7d4a6c38-348b-4f46-9278-b1bfeabc0353");
       message.yrkandeFrom(OffsetDateTime.now());
       message.yrkandeTom(OffsetDateTime.now());
       message.addIndividYrkandeRollerItem(individYrkandeRoll);
@@ -126,6 +128,10 @@ public class HandlaggningTest
 
    private HandlaggningUpdate createHandlaggningUpdate(Handlaggning handlaggning)
    {
+      Idtyp idtyp = new Idtyp();
+      idtyp.setTypId("c5f2e2b4-9143-4160-8f4b-30c172f0ac05"); // PNR
+      idtyp.setVarde("19900101-5678");
+
       ProduceratResultatRef produceratResultat = new ProduceratResultatRef();
       produceratResultat.id(UUID.randomUUID());
       produceratResultat.version(1);
@@ -133,16 +139,16 @@ public class HandlaggningTest
       Beslutsrad beslutsrad = new Beslutsrad();
       beslutsrad.id(UUID.randomUUID());
       beslutsrad.version(1);
-      beslutsrad.avslutsTyp(UUID.randomUUID());
-      beslutsrad.beslutsTyp(UUID.randomUUID());
-      beslutsrad.beslutsUtfall(UUID.randomUUID());
+      beslutsrad.avslutsTyp(UUID.randomUUID().toString());
+      beslutsrad.beslutsTyp(UUID.randomUUID().toString());
+      beslutsrad.beslutsUtfall(UUID.randomUUID().toString());
       beslutsrad.produceradeResultatRef(List.of(produceratResultat));
 
       Beslut beslut = new Beslut();
       beslut.id(UUID.randomUUID());
       beslut.version(1);
       beslut.datum(OffsetDateTime.now());
-      beslut.beslutsfattare(UUID.randomUUID());
+      beslut.beslutsfattare(idtyp);
       beslut.beslutsrader(List.of(beslutsrad));
 
       UppgiftSpecifikation uppgiftSpecifikation = new UppgiftSpecifikation();
@@ -154,9 +160,9 @@ public class HandlaggningTest
       uppgift.version(1);
       uppgift.skapadTs(OffsetDateTime.now());
       uppgift.aktivitetId(UUID.randomUUID());
-      uppgift.uppgiftStatus(UppgiftStatus.PLANERAD);
+      uppgift.uppgiftStatus(UUID.randomUUID().toString());
       uppgift.uppgiftspecifikation(uppgiftSpecifikation);
-      uppgift.fsSAinformation(FSSAinformation.HANDLAGGNING_PAGAR);
+      uppgift.fsSAinformation(UUID.randomUUID().toString());
 
       Underlag underlag = new Underlag();
       underlag.typ("test");
@@ -222,14 +228,14 @@ public class HandlaggningTest
    {
       assertNotNull(yrkande);
       assertNotNull(yrkande.getId());
-      assertEquals(UUID.fromString("43da1371-ad39-407f-adde-c332ef7d3662"), yrkande.getErbjudandeId());
+      assertEquals("7d4a6c38-348b-4f46-9278-b1bfeabc0353", yrkande.getErbjudandeId());
       assertNotNull(yrkande.getYrkandeFrom());
       assertNotNull(yrkande.getYrkandeTom());
       assertNotNull(yrkande.getYrkandedatum());
       assertEquals(1, yrkande.getIndividYrkandeRoller().size());
-      assertEquals(UUID.fromString("6b7186ed-ac45-4674-91cf-5723a515b556"),
-            yrkande.getIndividYrkandeRoller().getFirst().getIndividId());
-      assertEquals(UUID.fromString("7ed1ee53-e53c-4303-b699-ab633eb1339a"),
+      assertEquals("19900101-1234",
+            yrkande.getIndividYrkandeRoller().getFirst().getIndivid().getVarde());
+      assertEquals("80f5f41f-9e55-4fc2-a076-ad5a651e0a9d",
             yrkande.getIndividYrkandeRoller().getFirst().getYrkandeRollId());
       assertFalse(yrkande.getProduceradeResultat().isEmpty());
       assertNotNull(yrkande.getProduceradeResultat().getFirst().getId());

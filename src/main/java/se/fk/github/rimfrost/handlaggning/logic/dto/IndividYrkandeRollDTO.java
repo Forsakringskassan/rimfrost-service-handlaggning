@@ -7,8 +7,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface IndividYrkandeRollDTO
 {
-   UUID individId();
+   IdtypDTO individ();
 
-   UUID yrkandeRollId();
+   String yrkandeRollId();
 
 }

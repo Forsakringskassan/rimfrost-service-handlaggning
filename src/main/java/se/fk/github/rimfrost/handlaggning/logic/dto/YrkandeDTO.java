@@ -7,15 +7,12 @@ import java.util.UUID;
 import jakarta.annotation.Nullable;
 import org.immutables.value.Value;
 
-import se.fk.github.rimfrost.handlaggning.logic.enums.Avsikt;
-import se.fk.github.rimfrost.handlaggning.logic.enums.Yrkandestatus;
-
 @Value.Immutable
 public interface YrkandeDTO
 {
    UUID id();
 
-   UUID erbjudandeId();
+   String erbjudandeId();
 
    Integer version();
 
@@ -25,9 +22,9 @@ public interface YrkandeDTO
 
    OffsetDateTime yrkandeTom();
 
-   Yrkandestatus yrkandestatus();
+   String yrkandestatus();
 
-   Avsikt avsikt();
+   String avsikt();
 
    @Nullable
    BeslutDTO beslut();

@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 public interface ErbjudandeFlowInfoEntity
 {
 
-   UUID id();
+   String id();
 
    String erbjudandetyp();
 

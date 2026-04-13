@@ -8,7 +8,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
-import se.fk.github.rimfrost.handlaggning.logic.enums.*;
 import se.fk.github.rimfrost.handlaggning.logic.repository.ProduceratResultatRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
@@ -33,7 +32,7 @@ public class YrkandeServiceImpl implements YrkandeService
    {
       var individYrkandeRoller = request.individYrkandeRoller().stream()
             .map(e -> (IndividYrkandeRollEntity) ImmutableIndividYrkandeRollEntity.builder()
-                  .individId(e.individId())
+                  .individ(mapper.toIdtypEntity(e.individ()))
                   .yrkandeRollId(e.yrkandeRollId())
                   .build())
             .toList();
@@ -42,7 +41,7 @@ public class YrkandeServiceImpl implements YrkandeService
             .map(e -> (ProduceratResultatEntity) ImmutableProduceratResultatEntity.builder()
                   .id(UUID.randomUUID())
                   .version(1)
-                  .yrkandeStatus(Yrkandestatus.YRKAT)
+                  .yrkandeStatus("e27da561-a8db-4513-8272-ef652b097b16") // YRKAT
                   .franOchMed(e.franOchMed())
                   .tillOchMed(e.tillOchMed())
                   .typ(e.typ())
@@ -57,8 +56,8 @@ public class YrkandeServiceImpl implements YrkandeService
             .yrkandeFrom(request.yrkandeFrom())
             .yrkandeTom(request.yrkandeTom())
             .yrkandedatum(OffsetDateTime.now())
-            .yrkandestatus(Yrkandestatus.YRKAT)
-            .avsikt(Avsikt.NY)
+            .yrkandestatus("e27da561-a8db-4513-8272-ef652b097b16") // YRKAT
+            .avsikt("dae2ffc3-07c8-4686-a3d5-58bc942dfe06") // NY
             .individYrkandeRoll(individYrkandeRoller)
             .produceradeResultat(produceradeResultat)
             .build();
