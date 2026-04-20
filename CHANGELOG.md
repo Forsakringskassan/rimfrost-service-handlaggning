@@ -2,6 +2,17 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 0.3.1 (2026-04-15)
+
+### Bug Fixes
+
+-  **deps**  update dependency se.fk.maven:fk-maven-quarkus-parent to v1.12.0 ([1c6e6](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/1c6e617d6fae4ce) renovate[bot])  
+-  **deps**  update dependency se.fk.rimfrost:rimfrost-process-asyncapi to v0.1.6 ([eca31](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/eca31897f90b08d) renovate[bot])  
+-  Add support for referensdata ([27e10](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/27e109fe4c27d38) Lars Persson)  
+
+### Dependency updates
+
+- add renovate.json ([90966](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/909668e3f1ca016) renovate[bot])  
 ## 0.3.0 (2026-04-02)
 
 ### Bug Fixes
