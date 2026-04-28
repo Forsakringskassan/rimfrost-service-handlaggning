@@ -2,6 +2,20 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.0.0 (2026-04-28)
+
+### Breaking changes
+
+-  release 1.0 ([7f400](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/7f400eb7fbdcc9d) Lars Persson)  
+
+### Features
+
+-  release 1.0 ([7f400](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/7f400eb7fbdcc9d) Lars Persson)  
+
+### Bug Fixes
+
+-  Bump to released api versions ([97959](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/979594a90ddf513) Lars Persson)  
+
 ## 0.3.1 (2026-04-15)
 
 ### Bug Fixes
