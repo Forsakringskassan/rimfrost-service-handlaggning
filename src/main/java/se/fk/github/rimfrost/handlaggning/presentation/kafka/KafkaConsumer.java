@@ -29,6 +29,14 @@ public class KafkaConsumer
       LOGGER.info(
             "HandlaggningResponseMessagePayload received with HandlaggningId: "
                   + handlaggningResponseMessagePayload.getData().getHandlaggningId());
+
+      var errorInfo = handlaggningResponseMessagePayload.getData().getError();
+      if (errorInfo != null)
+      {
+         LOGGER.error("Handlaggning failed with error code {} and message {}", errorInfo.getFelkod(),
+               errorInfo.getFelmeddelande());
+      }
+
       handlaggningService.sendHandlaggningDoneMessage(
             UUID.fromString(handlaggningResponseMessagePayload.getData().getHandlaggningId()));
    }
