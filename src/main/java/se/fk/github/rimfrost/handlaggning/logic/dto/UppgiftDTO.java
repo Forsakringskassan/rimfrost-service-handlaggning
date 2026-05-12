@@ -28,6 +28,7 @@ public interface UppgiftDTO
 
    UUID aktivitetId();
 
+   @Nullable
    String uppgiftStatus();
 
    String fssaInformation();
