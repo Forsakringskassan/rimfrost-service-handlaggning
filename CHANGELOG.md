@@ -2,6 +2,13 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.0.1 (2026-05-12)
+
+### Bug Fixes
+
+-  Allow null for uppgiftStatus field ([f12cd](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/f12cd6b6ad981d7) Lars Persson)  
+-  Add logging of error information in handlaggning response message ([a32e2](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/a32e25641818dd7) Lars Persson)  
+
 ## 1.0.0 (2026-04-28)
 
 ### Breaking changes
