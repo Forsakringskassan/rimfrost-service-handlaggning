@@ -27,8 +27,8 @@ public class KafkaProducer
       payload.setType(requestType);
       payload.setSource("/service/handlaggning");
       payload.setTime(OffsetDateTime.now());
-      payload.setSpecversion(SpecVersion.NUMBER_1_DOT_0);
-      payload.setKogitoproctype(KogitoProcType.BPMN);
+      payload.setSpecversion(SpecVersion.V1);
+      payload.setKogitoproctype("BPMN");
 
       var metadata = OutgoingKafkaRecordMetadata.builder()
             .withTopic(topic)
