@@ -16,6 +16,8 @@ public interface YrkandeCreateRequest
 
    public OffsetDateTime yrkandeTom();
 
+   public UUID handlaggningspecifikationId();
+
    public List<IndividYrkandeRollCreateRequest> individYrkandeRoller();
 
    public List<ProduceratResultatCreateRequest> produceradeResultat();

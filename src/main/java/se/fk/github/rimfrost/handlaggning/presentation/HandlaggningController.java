@@ -13,6 +13,8 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
 import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
@@ -68,11 +70,8 @@ public class HandlaggningController implements HandlaggningControllerApi
    })
    public PostHandlaggningResponse postHandlaggning(PostHandlaggningRequest postHandlaggningRequest)
    {
-      HandlaggningCreateRequest handlaggningCreateRequest = mapper
-            .toHandlaggningCreateRequest(postHandlaggningRequest);
-      HandlaggningCreateResponse handlaggningCreateResponse = handlaggningService
-            .createHandlaggning(handlaggningCreateRequest);
-      return mapper.toPostHandlaggningResponse(handlaggningCreateResponse);
+      // TODO: Remove this endpoint once openapi specification has been updated
+      throw new WebApplicationException(Response.Status.GONE);
    }
 
    @Override

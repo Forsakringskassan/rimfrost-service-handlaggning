@@ -38,7 +38,7 @@
     <dependency>
       <groupId>se.fk.rimfrost</groupId>
       <artifactId>rimfrost-service-handlaggning-openapi-jaxrs-spec</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost</groupId>
@@ -51,6 +51,11 @@
       <version>1.2.2</version>
     </dependency>
     <dependency>
+      <groupId>se.fk.rimfrost.framework.erbjudande.topic</groupId>
+      <artifactId>rimfrost-framework-erbjudande-topic-adapter</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
       <groupId>io.github.classgraph</groupId>
       <artifactId>classgraph</artifactId>
       <version>4.8.184</version>
@@ -59,6 +64,12 @@
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>3.13.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

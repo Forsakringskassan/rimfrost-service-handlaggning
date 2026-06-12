@@ -6,8 +6,6 @@ import java.util.UUID;
 
 public interface HandlaggningService
 {
-   HandlaggningCreateResponse createHandlaggning(HandlaggningCreateRequest request);
-
    HandlaggningGetResponse getHandlaggning(HandlaggningGetRequest request);
 
    HandlaggningPutResponse putHandlaggning(HandlaggningPutRequest request);
