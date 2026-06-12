@@ -1,5 +1,6 @@
 package se.fk.github.rimfrost.handlaggning;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import io.restassured.http.ContentType;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
@@ -10,6 +11,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.eclipse.microprofile.reactive.messaging.spi.Connector;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.fk.rimfrost.HandlaggningDoneMessage;
 import se.fk.rimfrost.HandlaggningRequestMessagePayload;
@@ -22,8 +26,6 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Idtyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
@@ -35,6 +37,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.awaitility.Awaitility.await;
@@ -47,9 +50,35 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTest
 public class HandlaggningTest
 {
+   private static WireMockServer server;
+
    private static final String handlaggningResponses = "handlaggning-responses";
    private static final String handlaggningRequests = "handlaggning-requests";
    private static final String handlaggningDone = "handlaggning-done";
+
+   @BeforeAll
+   public static void setup()
+   {
+      server = new WireMockServer(
+            options()
+                  .dynamicPort()
+                  .usingFilesUnderDirectory("src/test/resources"));
+      server.start();
+
+      System.setProperty("erbjudande.topic.api.base-url", server.baseUrl());
+   }
+
+   @AfterAll
+   public static void teardown()
+   {
+      server.stop();
+   }
+
+   @BeforeEach
+   void resetStubs()
+   {
+      server.resetToDefaultMappings();
+   }
 
    @Inject
    @Connector("smallrye-in-memory")
@@ -84,21 +113,12 @@ public class HandlaggningTest
       message.erbjudandeId("7d4a6c38-348b-4f46-9278-b1bfeabc0353");
       message.yrkandeFrom(OffsetDateTime.now());
       message.yrkandeTom(OffsetDateTime.now());
+      message.handlaggningspecifikationId(UUID.fromString("5940b701-e385-4b72-af59-44e829b679ed"));
       message.addIndividYrkandeRollerItem(individYrkandeRoll);
       message.addProduceradeResultatItem(produceratResultat);
 
       return given().contentType(ContentType.JSON).body(message).post("/yrkande").then().statusCode(200).extract().body()
             .as(PostYrkandeResponse.class);
-   }
-
-   private PostHandlaggningResponse createHandlaggning(UUID yrkandeId)
-   {
-      PostHandlaggningRequest request = new PostHandlaggningRequest();
-      request.yrkandeId(yrkandeId);
-      request.handlaggningspecifikationId(UUID.randomUUID());
-
-      return given().contentType(ContentType.JSON).body(request).post("/handlaggning").then().statusCode(200).extract().body()
-            .as(PostHandlaggningResponse.class);
    }
 
    private HandlaggningRequestMessagePayload receiveHandlaggningRequestMsg()
@@ -255,14 +275,7 @@ public class HandlaggningTest
    private void verifyCreateYrkandeResponse(PostYrkandeResponse yrkandeResponse)
    {
       assertNotNull(yrkandeResponse);
-      verifyYrkande(yrkandeResponse.getYrkande());
-   }
-
-   private void verifyCreateHandlaggningResponse(PostHandlaggningResponse postHandlaggningResponse, UUID yrkandeId)
-   {
-      assertNotNull(postHandlaggningResponse);
-      verifyHandlaggningResponse(postHandlaggningResponse.getHandlaggning());
-      assertEquals(yrkandeId, postHandlaggningResponse.getHandlaggning().getYrkande().getId());
+      verifyHandlaggningResponse(yrkandeResponse.getHandlaggning());
    }
 
    private void verifyHandlaggningRequestMsg(HandlaggningRequestMessagePayload msg, UUID handlaggningId)
@@ -369,16 +382,6 @@ public class HandlaggningTest
       verifyCreateYrkandeResponse(createYrkandeResponse);
 
       //
-      // Create handlaggning to start the flow
-      //
-      var createHandlaggningResponse = createHandlaggning(createYrkandeResponse.getYrkande().getId());
-
-      //
-      // Verify create handlaggning response
-      //
-      verifyCreateHandlaggningResponse(createHandlaggningResponse, createYrkandeResponse.getYrkande().getId());
-
-      //
       // Receive kafka flow start message
       //
       var handlaggningRequestMsg = receiveHandlaggningRequestMsg();
@@ -386,12 +389,12 @@ public class HandlaggningTest
       //
       // Verify kafka flow start message
       //
-      verifyHandlaggningRequestMsg(handlaggningRequestMsg, createHandlaggningResponse.getHandlaggning().getId());
+      verifyHandlaggningRequestMsg(handlaggningRequestMsg, createYrkandeResponse.getHandlaggning().getId());
 
       //
       // Verify read & update handlaggning
       //
-      verifyHandlaggningReadUpdate(createHandlaggningResponse.getHandlaggning().getId());
+      verifyHandlaggningReadUpdate(createYrkandeResponse.getHandlaggning().getId());
 
       //
       // Send kafka flow response message
@@ -401,6 +404,6 @@ public class HandlaggningTest
       //
       // Verify kafka handlaggning done message
       //
-      verifyHandlaggningDoneMsg(createHandlaggningResponse.getHandlaggning().getId());
+      verifyHandlaggningDoneMsg(createYrkandeResponse.getHandlaggning().getId());
    }
 }

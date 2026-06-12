@@ -6,17 +6,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import se.fk.github.rimfrost.handlaggning.integration.KafkaProducer;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
+import se.fk.github.rimfrost.handlaggning.logic.repository.HandlaggningRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.ProduceratResultatRepository;
 import se.fk.github.rimfrost.handlaggning.logic.repository.YrkandeRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
 import se.fk.github.rimfrost.handlaggning.logic.util.LogicMapper;
+import se.fk.rimfrost.framework.erbjudande.topic.adapter.ErbjudandeTopicAdapter;
+import se.fk.rimfrost.framework.erbjudande.topic.exception.ErbjudandeTopicException;
 
 @ApplicationScoped
 public class YrkandeServiceImpl implements YrkandeService
 {
-   private static final Logger LOGGER = LoggerFactory.getLogger(YrkandeService.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(YrkandeServiceImpl.class);
+
+   @Inject
+   HandlaggningRepository handlaggningRepository;
 
    @Inject
    private YrkandeRepository yrkandeRepository;
@@ -26,6 +33,12 @@ public class YrkandeServiceImpl implements YrkandeService
 
    @Inject
    private LogicMapper mapper;
+
+   @Inject
+   KafkaProducer producer;
+
+   @Inject
+   ErbjudandeTopicAdapter erbjudandeTopicAdapter;
 
    @Override
    public YrkandeCreateResponse createYrkande(YrkandeCreateRequest request)
@@ -62,11 +75,24 @@ public class YrkandeServiceImpl implements YrkandeService
             .produceradeResultat(produceradeResultat)
             .build();
 
+      var handlaggningEntity = ImmutableHandlaggningEntity.builder()
+            .id(UUID.randomUUID())
+            .yrkande(yrkandeEntity)
+            .version(1)
+            .skapadTS(OffsetDateTime.now())
+            .handlaggningspecifikationId(request.handlaggningspecifikationId())
+            .build();
+
+      var erbjudandeTopic = getErbjudandeTopic(yrkandeEntity.erbjudandeId());
+
       produceratResultatRepository.save(produceradeResultat);
       yrkandeRepository.save(yrkandeEntity);
+      handlaggningRepository.save(handlaggningEntity);
+
+      producer.sendRequestMessage(erbjudandeTopic, erbjudandeTopic, handlaggningEntity.id());
 
       return ImmutableYrkandeCreateResponse.builder()
-            .yrkande(mapper.toYrkandeDTO(yrkandeEntity))
+            .handlaggning(mapper.toHandlaggningDTO(handlaggningEntity))
             .build();
    }
 
@@ -79,4 +105,17 @@ public class YrkandeServiceImpl implements YrkandeService
             .build();
    }
 
+   private String getErbjudandeTopic(String erbjudandeId)
+   {
+      try
+      {
+         return erbjudandeTopicAdapter.getTopic(erbjudandeId);
+      }
+      catch (ErbjudandeTopicException e)
+      {
+         LOGGER.error("Failed to retrieve erbjudande topic", e);
+
+         throw new RuntimeException(e);
+      }
+   }
 }

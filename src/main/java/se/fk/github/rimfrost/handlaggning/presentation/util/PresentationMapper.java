@@ -45,21 +45,20 @@ public class PresentationMapper
                   .build())
             .toList();
 
-      YrkandeCreateRequest request = ImmutableYrkandeCreateRequest.builder()
+      return ImmutableYrkandeCreateRequest.builder()
             .erbjudandedId(postYrkandeRequest.getErbjudandeId())
             .yrkandeFrom(postYrkandeRequest.getYrkandeFrom())
             .yrkandeTom(postYrkandeRequest.getYrkandeTom())
+            .handlaggningspecifikationId(postYrkandeRequest.getHandlaggningspecifikationId())
             .individYrkandeRoller(individYrkandeRoller)
             .produceradeResultat(produceradeResultat)
             .build();
-
-      return request;
    }
 
    public PostYrkandeResponse toPostYrkandeResponse(YrkandeCreateResponse yrkandeCreateResponse)
    {
       PostYrkandeResponse postYrkandeResponse = new PostYrkandeResponse();
-      postYrkandeResponse.setYrkande(toYrkande(yrkandeCreateResponse.yrkande()));
+      postYrkandeResponse.setHandlaggning(toHandlaggning(yrkandeCreateResponse.handlaggning()));
       return postYrkandeResponse;
    }
 
@@ -117,11 +116,11 @@ public class PresentationMapper
             .build();
    }
 
-   public HandlaggningCreateRequest toHandlaggningCreateRequest(PostHandlaggningRequest postYrkandeRequest)
+   public HandlaggningCreateRequest toHandlaggningCreateRequest(PostHandlaggningRequest postHandlaggningRequest)
    {
       HandlaggningCreateRequest request = ImmutableHandlaggningCreateRequest.builder()
-            .yrkandeId(postYrkandeRequest.getYrkandeId())
-            .handlaggningspecifikationId(postYrkandeRequest.getHandlaggningspecifikationId())
+            .yrkandeId(postHandlaggningRequest.getYrkandeId())
+            .handlaggningspecifikationId(postHandlaggningRequest.getHandlaggningspecifikationId())
             .build();
       return request;
    }
