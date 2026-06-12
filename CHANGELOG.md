@@ -2,6 +2,18 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.2.0 (2026-06-12)
+
+### Features
+
+-  Add support for selecting topic based on erbjudande id ([08797](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/08797c4f741fbf6) Lars Persson)  
+
+## rimfrost-1.1 (2026-06-04)
+
+### Bug Fixes
+
+-  bump process-asyncapi version (#32) ([53bf8](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/53bf855e1328cd3) NilsElveros)  
+
 ## 1.0.1 (2026-05-12)
 
 ### Bug Fixes
