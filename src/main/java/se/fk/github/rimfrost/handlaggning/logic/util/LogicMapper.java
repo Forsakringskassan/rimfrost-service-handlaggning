@@ -105,6 +105,7 @@ public class LogicMapper
             .franOchMed(produceratResultatDTO.franOchMed())
             .tillOchMed(produceratResultatDTO.tillOchMed())
             .yrkandeStatus(produceratResultatDTO.yrkandestatus())
+            .avslagsanledning(produceratResultatDTO.avslagsanledning())
             .typ(produceratResultatDTO.typ())
             .data(produceratResultatDTO.data())
             .build();

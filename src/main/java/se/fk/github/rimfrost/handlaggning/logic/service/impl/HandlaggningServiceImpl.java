@@ -1,13 +1,10 @@
 package se.fk.github.rimfrost.handlaggning.logic.service.impl;
 
-import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import se.fk.github.rimfrost.handlaggning.integration.KafkaProducer;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.entity.*;
+import se.fk.github.rimfrost.handlaggning.logic.exception.HandlaggningNotFoundException;
 import se.fk.github.rimfrost.handlaggning.logic.repository.HandlaggningRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
 import se.fk.github.rimfrost.handlaggning.logic.util.LogicMapper;
@@ -19,15 +16,13 @@ public class HandlaggningServiceImpl implements HandlaggningService
    HandlaggningRepository handlaggningRepository;
 
    @Inject
-   KafkaProducer producer;
-
-   @Inject
    LogicMapper mapper;
 
    @Override
    public HandlaggningGetResponse getHandlaggning(HandlaggningGetRequest request)
    {
-      var handlaggningEntity = handlaggningRepository.findById(request.handlaggningId()).orElseThrow();
+      var handlaggningEntity = handlaggningRepository.findById(request.handlaggningId())
+            .orElseThrow(() -> new HandlaggningNotFoundException("Handlaggning not found for id: " + request.handlaggningId()));
       return ImmutableHandlaggningGetResponse.builder()
             .handlaggning(mapper.toHandlaggningDTO(handlaggningEntity))
             .build();
@@ -36,8 +31,6 @@ public class HandlaggningServiceImpl implements HandlaggningService
    @Override
    public HandlaggningPutResponse putHandlaggning(HandlaggningPutRequest request)
    {
-      handlaggningRepository.findById(request.handlaggning().id()).orElseThrow();
-
       var entity = mapper.toHandlaggningEntity(request.handlaggning());
 
       handlaggningRepository.save(entity);
@@ -58,11 +51,4 @@ public class HandlaggningServiceImpl implements HandlaggningService
             .handlaggning(handlaggning)
             .build();
    }
-
-   @Override
-   public void sendHandlaggningDoneMessage(UUID handlaggningID)
-   {
-      producer.sendHandlaggningDone(handlaggningID);
-   }
-
 }
