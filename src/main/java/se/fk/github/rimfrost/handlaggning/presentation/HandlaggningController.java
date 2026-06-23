@@ -1,30 +1,20 @@
 package se.fk.github.rimfrost.handlaggning.presentation;
 
-import java.util.List;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
-import se.fk.github.rimfrost.handlaggning.logic.service.YrkandeService;
 import se.fk.github.rimfrost.handlaggning.presentation.util.PresentationMapper;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.HandlaggningControllerApi;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
 
@@ -37,10 +27,9 @@ public class HandlaggningController implements HandlaggningControllerApi
    HandlaggningService handlaggningService;
 
    @Inject
-   YrkandeService yrkandeService;
-
-   @Inject
    PresentationMapper mapper;
+
+   Logger logger = LoggerFactory.getLogger(HandlaggningController.class);
 
    @Override
    @GET
@@ -51,27 +40,9 @@ public class HandlaggningController implements HandlaggningControllerApi
    })
    public GetHandlaggningResponse getHandlaggning(UUID handlaggningId)
    {
-      HandlaggningGetRequest handlaggningGetRequest = mapper.toHandlaggningGetRequest(handlaggningId);
-      HandlaggningGetResponse handlaggningGetResponse = handlaggningService
-            .getHandlaggning(handlaggningGetRequest);
+      var handlaggningGetRequest = mapper.toHandlaggningGetRequest(handlaggningId);
+      var handlaggningGetResponse = handlaggningService.getHandlaggning(handlaggningGetRequest);
       return mapper.toGetHandlaggningResponse(handlaggningGetResponse);
-   }
-
-   @Override
-   @POST
-   @Path("/handlaggning")
-   @Consumes(
-   {
-         "application/json"
-   })
-   @Produces(
-   {
-         "application/json"
-   })
-   public PostHandlaggningResponse postHandlaggning(PostHandlaggningRequest postHandlaggningRequest)
-   {
-      // TODO: Remove this endpoint once openapi specification has been updated
-      throw new WebApplicationException(Response.Status.GONE);
    }
 
    @Override
@@ -95,21 +66,4 @@ public class HandlaggningController implements HandlaggningControllerApi
       return mapper.toPutHandlaggningResponse(handlaggningPutResponse);
    }
 
-   @Override
-   @POST
-   @Path("/yrkande")
-   @Consumes(
-   {
-         "application/json"
-   })
-   @Produces(
-   {
-         "application/json"
-   })
-   public PostYrkandeResponse postYrkande(PostYrkandeRequest postYrkandeRequest)
-   {
-      YrkandeCreateRequest yrkandeCreateRequest = mapper.toYrkandeCreateRequest(postYrkandeRequest);
-      YrkandeCreateResponse yrkandeCreateResponse = yrkandeService.createYrkande(yrkandeCreateRequest);
-      return mapper.toPostYrkandeResponse(yrkandeCreateResponse);
-   }
 }

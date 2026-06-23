@@ -12,10 +12,6 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostYrkandeResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PostHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
@@ -26,41 +22,6 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifi
 @ApplicationScoped
 public class PresentationMapper
 {
-
-   public YrkandeCreateRequest toYrkandeCreateRequest(PostYrkandeRequest postYrkandeRequest)
-   {
-      var individYrkandeRoller = postYrkandeRequest.getIndividYrkandeRoller().stream()
-            .map(e -> ImmutableIndividYrkandeRollCreateRequest.builder()
-                  .individ(toIdtypDTO(e.getIndivid()))
-                  .yrkandeRollId(e.getYrkandeRollId())
-                  .build())
-            .toList();
-
-      var produceradeResultat = postYrkandeRequest.getProduceradeResultat().stream()
-            .map(e -> ImmutableProduceratResultatCreateRequest.builder()
-                  .franOchMed(e.getFrom())
-                  .tillOchMed(e.getTom())
-                  .typ(e.getTyp())
-                  .data(e.getData())
-                  .build())
-            .toList();
-
-      return ImmutableYrkandeCreateRequest.builder()
-            .erbjudandedId(postYrkandeRequest.getErbjudandeId())
-            .yrkandeFrom(postYrkandeRequest.getYrkandeFrom())
-            .yrkandeTom(postYrkandeRequest.getYrkandeTom())
-            .handlaggningspecifikationId(postYrkandeRequest.getHandlaggningspecifikationId())
-            .individYrkandeRoller(individYrkandeRoller)
-            .produceradeResultat(produceradeResultat)
-            .build();
-   }
-
-   public PostYrkandeResponse toPostYrkandeResponse(YrkandeCreateResponse yrkandeCreateResponse)
-   {
-      PostYrkandeResponse postYrkandeResponse = new PostYrkandeResponse();
-      postYrkandeResponse.setHandlaggning(toHandlaggning(yrkandeCreateResponse.handlaggning()));
-      return postYrkandeResponse;
-   }
 
    public Yrkande toYrkande(YrkandeDTO yrkandeDTO)
    {
@@ -116,29 +77,11 @@ public class PresentationMapper
             .build();
    }
 
-   public HandlaggningCreateRequest toHandlaggningCreateRequest(PostHandlaggningRequest postHandlaggningRequest)
-   {
-      HandlaggningCreateRequest request = ImmutableHandlaggningCreateRequest.builder()
-            .yrkandeId(postHandlaggningRequest.getYrkandeId())
-            .handlaggningspecifikationId(postHandlaggningRequest.getHandlaggningspecifikationId())
-            .build();
-      return request;
-   }
-
-   public PostHandlaggningResponse toPostHandlaggningResponse(HandlaggningCreateResponse handlaggningCreateResponse)
-   {
-      PostHandlaggningResponse postHandlaggningResponse = new PostHandlaggningResponse();
-      postHandlaggningResponse.setHandlaggning(toHandlaggning(handlaggningCreateResponse.handlaggning()));
-      return postHandlaggningResponse;
-   }
-
    public HandlaggningGetRequest toHandlaggningGetRequest(UUID HandlaggningId)
    {
-      HandlaggningGetRequest handlaggningGetRequest = ImmutableHandlaggningGetRequest.builder()
+      return ImmutableHandlaggningGetRequest.builder()
             .handlaggningId(HandlaggningId)
             .build();
-
-      return handlaggningGetRequest;
    }
 
    public GetHandlaggningResponse toGetHandlaggningResponse(HandlaggningGetResponse handlaggningGetResponse)
@@ -296,6 +239,10 @@ public class PresentationMapper
 
    private UppgiftDTO toUppgiftDTO(UUID handlaggningId, Uppgift uppgift)
    {
+      if (uppgift == null)
+      {
+         return null;
+      }
 
       var builder = ImmutableUppgiftDTO.builder()
             .uppgiftId(uppgift.getId())
@@ -338,6 +285,11 @@ public class PresentationMapper
 
    private Uppgift toUppgift(UppgiftDTO uppgiftDTO)
    {
+      if (uppgiftDTO == null)
+      {
+         return null;
+      }
+
       var uppgift = new Uppgift();
       uppgift.setId(uppgiftDTO.uppgiftId());
       uppgift.setVersion(uppgiftDTO.version());
