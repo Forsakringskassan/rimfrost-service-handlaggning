@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.3.0 (2026-06-23)
+
+### Features
+
+-  Cleanup after workflow service split ([0220c](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/0220c3b05fce7ee) Lars Persson)  
+
+### Bug Fixes
+
+-  Replace jaxrsclientfactory dependency ([f8b6e](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/f8b6e8e60b7b14e) Lars Persson)  
+
 ## 1.2.0 (2026-06-12)
 
 ### Features
