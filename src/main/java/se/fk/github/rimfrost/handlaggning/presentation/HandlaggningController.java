@@ -3,6 +3,8 @@ package se.fk.github.rimfrost.handlaggning.presentation;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
@@ -57,7 +59,7 @@ public class HandlaggningController implements HandlaggningControllerApi
          "application/json"
    })
    public PutHandlaggningResponse putHandlaggning(UUID handlaggningId,
-         PutHandlaggningRequest putHandlaggningRequest)
+         @Valid @NotNull PutHandlaggningRequest putHandlaggningRequest)
    {
       HandlaggningPutRequest handlaggningPutRequest = mapper
             .toHandlaggningPutRequest(handlaggningId, putHandlaggningRequest);
@@ -65,5 +67,4 @@ public class HandlaggningController implements HandlaggningControllerApi
             .putHandlaggning(handlaggningPutRequest);
       return mapper.toPutHandlaggningResponse(handlaggningPutResponse);
    }
-
 }

@@ -33,6 +33,17 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
    }
 
    @Test
+   void should_create_handlaggning_on_put_with_unknown_id_and_yrkande_beslut_null()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getYrkande().setBeslut(null);
+      handlaggningUpdate.setUnderlag(List.of());
+
+      var response = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, response);
+   }
+
+   @Test
    void should_return_404_on_get_with_unknown_id()
    {
       getHandlaggning(UUID.randomUUID(), 404);
@@ -117,6 +128,38 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
    {
       var handlaggningUpdate = createHandlaggningUpdate();
       handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setAvslagsanledning("avslagsanledning");
+      var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
+
+      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
+
+      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
+   }
+
+   @Test
+   void should_update_existing_handlaggning_on_put_with_uppgift_utforar_id_null()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().setUtforarId(null);
+      var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
+
+      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
+
+      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
+   }
+
+   @Test
+   void should_update_existing_handlaggning_on_put_with_yrkande_beslut_null()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getYrkande().setBeslut(null);
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
