@@ -42,6 +42,21 @@ public abstract class HandlaggningTestBase
             .then().statusCode(200).extract().body().as(PutHandlaggningResponse.class);
    }
 
+   protected static void sendHandlaggningUpdate(HandlaggningUpdate handlaggningUpdate, int expectedStatusCode)
+   {
+      sendHandlaggningUpdate(handlaggningUpdate.getId(), handlaggningUpdate, expectedStatusCode);
+   }
+
+   protected static void sendHandlaggningUpdate(UUID handlaggningId, HandlaggningUpdate handlaggningUpdate,
+         int expectedStatusCode)
+   {
+      PutHandlaggningRequest request = new PutHandlaggningRequest();
+      request.setHandlaggning(handlaggningUpdate);
+
+      given().contentType(ContentType.JSON).body(request).put("/handlaggning/" + handlaggningId)
+            .then().statusCode(expectedStatusCode);
+   }
+
    protected static void getHandlaggning(UUID id, int expectedStatus)
    {
       given().contentType(ContentType.JSON).get("/handlaggning/" + id).then().statusCode(expectedStatus);

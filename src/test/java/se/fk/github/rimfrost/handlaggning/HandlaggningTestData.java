@@ -1,9 +1,12 @@
 package se.fk.github.rimfrost.handlaggning;
 
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Idtyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultatRef;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
@@ -50,6 +53,25 @@ public class HandlaggningTestData
       produceratResultat.setTyp(UUID.randomUUID().toString());
       produceratResultat.setData("{}");
 
+      ProduceratResultatRef produceratResultatRef = new ProduceratResultatRef();
+      produceratResultatRef.setId(UUID.randomUUID());
+      produceratResultatRef.setVersion(1);
+
+      Beslutsrad beslutsrad = new Beslutsrad();
+      beslutsrad.setId(UUID.randomUUID());
+      beslutsrad.setVersion(1);
+      beslutsrad.setAvslutsTyp(UUID.randomUUID().toString());
+      beslutsrad.setBeslutsTyp(UUID.randomUUID().toString());
+      beslutsrad.setBeslutsUtfall(UUID.randomUUID().toString());
+      beslutsrad.setProduceradeResultatRef(List.of(produceratResultatRef));
+
+      Beslut beslut = new Beslut();
+      beslut.setId(UUID.randomUUID());
+      beslut.setVersion(1);
+      beslut.setDatum(OffsetDateTime.now());
+      beslut.setBeslutsfattare(idtyp);
+      beslut.setBeslutsrader(List.of(beslutsrad));
+
       Yrkande yrkande = new Yrkande();
       yrkande.setId(UUID.randomUUID());
       yrkande.setVersion(1);
@@ -61,12 +83,17 @@ public class HandlaggningTestData
       yrkande.setAvsikt(UUID.randomUUID().toString());
       yrkande.setIndividYrkandeRoller(List.of(individyrkandeRoll));
       yrkande.setProduceradeResultat(List.of(produceratResultat));
+      yrkande.setBeslut(beslut);
 
       return yrkande;
    }
 
    private static Uppgift createUppgift()
    {
+      Idtyp idtyp = new Idtyp();
+      idtyp.setTypId(UUID.randomUUID().toString());
+      idtyp.setVarde(UUID.randomUUID().toString());
+
       UppgiftSpecifikation uppgiftSpecifikation = new UppgiftSpecifikation();
       uppgiftSpecifikation.setId(UUID.randomUUID());
       uppgiftSpecifikation.setVersion(1);
@@ -79,6 +106,7 @@ public class HandlaggningTestData
       uppgift.setUppgiftspecifikation(uppgiftSpecifikation);
       uppgift.setUppgiftStatus(UUID.randomUUID().toString());
       uppgift.setFsSAinformation(UUID.randomUUID().toString());
+      uppgift.setUtforarId(idtyp);
 
       return uppgift;
    }
