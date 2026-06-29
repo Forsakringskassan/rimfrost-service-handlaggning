@@ -434,14 +434,6 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_return_400_when_uppgift_uppgiftstatus_null_on_put()
-   {
-      var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().setUppgiftStatus(null);
-      sendHandlaggningUpdate(handlaggningUpdate, 400);
-   }
-
-   @Test
    void should_return_400_when_uppgift_fsa_information_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
