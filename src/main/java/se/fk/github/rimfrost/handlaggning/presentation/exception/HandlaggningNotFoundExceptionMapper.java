@@ -11,6 +11,6 @@ public class HandlaggningNotFoundExceptionMapper implements ExceptionMapper<Hand
    @Override
    public Response toResponse(HandlaggningNotFoundException exception)
    {
-      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).build();
+      return Response.status(Response.Status.NOT_FOUND).build();
    }
 }
