@@ -2,6 +2,13 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.3.1 (2026-06-29)
+
+### Bug Fixes
+
+-  Improve exception handling ([afb3f](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/afb3fdaf9ab12df) Lars Persson)  
+-  Add quarkus-hibernate-validator in order to enable REST validation ([c90ee](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/c90eeb4d703a557) Lars Persson)  
+
 ## 1.3.0 (2026-06-23)
 
 ### Features
