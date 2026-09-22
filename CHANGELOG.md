@@ -2,6 +2,15 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.3.3 (2026-09-22)
+
+### Bug Fixes
+
+-  Bump rimfrost-service-handlaggning-openapi version ([94937](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/94937f862e15a6c) Lars Persson)  
+
+### Dependency updates
+
+- pin forsakringskassan/.github action to d1349e6 ([b82b9](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/b82b94916680b4c) renovate[bot])  
 ## 1.3.2 (2026-06-29)
 
 ### Bug Fixes
