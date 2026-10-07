@@ -2,6 +2,7 @@ package se.fk.github.rimfrost.handlaggning;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Regelutfall;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -21,23 +22,22 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_create_handlaggning_on_put_with_unknown_id_and_process_id_uppgift_null()
+   void should_create_handlaggning_on_put_with_unknown_id_and_handlaggning_id_varde_null_and_underlag_empty()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setUppgift(null);
-      handlaggningUpdate.setProcessinstansId(null);
-      handlaggningUpdate.setUnderlag(List.of());
+      handlaggningUpdate.getHandlaggning().setHandlaggningIdVarde(null);
+      handlaggningUpdate.getUppgift().setUnderlag(List.of());
 
       var response = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, response);
    }
 
    @Test
-   void should_create_handlaggning_on_put_with_unknown_id_and_yrkande_beslut_null()
+   void should_create_handlaggning_on_put_with_unknown_id_and_yrkande_beslut_empty()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setBeslut(null);
-      handlaggningUpdate.setUnderlag(List.of());
+      handlaggningUpdate.getHandlaggning().getYrkande().setBeslut(List.of());
+      handlaggningUpdate.getUppgift().setUnderlag(List.of());
 
       var response = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, response);
@@ -56,7 +56,7 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
@@ -67,11 +67,11 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
@@ -79,15 +79,15 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
    void should_update_existing_handlaggning_on_put_with_uppgift_planerad()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().setPlaneradTs(OffsetDateTime.now());
+      handlaggningUpdate.getUppgift().setPlaneradTillTS(OffsetDateTime.now());
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
@@ -95,15 +95,15 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
    void should_update_existing_handlaggning_on_put_with_uppgift_utford()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().setUtfordTs(OffsetDateTime.now());
+      handlaggningUpdate.getUppgift().setUtfordTS(OffsetDateTime.now());
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
@@ -111,63 +111,65 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
    void should_update_existing_handlaggning_on_put_with_handlaggning_avslutad()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setAvslutadTS(OffsetDateTime.now());
+      handlaggningUpdate.getHandlaggning().setAvslutadTS(OffsetDateTime.now());
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
    @Test
-   void should_update_existing_handlaggning_on_put_with_producerat_resultat_avslagsanledning()
+   void should_update_existing_handlaggning_on_put_with_uppgift_regelutfall()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setAvslagsanledning("avslagsanledning");
+      var regelutfall = new Regelutfall();
+      regelutfall.setVarde("varde");
+      handlaggningUpdate.getUppgift().setRegelutfall(regelutfall);
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
    @Test
-   void should_update_existing_handlaggning_on_put_with_uppgift_utforar_id_null()
+   void should_update_existing_handlaggning_on_put_with_uppgift_utforare_null()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().setUtforarId(null);
+      handlaggningUpdate.getUppgift().setUtforare(null);
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
    @Test
-   void should_update_existing_handlaggning_on_put_with_yrkande_beslut_null()
+   void should_update_existing_handlaggning_on_put_with_yrkande_beslut_empty()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setBeslut(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setBeslut(List.of());
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 
@@ -179,11 +181,11 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
       var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      handlaggningUpdate.setVersion(handlaggningUpdate.getVersion() + 1);
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
       updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
       verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
 
-      var getResponse = getHandlaggning(handlaggningUpdate.getId());
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
 }

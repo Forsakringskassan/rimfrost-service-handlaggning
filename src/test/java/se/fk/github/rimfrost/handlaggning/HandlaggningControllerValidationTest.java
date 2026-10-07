@@ -3,6 +3,7 @@ package se.fk.github.rimfrost.handlaggning;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Regelutfall;
 
 import java.util.UUID;
 
@@ -28,15 +29,31 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_handlaggning_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setId(null);
+      handlaggningUpdate.getHandlaggning().setId(null);
       sendHandlaggningUpdate(UUID.randomUUID(), handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_handlaggning_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.setHandlaggning(null);
+      sendHandlaggningUpdate(UUID.randomUUID(), handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.setUppgift(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
    void should_return_400_when_handlaggning_version_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setVersion(null);
+      handlaggningUpdate.getHandlaggning().setVersion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -44,7 +61,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_handlaggning_skapad_ts_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setSkapadTS(null);
+      handlaggningUpdate.getHandlaggning().setSkapadTS(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -52,31 +69,23 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_handlaggning_specifikation_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setHandlaggningspecifikationId(null);
+      handlaggningUpdate.getHandlaggning().setHandlaggningspecifikationId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_handlaggning_underlag_version_null_on_put()
+   void should_return_400_when_handlaggning_id_typ_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUnderlag().getFirst().setVersion(null);
+      handlaggningUpdate.getHandlaggning().setHandlaggningIdTyp(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_handlaggning_underlag_typ_null_on_put()
+   void should_return_400_when_handlaggning_yrkande_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUnderlag().getFirst().setTyp(null);
-      sendHandlaggningUpdate(handlaggningUpdate, 400);
-   }
-
-   @Test
-   void should_return_400_when_handlaggning_underlag_data_null_on_put()
-   {
-      var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUnderlag().getFirst().setData(null);
+      handlaggningUpdate.getHandlaggning().setYrkande(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -84,7 +93,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -92,15 +101,15 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_version_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setVersion(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setVersion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_erbjudande_id_null_on_put()
+   void should_return_400_when_yrkande_ingangtyp_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setErbjudandeId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setIngangtypId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -108,7 +117,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_yrkande_datum_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setYrkandedatum(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setYrkandedatum(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -116,7 +125,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_yrkandestatus_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setYrkandestatus(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setYrkandestatus(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -124,7 +133,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_yrkande_from_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setYrkandeFrom(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setYrkandeFrom(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -132,7 +141,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_yrkande_tom_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setYrkandeTom(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setYrkandeTom(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -140,103 +149,95 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_avsikt_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setYrkandeTom(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setAvsikt(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_individ_yrkande_roller_null_on_put()
+   void should_return_400_when_yrkande_roller_i_yrkande_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setIndividYrkandeRoller(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setRollerIYrkande(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_individ_yrkande_roll_roll_id_null_on_put()
+   void should_return_400_when_yrkande_roll_i_yrkande_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getIndividYrkandeRoller().getFirst().setYrkandeRollId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getRollerIYrkande().getFirst().setId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_individ_yrkande_roll_individ_typ_id_null_on_put()
+   void should_return_400_when_yrkande_roll_i_yrkande_roll_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getIndividYrkandeRoller().getFirst().getIndivid().setTypId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getRollerIYrkande().getFirst().setYrkandeRollId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_individ_yrkande_roll_individ_varde_null_on_put()
+   void should_return_400_when_yrkande_roll_i_yrkande_avser_yrkande_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getIndividYrkandeRoller().getFirst().getIndivid().setVarde(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getRollerIYrkande().getFirst().setAvserYrkande(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_null_on_put()
+   void should_return_400_when_yrkande_roll_i_yrkande_individ_typ_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().setProduceradeResultat(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getRollerIYrkande().getFirst().getIndivid().setTypId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_id_null_on_put()
+   void should_return_400_when_yrkande_roll_i_yrkande_individ_varde_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getRollerIYrkande().getFirst().getIndivid().setVarde(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_version_null_on_put()
+   void should_return_400_when_yrkande_sakfragor_stallningstaganden_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setVersion(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setSakfragorStallningstaganden(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_from_null_on_put()
+   void should_return_400_when_yrkande_sakfraga_stallningstagande_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setFrom(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getSakfragorStallningstaganden().getFirst().setId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_tom_null_on_put()
+   void should_return_400_when_yrkande_sakfraga_stallningstagande_objekt_typ_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setTom(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getSakfragorStallningstaganden().getFirst().setObjektTypId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_yrkandestatus_null_on_put()
+   void should_return_400_when_yrkande_sakfraga_stallningstagande_data_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setYrkandestatus(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getSakfragorStallningstaganden().getFirst().setData(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_producerade_resultat_typ_null_on_put()
+   void should_return_400_when_yrkande_beslut_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setTyp(null);
-      sendHandlaggningUpdate(handlaggningUpdate, 400);
-   }
-
-   @Test
-   void should_return_400_when_yrkande_producerade_resultat_data_null_on_put()
-   {
-      var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getProduceradeResultat().getFirst().setData(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().setBeslut(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -244,7 +245,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().setId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().setId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -252,7 +253,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_version_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().setVersion(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().setVersion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -260,7 +261,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_datum_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().setDatum(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().setDatum(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -268,7 +269,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsfattare_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().setBeslutsfattare(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().setBeslutsfattare(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -276,7 +277,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsfattare_typ_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsfattare().setTypId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsfattare().setTypId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -284,7 +285,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsfattare_varde_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsfattare().setVarde(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsfattare().setVarde(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -292,7 +293,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsrader_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().setBeslutsrader(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().setBeslutsrader(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -300,7 +301,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsrad_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().setId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst().setId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -308,7 +309,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsrad_version_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().setVersion(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst().setVersion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -316,7 +317,7 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsrad_besluts_typ_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().setBeslutsTyp(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst().setBeslutsTyp(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -324,7 +325,8 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsrad_besluts_utfall_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().setBeslutsUtfall(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst()
+            .setBeslutsUtfall(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -332,32 +334,34 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_yrkande_beslut_beslutsrad_avsluts_typ_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().setAvslutsTyp(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst().setAvslutsTyp(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_beslut_beslutsrad_producerade_resultat_ref_null_on_put()
+   void should_return_400_when_yrkande_beslut_beslutsrad_sakfragor_stallningstaganden_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().setProduceradeResultatRef(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst()
+            .setSakfragorStallningstaganden(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_beslut_beslutsrad_producerat_resultat_ref_id_null_on_put()
+   void should_return_400_when_yrkande_beslut_beslutsrad_sakfraga_stallningstagande_ref_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().getProduceradeResultatRef().getFirst().setId(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst()
+            .getSakfragorStallningstaganden().getFirst().setId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_yrkande_beslut_beslutsrad_producerat_resultat_ref_version_null_on_put()
+   void should_return_400_when_yrkande_beslut_beslutsrad_sakfraga_stallningstagande_ref_version_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getYrkande().getBeslut().getBeslutsrader().getFirst().getProduceradeResultatRef().getFirst()
-            .setVersion(null);
+      handlaggningUpdate.getHandlaggning().getYrkande().getBeslut().getFirst().getBeslutsrader().getFirst()
+            .getSakfragorStallningstaganden().getFirst().setVersion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -381,23 +385,23 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    void should_return_400_when_uppgift_skapad_ts_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().setVersion(null);
+      handlaggningUpdate.getUppgift().setSkapadTS(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_uppgift_utforar_id_id_typ_null_on_put()
+   void should_return_400_when_uppgift_utforare_typ_id_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().getUtforarId().setTypId(null);
+      handlaggningUpdate.getUppgift().getUtforare().setTypId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
-   void should_return_400_when_uppgift_utforar_id_varde_null_on_put()
+   void should_return_400_when_uppgift_utforare_varde_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().getUtforarId().setVarde(null);
+      handlaggningUpdate.getUppgift().getUtforare().setVarde(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -406,6 +410,14 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    {
       var handlaggningUpdate = createHandlaggningUpdate();
       handlaggningUpdate.getUppgift().setAktivitetId(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_handlaggning_id_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().setHandlaggningId(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -434,10 +446,59 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_return_400_when_uppgift_fsa_information_null_on_put()
+   void should_return_400_when_uppgift_fssa_information_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
       handlaggningUpdate.getUppgift().setFsSAinformation(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_underlag_version_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().getUnderlag().getFirst().setVersion(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_underlag_typ_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().getUnderlag().getFirst().setTyp(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_underlag_data_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().getUnderlag().getFirst().setData(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_resultat_informationsobjekt_id_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().getResultat().getFirst().setInformationsobjektId(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_resultat_version_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().getResultat().getFirst().setVersion(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_regelutfall_varde_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      var regelutfall = new Regelutfall();
+      handlaggningUpdate.getUppgift().setRegelutfall(regelutfall);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 }

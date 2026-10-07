@@ -6,4 +6,6 @@ import org.immutables.value.Value;
 public interface HandlaggningPutRequest
 {
    HandlaggningDTO handlaggning();
+
+   UppgiftDTO uppgift();
 }

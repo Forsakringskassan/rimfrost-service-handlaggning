@@ -17,8 +17,7 @@ import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
 import se.fk.github.rimfrost.handlaggning.presentation.util.PresentationMapper;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.HandlaggningControllerApi;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 
 @SuppressWarnings("unused")
 @ApplicationScoped
@@ -58,8 +57,8 @@ public class HandlaggningController implements HandlaggningControllerApi
    {
          "application/json"
    })
-   public PutHandlaggningResponse putHandlaggning(UUID handlaggningId,
-         @Valid @NotNull PutHandlaggningRequest putHandlaggningRequest)
+   public HandlaggningUpdate putHandlaggning(UUID handlaggningId,
+         @Valid @NotNull HandlaggningUpdate putHandlaggningRequest)
    {
       HandlaggningPutRequest handlaggningPutRequest = mapper
             .toHandlaggningPutRequest(handlaggningId, putHandlaggningRequest);

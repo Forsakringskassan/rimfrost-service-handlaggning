@@ -2,10 +2,12 @@ package se.fk.github.rimfrost.handlaggning.logic.dto;
 
 import org.immutables.value.Value;
 
-@Value.Immutable
-public interface HandlaggningPutResponse
-{
-   HandlaggningDTO handlaggning();
+import java.util.UUID;
 
-   UppgiftDTO uppgift();
+@Value.Immutable
+public interface SakfragaStallningstagandeRefDTO
+{
+   UUID id();
+
+   int version();
 }

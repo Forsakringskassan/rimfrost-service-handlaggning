@@ -5,10 +5,14 @@ import java.util.UUID;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface IndividYrkandeRollDTO
+public interface RollIYrkandeDTO
 {
+   UUID id();
+
    IdtypDTO individ();
 
    String yrkandeRollId();
+
+   UUID avserYrkande();
 
 }

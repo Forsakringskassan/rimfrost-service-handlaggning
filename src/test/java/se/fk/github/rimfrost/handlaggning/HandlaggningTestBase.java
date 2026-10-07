@@ -6,10 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 
@@ -21,7 +19,6 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public abstract class HandlaggningTestBase
 {
@@ -33,27 +30,28 @@ public abstract class HandlaggningTestBase
                   .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)));
    }
 
-   protected static PutHandlaggningResponse sendHandlaggningUpdate(HandlaggningUpdate handlaggningUpdate)
+   protected static HandlaggningUpdate sendHandlaggningUpdate(HandlaggningUpdate handlaggningUpdate)
    {
-      PutHandlaggningRequest request = new PutHandlaggningRequest();
-      request.setHandlaggning(handlaggningUpdate);
-
-      return given().contentType(ContentType.JSON).body(request).put("/handlaggning/" + handlaggningUpdate.getId())
-            .then().statusCode(200).extract().body().as(PutHandlaggningResponse.class);
+      return given().contentType(ContentType.JSON).body(handlaggningUpdate)
+            .put("/handlaggning/" + handlaggningUpdate.getHandlaggning().getId())
+            .then().statusCode(200).extract().body().as(HandlaggningUpdate.class);
    }
 
    protected static void sendHandlaggningUpdate(HandlaggningUpdate handlaggningUpdate, int expectedStatusCode)
    {
-      sendHandlaggningUpdate(handlaggningUpdate.getId(), handlaggningUpdate, expectedStatusCode);
+      sendHandlaggningUpdate(handlaggningUpdate.getHandlaggning().getId(), handlaggningUpdate, expectedStatusCode);
    }
 
    protected static void sendHandlaggningUpdate(UUID handlaggningId, HandlaggningUpdate handlaggningUpdate,
          int expectedStatusCode)
    {
-      PutHandlaggningRequest request = new PutHandlaggningRequest();
-      request.setHandlaggning(handlaggningUpdate);
+      var request = given().contentType(ContentType.JSON);
+      if (handlaggningUpdate != null)
+      {
+         request.body(handlaggningUpdate);
+      }
 
-      given().contentType(ContentType.JSON).body(request).put("/handlaggning/" + handlaggningId)
+      request.put("/handlaggning/" + handlaggningId)
             .then().statusCode(expectedStatusCode);
    }
 
@@ -69,92 +67,65 @@ public abstract class HandlaggningTestBase
    }
 
    protected void verifyHandlaggningUpdateResponse(HandlaggningUpdate handlaggningUpdate,
-         PutHandlaggningResponse putHandlaggningResponse)
+         HandlaggningUpdate putHandlaggningResponse)
    {
       assertNotNull(putHandlaggningResponse);
-      assertNotNull(putHandlaggningResponse.getHandlaggning());
-      assertEquals(handlaggningUpdate.getId(), putHandlaggningResponse.getHandlaggning().getId());
-      assertEquals(handlaggningUpdate.getVersion(), putHandlaggningResponse.getHandlaggning().getVersion());
-      verifyYrkande(handlaggningUpdate.getYrkande(), putHandlaggningResponse.getHandlaggning().getYrkande());
-      assertEquals(handlaggningUpdate.getProcessinstansId(), putHandlaggningResponse.getHandlaggning().getProcessinstansId());
-      assertEquals(getInstant(handlaggningUpdate.getSkapadTS()),
-            getInstant(putHandlaggningResponse.getHandlaggning().getSkapadTS()));
-      assertEquals(
-            getInstant(handlaggningUpdate.getAvslutadTS()),
-            getInstant(putHandlaggningResponse.getHandlaggning().getAvslutadTS()));
-      assertEquals(handlaggningUpdate.getHandlaggningspecifikationId(),
-            putHandlaggningResponse.getHandlaggning().getHandlaggningspecifikationId());
-      assertEquals(handlaggningUpdate.getUnderlag(), putHandlaggningResponse.getHandlaggning().getUnderlag());
-      verifyUppgift(handlaggningUpdate.getUppgift(), putHandlaggningResponse.getHandlaggning().getUppgift());
+      verifyHandlaggning(handlaggningUpdate.getHandlaggning(), putHandlaggningResponse.getHandlaggning());
+      verifyUppgift(handlaggningUpdate.getUppgift(), putHandlaggningResponse.getUppgift());
    }
 
    protected void verifyHandlaggningGetResponse(HandlaggningUpdate handlaggningUpdate,
          GetHandlaggningResponse getHandlaggningResponse)
    {
       assertNotNull(getHandlaggningResponse);
-      assertNotNull(getHandlaggningResponse.getHandlaggning());
-      assertEquals(handlaggningUpdate.getId(), getHandlaggningResponse.getHandlaggning().getId());
-      assertEquals(handlaggningUpdate.getVersion(), getHandlaggningResponse.getHandlaggning().getVersion());
-      verifyYrkande(handlaggningUpdate.getYrkande(), getHandlaggningResponse.getHandlaggning().getYrkande());
-      assertEquals(handlaggningUpdate.getProcessinstansId(), getHandlaggningResponse.getHandlaggning().getProcessinstansId());
-      assertEquals(getInstant(handlaggningUpdate.getSkapadTS()),
-            getInstant(getHandlaggningResponse.getHandlaggning().getSkapadTS()));
-      assertEquals(getInstant(handlaggningUpdate.getAvslutadTS()),
-            getInstant(getHandlaggningResponse.getHandlaggning().getAvslutadTS()));
-      assertEquals(handlaggningUpdate.getHandlaggningspecifikationId(),
-            getHandlaggningResponse.getHandlaggning().getHandlaggningspecifikationId());
+      verifyHandlaggning(handlaggningUpdate.getHandlaggning(), getHandlaggningResponse.getHandlaggning());
+   }
+
+   private void verifyHandlaggning(Handlaggning expectedHandlaggning, Handlaggning actualHandlaggning)
+   {
+      assertNotNull(actualHandlaggning);
+      assertEquals(expectedHandlaggning.getId(), actualHandlaggning.getId());
+      assertEquals(expectedHandlaggning.getVersion(), actualHandlaggning.getVersion());
+      verifyYrkande(expectedHandlaggning.getYrkande(), actualHandlaggning.getYrkande());
+      assertEquals(expectedHandlaggning.getHandlaggningIdTyp(), actualHandlaggning.getHandlaggningIdTyp());
+      assertEquals(expectedHandlaggning.getHandlaggningIdVarde(), actualHandlaggning.getHandlaggningIdVarde());
+      assertEquals(getInstant(expectedHandlaggning.getSkapadTS()), getInstant(actualHandlaggning.getSkapadTS()));
+      assertEquals(getInstant(expectedHandlaggning.getAvslutadTS()), getInstant(actualHandlaggning.getAvslutadTS()));
+      assertEquals(expectedHandlaggning.getHandlaggningspecifikationId(),
+            actualHandlaggning.getHandlaggningspecifikationId());
    }
 
    private void verifyYrkande(Yrkande expectedYrkande, Yrkande actualYrkande)
    {
       assertEquals(expectedYrkande.getId(), actualYrkande.getId());
       assertEquals(expectedYrkande.getVersion(), actualYrkande.getVersion());
-      assertEquals(expectedYrkande.getErbjudandeId(), actualYrkande.getErbjudandeId());
+      assertEquals(expectedYrkande.getIngangtypId(), actualYrkande.getIngangtypId());
       assertEquals(getInstant(expectedYrkande.getYrkandedatum()), getInstant(actualYrkande.getYrkandedatum()));
       assertEquals(expectedYrkande.getYrkandestatus(), actualYrkande.getYrkandestatus());
       assertEquals(getInstant(expectedYrkande.getYrkandeFrom()), getInstant(actualYrkande.getYrkandeFrom()));
       assertEquals(getInstant(expectedYrkande.getYrkandeTom()), getInstant(actualYrkande.getYrkandeTom()));
       assertEquals(expectedYrkande.getAvsikt(), actualYrkande.getAvsikt());
-      assertEquals(expectedYrkande.getIndividYrkandeRoller(), actualYrkande.getIndividYrkandeRoller());
-      assertEquals(expectedYrkande.getProduceradeResultat().size(), actualYrkande.getProduceradeResultat().size());
-
-      for (int i = 0; i < expectedYrkande.getProduceradeResultat().size(); i++)
-      {
-         verifyProduceratResultat(expectedYrkande.getProduceradeResultat().get(i), actualYrkande.getProduceradeResultat().get(i));
-      }
-   }
-
-   private void verifyProduceratResultat(ProduceratResultat expectedProduceratResultat,
-         ProduceratResultat actualProduceratResultat)
-   {
-      assertEquals(expectedProduceratResultat.getId(), actualProduceratResultat.getId());
-      assertEquals(expectedProduceratResultat.getVersion(), actualProduceratResultat.getVersion());
-      assertEquals(getInstant(expectedProduceratResultat.getFrom()), getInstant(actualProduceratResultat.getFrom()));
-      assertEquals(getInstant(expectedProduceratResultat.getTom()), getInstant(actualProduceratResultat.getTom()));
-      assertEquals(expectedProduceratResultat.getYrkandestatus(), actualProduceratResultat.getYrkandestatus());
-      assertEquals(expectedProduceratResultat.getAvslagsanledning(), actualProduceratResultat.getAvslagsanledning());
-      assertEquals(expectedProduceratResultat.getTyp(), actualProduceratResultat.getTyp());
-      assertEquals(expectedProduceratResultat.getData(), actualProduceratResultat.getData());
+      assertEquals(expectedYrkande.getRollerIYrkande(), actualYrkande.getRollerIYrkande());
+      assertEquals(expectedYrkande.getSakfragorStallningstaganden(), actualYrkande.getSakfragorStallningstaganden());
    }
 
    private void verifyUppgift(Uppgift expectedUppgift, Uppgift actualUppgift)
    {
-      if (expectedUppgift == null)
-      {
-         assertNull(actualUppgift);
-         return;
-      }
-
+      assertNotNull(actualUppgift);
       assertEquals(expectedUppgift.getId(), actualUppgift.getId());
       assertEquals(expectedUppgift.getVersion(), actualUppgift.getVersion());
-      assertEquals(getInstant(expectedUppgift.getSkapadTs()), getInstant(actualUppgift.getSkapadTs()));
-      assertEquals(getInstant(expectedUppgift.getPlaneradTs()), getInstant(actualUppgift.getPlaneradTs()));
-      assertEquals(getInstant(expectedUppgift.getUtfordTs()), getInstant(actualUppgift.getUtfordTs()));
-      assertEquals(expectedUppgift.getUtforarId(), actualUppgift.getUtforarId());
+      assertEquals(getInstant(expectedUppgift.getSkapadTS()), getInstant(actualUppgift.getSkapadTS()));
+      assertEquals(getInstant(expectedUppgift.getPlaneradTillTS()), getInstant(actualUppgift.getPlaneradTillTS()));
+      assertEquals(getInstant(expectedUppgift.getUtfordTS()), getInstant(actualUppgift.getUtfordTS()));
+      assertEquals(expectedUppgift.getUtforare(), actualUppgift.getUtforare());
       assertEquals(expectedUppgift.getAktivitetId(), actualUppgift.getAktivitetId());
       assertEquals(expectedUppgift.getUppgiftspecifikation(), actualUppgift.getUppgiftspecifikation());
       assertEquals(expectedUppgift.getUppgiftStatus(), actualUppgift.getUppgiftStatus());
       assertEquals(expectedUppgift.getFsSAinformation(), actualUppgift.getFsSAinformation());
+      assertEquals(expectedUppgift.getHandlaggningId(), actualUppgift.getHandlaggningId());
+      assertEquals(expectedUppgift.getRegelutfall(), actualUppgift.getRegelutfall());
+      assertEquals(expectedUppgift.getUnderlag(), actualUppgift.getUnderlag());
+      assertEquals(expectedUppgift.getResultat(), actualUppgift.getResultat());
    }
 
    private Instant getInstant(OffsetDateTime offsetDateTime)

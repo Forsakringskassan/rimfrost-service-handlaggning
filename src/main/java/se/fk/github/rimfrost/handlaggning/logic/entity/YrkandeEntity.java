@@ -10,7 +10,7 @@ public interface YrkandeEntity
 {
    UUID id();
 
-   String erbjudandeId();
+   String ingangtypId();
 
    int version();
 
@@ -25,13 +25,19 @@ public interface YrkandeEntity
    String avsikt();
 
    @Value.Default
-   default List<IndividYrkandeRollEntity> individYrkandeRoll()
+   default List<BeslutEntity> beslut()
    {
       return List.of();
    }
 
    @Value.Default
-   default List<ProduceratResultatEntity> produceradeResultat()
+   default List<RollIYrkandeEntity> rollerIYrkande()
+   {
+      return List.of();
+   }
+
+   @Value.Default
+   default List<SakfragaStallningstagandeEntity> sakfragorStallningstaganden()
    {
       return List.of();
    }

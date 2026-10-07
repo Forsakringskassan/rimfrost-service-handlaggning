@@ -12,43 +12,83 @@ public class LogicMapper
    {
       return ImmutableYrkandeDTO.builder()
             .id(yrkandeEntity.id())
-            .erbjudandeId(yrkandeEntity.erbjudandeId())
+            .ingangtypId(yrkandeEntity.ingangtypId())
             .version(yrkandeEntity.version())
             .yrkandedatum(yrkandeEntity.yrkandedatum())
             .yrkandeFrom(yrkandeEntity.yrkandeFrom())
             .yrkandeTom(yrkandeEntity.yrkandeTom())
             .yrkandestatus(yrkandeEntity.yrkandestatus())
             .avsikt(yrkandeEntity.avsikt())
-            .individYrkandeRoll(yrkandeEntity.individYrkandeRoll()
+            .beslut(yrkandeEntity.beslut()
                   .stream()
-                  .map(this::toIndividYrkandeRollDTO)
+                  .map(this::toBeslutDTO)
                   .toList())
-            .produceradeResultat(yrkandeEntity.produceradeResultat()
+            .rollerIYrkande(yrkandeEntity.rollerIYrkande()
                   .stream()
-                  .map(this::toProduceratResultatDTO)
+                  .map(this::toRollIYrkandeDTO)
+                  .toList())
+            .sakfragorStallningstaganden(yrkandeEntity.sakfragorStallningstaganden()
+                  .stream()
+                  .map(this::toSakfragaStallningstagandeDTO)
                   .toList())
             .build();
    }
 
-   public IndividYrkandeRollDTO toIndividYrkandeRollDTO(IndividYrkandeRollEntity individYrkandeRollEntity)
+   public RollIYrkandeDTO toRollIYrkandeDTO(RollIYrkandeEntity rollIYrkandeEntity)
    {
-      return ImmutableIndividYrkandeRollDTO.builder()
-            .individ(toIdtypDTO(individYrkandeRollEntity.individ()))
-            .yrkandeRollId(individYrkandeRollEntity.yrkandeRollId())
+      return ImmutableRollIYrkandeDTO.builder()
+            .id(rollIYrkandeEntity.id())
+            .individ(toIdtypDTO(rollIYrkandeEntity.individ()))
+            .yrkandeRollId(rollIYrkandeEntity.yrkandeRollId())
+            .avserYrkande(rollIYrkandeEntity.avserYrkande())
             .build();
    }
 
-   public ProduceratResultatDTO toProduceratResultatDTO(ProduceratResultatEntity produceratResultatEntity)
+   public SakfragaStallningstagandeDTO toSakfragaStallningstagandeDTO(
+         SakfragaStallningstagandeEntity sakfragaStallningstagandeEntity)
    {
-      return ImmutableProduceratResultatDTO.builder()
-            .id(produceratResultatEntity.id())
-            .version(produceratResultatEntity.version())
-            .franOchMed(produceratResultatEntity.franOchMed())
-            .tillOchMed(produceratResultatEntity.tillOchMed())
-            .yrkandestatus(produceratResultatEntity.yrkandeStatus())
-            .avslagsanledning(produceratResultatEntity.avslagsanledning())
-            .typ(produceratResultatEntity.typ())
-            .data(produceratResultatEntity.data())
+      return ImmutableSakfragaStallningstagandeDTO.builder()
+            .id(sakfragaStallningstagandeEntity.id())
+            .objektTypId(sakfragaStallningstagandeEntity.objektTypId())
+            .data(sakfragaStallningstagandeEntity.data())
+            .build();
+   }
+
+   public BeslutDTO toBeslutDTO(BeslutEntity beslutEntity)
+   {
+      return ImmutableBeslutDTO.builder()
+            .id(beslutEntity.id())
+            .version(beslutEntity.version())
+            .datum(beslutEntity.datum())
+            .beslutsfattare(toIdtypDTO(beslutEntity.beslutsfattare()))
+            .beslutsrader(beslutEntity.beslutsrader()
+                  .stream()
+                  .map(this::toBeslutsradDTO)
+                  .toList())
+            .build();
+   }
+
+   public BeslutsradDTO toBeslutsradDTO(BeslutsradEntity beslutsradEntity)
+   {
+      return ImmutableBeslutsradDTO.builder()
+            .id(beslutsradEntity.id())
+            .version(beslutsradEntity.version())
+            .beslutsTyp(beslutsradEntity.beslutsTyp())
+            .beslutsUtfall(beslutsradEntity.beslutsUtfall())
+            .avslutsTyp(beslutsradEntity.avslutsTyp())
+            .sakfragorStallningstagandeRefs(beslutsradEntity.sakfragorStallningstagandeRefs()
+                  .stream()
+                  .map(this::toSakfragaStallningstagandeRefDTO)
+                  .toList())
+            .build();
+   }
+
+   public SakfragaStallningstagandeRefDTO toSakfragaStallningstagandeRefDTO(
+         SakfragaStallningstagandeRefEntity refEntity)
+   {
+      return ImmutableSakfragaStallningstagandeRefDTO.builder()
+            .id(refEntity.id())
+            .version(refEntity.version())
             .build();
    }
 
@@ -58,7 +98,8 @@ public class LogicMapper
             .id(handlaggningEntity.id())
             .yrkande(toYrkandeDTO(handlaggningEntity.yrkande()))
             .version(handlaggningEntity.version())
-            .processinstansId(handlaggningEntity.processinstansId())
+            .handlaggningIdTyp(handlaggningEntity.handlaggningIdTyp())
+            .handlaggningIdVarde(handlaggningEntity.handlaggningIdVarde())
             .skapadTS(handlaggningEntity.skapadTS())
             .avslutadTS(handlaggningEntity.avslutadTS())
             .handlaggningspecifikationId(handlaggningEntity.handlaggningspecifikationId())
@@ -69,45 +110,88 @@ public class LogicMapper
    {
       return ImmutableYrkandeEntity.builder()
             .id(yrkandeDTO.id())
-            .erbjudandeId(yrkandeDTO.erbjudandeId())
+            .ingangtypId(yrkandeDTO.ingangtypId())
             .version(yrkandeDTO.version())
             .yrkandedatum(yrkandeDTO.yrkandedatum())
             .yrkandeFrom(yrkandeDTO.yrkandeFrom())
             .yrkandeTom(yrkandeDTO.yrkandeTom())
             .yrkandestatus(yrkandeDTO.yrkandestatus())
             .avsikt(yrkandeDTO.avsikt())
-            .individYrkandeRoll(
-                  yrkandeDTO.individYrkandeRoll()
+            .beslut(
+                  yrkandeDTO.beslut()
                         .stream()
-                        .map(this::toIndividYrkandeRollEntity)
+                        .map(this::toBeslutEntity)
                         .toList())
-            .produceradeResultat(
-                  yrkandeDTO.produceradeResultat()
+            .rollerIYrkande(
+                  yrkandeDTO.rollerIYrkande()
                         .stream()
-                        .map(this::toProduceratResultatEntity)
+                        .map(this::toRollIYrkandeEntity)
+                        .toList())
+            .sakfragorStallningstaganden(
+                  yrkandeDTO.sakfragorStallningstaganden()
+                        .stream()
+                        .map(this::toSakfragaStallningstagandeEntity)
                         .toList())
             .build();
    }
 
-   public IndividYrkandeRollEntity toIndividYrkandeRollEntity(IndividYrkandeRollDTO yrkanderollDTO)
+   public RollIYrkandeEntity toRollIYrkandeEntity(RollIYrkandeDTO rollIYrkandeDTO)
    {
-      return ImmutableIndividYrkandeRollEntity.builder()
-            .individ(toIdtypEntity(yrkanderollDTO.individ()))
-            .yrkandeRollId(yrkanderollDTO.yrkandeRollId())
+      return ImmutableRollIYrkandeEntity.builder()
+            .id(rollIYrkandeDTO.id())
+            .individ(toIdtypEntity(rollIYrkandeDTO.individ()))
+            .yrkandeRollId(rollIYrkandeDTO.yrkandeRollId())
+            .avserYrkande(rollIYrkandeDTO.avserYrkande())
             .build();
    }
 
-   public ProduceratResultatEntity toProduceratResultatEntity(ProduceratResultatDTO produceratResultatDTO)
+   public SakfragaStallningstagandeEntity toSakfragaStallningstagandeEntity(
+         SakfragaStallningstagandeDTO sakfragaStallningstagandeDTO)
    {
-      return ImmutableProduceratResultatEntity.builder()
-            .id(produceratResultatDTO.id())
-            .version(produceratResultatDTO.version())
-            .franOchMed(produceratResultatDTO.franOchMed())
-            .tillOchMed(produceratResultatDTO.tillOchMed())
-            .yrkandeStatus(produceratResultatDTO.yrkandestatus())
-            .avslagsanledning(produceratResultatDTO.avslagsanledning())
-            .typ(produceratResultatDTO.typ())
-            .data(produceratResultatDTO.data())
+      return ImmutableSakfragaStallningstagandeEntity.builder()
+            .id(sakfragaStallningstagandeDTO.id())
+            .objektTypId(sakfragaStallningstagandeDTO.objektTypId())
+            .data(sakfragaStallningstagandeDTO.data())
+            .build();
+   }
+
+   public BeslutEntity toBeslutEntity(BeslutDTO beslutDTO)
+   {
+      return ImmutableBeslutEntity.builder()
+            .id(beslutDTO.id())
+            .version(beslutDTO.version())
+            .datum(beslutDTO.datum())
+            .beslutsfattare(toIdtypEntity(beslutDTO.beslutsfattare()))
+            .beslutsrader(
+                  beslutDTO.beslutsrader()
+                        .stream()
+                        .map(this::toBeslutsradEntity)
+                        .toList())
+            .build();
+   }
+
+   public BeslutsradEntity toBeslutsradEntity(BeslutsradDTO beslutsradDTO)
+   {
+      return ImmutableBeslutsradEntity.builder()
+            .id(beslutsradDTO.id())
+            .version(beslutsradDTO.version())
+            .beslutsTyp(beslutsradDTO.beslutsTyp())
+            .beslutsUtfall(beslutsradDTO.beslutsUtfall())
+            .avslutsTyp(beslutsradDTO.avslutsTyp())
+            .sakfragorStallningstagandeRefs(
+                  beslutsradDTO.sakfragorStallningstagandeRefs()
+                        .stream()
+                        .map(this::toSakfragaStallningstagandeRefEntity)
+                        .toList())
+            .build();
+   }
+
+   public SakfragaStallningstagandeRefEntity toSakfragaStallningstagandeRefEntity(
+         SakfragaStallningstagandeRefDTO refDTO)
+   {
+      return ImmutableSakfragaStallningstagandeRefEntity.builder()
+            .id(refDTO.id())
+            .version(refDTO.version())
             .build();
    }
 
@@ -117,7 +201,8 @@ public class LogicMapper
             .id(handlaggningDTO.id())
             .yrkande(toYrkandeEntity(handlaggningDTO.yrkande()))
             .version(handlaggningDTO.version())
-            .processinstansId(handlaggningDTO.processinstansId())
+            .handlaggningIdTyp(handlaggningDTO.handlaggningIdTyp())
+            .handlaggningIdVarde(handlaggningDTO.handlaggningIdVarde())
             .skapadTS(handlaggningDTO.skapadTS())
             .avslutadTS(handlaggningDTO.avslutadTS())
             .handlaggningspecifikationId(handlaggningDTO.handlaggningspecifikationId())
