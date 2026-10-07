@@ -117,6 +117,7 @@ public class HandlaggningTestData
       uppgift.setAktivitetId(UUID.randomUUID());
       uppgift.setUppgiftspecifikation(uppgiftSpecifikation);
       uppgift.setUppgiftStatus(UUID.randomUUID().toString());
+      uppgift.setKommentar(UUID.randomUUID().toString());
       uppgift.setFsSAinformation(UUID.randomUUID().toString());
       uppgift.setUtforare(idtyp);
       uppgift.setHandlaggningId(handlaggningId);

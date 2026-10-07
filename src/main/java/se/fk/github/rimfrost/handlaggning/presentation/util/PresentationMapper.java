@@ -259,6 +259,7 @@ public class PresentationMapper
             .uppgiftSpecifikation(toUppgiftspecifikationDTO(uppgift.getUppgiftspecifikation()))
             .version(uppgift.getVersion())
             .uppgiftStatus(uppgift.getUppgiftStatus())
+            .kommentar(uppgift.getKommentar())
             .fssaInformation(uppgift.getFsSAinformation())
             .aktivitetId(uppgift.getAktivitetId())
             .regelutfall(toRegelutfallDTO(uppgift.getRegelutfall()))
@@ -280,6 +281,7 @@ public class PresentationMapper
       uppgift.setUppgiftspecifikation(toUppgiftspecifikation(uppgiftDTO.uppgiftSpecifikation()));
       uppgift.setFsSAinformation(uppgiftDTO.fssaInformation());
       uppgift.setUppgiftStatus(uppgiftDTO.uppgiftStatus());
+      uppgift.setKommentar(uppgiftDTO.kommentar());
       uppgift.setHandlaggningId(uppgiftDTO.handlaggningId());
       uppgift.setRegelutfall(toRegelutfall(uppgiftDTO.regelutfall()));
       uppgift.setUnderlag(uppgiftDTO.underlag().stream().map(this::toUnderlag).toList());

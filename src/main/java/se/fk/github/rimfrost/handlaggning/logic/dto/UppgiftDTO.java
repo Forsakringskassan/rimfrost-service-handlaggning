@@ -32,6 +32,9 @@ public interface UppgiftDTO
    @Nullable
    String uppgiftStatus();
 
+   @Nullable
+   String kommentar();
+
    String fssaInformation();
 
    UppgiftspecifikationDTO uppgiftSpecifikation();

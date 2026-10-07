@@ -188,4 +188,20 @@ public class HandlaggningServiceTest extends HandlaggningTestBase
       var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
       verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
    }
+
+   @Test
+   void should_update_existing_handlaggning_on_put_with_uppgift_kommentar_null()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      handlaggningUpdate.getUppgift().setKommentar(null);
+      var updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
+
+      handlaggningUpdate.getHandlaggning().setVersion(handlaggningUpdate.getHandlaggning().getVersion() + 1);
+      updateResponse = sendHandlaggningUpdate(handlaggningUpdate);
+      verifyHandlaggningUpdateResponse(handlaggningUpdate, updateResponse);
+
+      var getResponse = getHandlaggning(handlaggningUpdate.getHandlaggning().getId());
+      verifyHandlaggningGetResponse(handlaggningUpdate, getResponse);
+   }
 }

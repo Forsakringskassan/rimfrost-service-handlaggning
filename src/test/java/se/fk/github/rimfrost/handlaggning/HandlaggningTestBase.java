@@ -121,6 +121,7 @@ public abstract class HandlaggningTestBase
       assertEquals(expectedUppgift.getAktivitetId(), actualUppgift.getAktivitetId());
       assertEquals(expectedUppgift.getUppgiftspecifikation(), actualUppgift.getUppgiftspecifikation());
       assertEquals(expectedUppgift.getUppgiftStatus(), actualUppgift.getUppgiftStatus());
+      assertEquals(expectedUppgift.getKommentar(), actualUppgift.getKommentar());
       assertEquals(expectedUppgift.getFsSAinformation(), actualUppgift.getFsSAinformation());
       assertEquals(expectedUppgift.getHandlaggningId(), actualUppgift.getHandlaggningId());
       assertEquals(expectedUppgift.getRegelutfall(), actualUppgift.getRegelutfall());
