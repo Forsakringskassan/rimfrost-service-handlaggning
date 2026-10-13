@@ -3,7 +3,11 @@ package se.fk.github.rimfrost.handlaggning;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Regelutfall;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdata;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling;
 
 import java.util.UUID;
 
@@ -39,14 +43,6 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
       var handlaggningUpdate = createHandlaggningUpdate();
       handlaggningUpdate.setHandlaggning(null);
       sendHandlaggningUpdate(UUID.randomUUID(), handlaggningUpdate, 400);
-   }
-
-   @Test
-   void should_return_400_when_uppgift_null_on_put()
-   {
-      var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.setUppgift(null);
-      sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
    @Test
@@ -414,14 +410,6 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_return_400_when_uppgift_handlaggning_id_null_on_put()
-   {
-      var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().setHandlaggningId(null);
-      sendHandlaggningUpdate(handlaggningUpdate, 400);
-   }
-
-   @Test
    void should_return_400_when_uppgift_uppgiftspecifikation_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
@@ -454,14 +442,6 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_return_400_when_uppgift_underlag_version_null_on_put()
-   {
-      var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().getUnderlag().getFirst().setVersion(null);
-      sendHandlaggningUpdate(handlaggningUpdate, 400);
-   }
-
-   @Test
    void should_return_400_when_uppgift_underlag_typ_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
@@ -470,10 +450,34 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_return_400_when_uppgift_underlag_data_null_on_put()
+   void should_return_400_when_uppgift_underlag_kopia_informationsobjekttyp_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().getUnderlag().getFirst().setData(null);
+      getUnderlag(handlaggningUpdate, Uppgiftsdatakopia.class).setInformationsobjekttyp(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_underlag_kopia_data_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      getUnderlag(handlaggningUpdate, Uppgiftsdatakopia.class).setData(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_underlag_koppling_informationsobjekt_id_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      getUnderlag(handlaggningUpdate, Uppgiftsdatakoppling.class).setInformationsobjektId(null);
+      sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   @Test
+   void should_return_400_when_uppgift_underlag_koppling_informationsobjektversion_null_on_put()
+   {
+      var handlaggningUpdate = createHandlaggningUpdate();
+      getUnderlag(handlaggningUpdate, Uppgiftsdatakoppling.class).setInformationsobjektversion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -486,10 +490,10 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
    }
 
    @Test
-   void should_return_400_when_uppgift_resultat_version_null_on_put()
+   void should_return_400_when_uppgift_resultat_informationsobjektversion_null_on_put()
    {
       var handlaggningUpdate = createHandlaggningUpdate();
-      handlaggningUpdate.getUppgift().getResultat().getFirst().setVersion(null);
+      handlaggningUpdate.getUppgift().getResultat().getFirst().setInformationsobjektversion(null);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
    }
 
@@ -500,5 +504,14 @@ public class HandlaggningControllerValidationTest extends HandlaggningTestBase
       var regelutfall = new Regelutfall();
       handlaggningUpdate.getUppgift().setRegelutfall(regelutfall);
       sendHandlaggningUpdate(handlaggningUpdate, 400);
+   }
+
+   private static <T extends Uppgiftsdata> T getUnderlag(HandlaggningUpdate handlaggningUpdate, Class<T> type)
+   {
+      return handlaggningUpdate.getUppgift().getUnderlag().stream()
+            .filter(type::isInstance)
+            .map(type::cast)
+            .findFirst()
+            .orElseThrow();
    }
 }

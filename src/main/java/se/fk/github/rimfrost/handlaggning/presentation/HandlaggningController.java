@@ -61,7 +61,7 @@ public class HandlaggningController implements HandlaggningControllerApi
          @Valid @NotNull HandlaggningUpdate putHandlaggningRequest)
    {
       HandlaggningPutRequest handlaggningPutRequest = mapper
-            .toHandlaggningPutRequest(handlaggningId, putHandlaggningRequest);
+            .toHandlaggningPutRequest(putHandlaggningRequest);
       HandlaggningPutResponse handlaggningPutResponse = handlaggningService
             .putHandlaggning(handlaggningPutRequest);
       return mapper.toPutHandlaggningResponse(handlaggningPutResponse);

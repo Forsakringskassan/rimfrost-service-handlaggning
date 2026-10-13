@@ -8,10 +8,11 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Idtyp;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.RollIYrkande;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.SakfragaStallningstagandeContainer;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.SakfragaStallningstagandeRef;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdata;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 
 import java.time.OffsetDateTime;
@@ -26,7 +27,7 @@ public class HandlaggningTestData
 
       HandlaggningUpdate handlaggningUpdate = new HandlaggningUpdate();
       handlaggningUpdate.setHandlaggning(handlaggning);
-      handlaggningUpdate.setUppgift(createUppgift(handlaggning.getId()));
+      handlaggningUpdate.setUppgift(createUppgift());
 
       return handlaggningUpdate;
    }
@@ -100,7 +101,7 @@ public class HandlaggningTestData
       return yrkande;
    }
 
-   private static Uppgift createUppgift(UUID handlaggningId)
+   private static Uppgift createUppgift()
    {
       Idtyp idtyp = new Idtyp();
       idtyp.setTypId(UUID.randomUUID().toString());
@@ -120,29 +121,29 @@ public class HandlaggningTestData
       uppgift.setKommentar(UUID.randomUUID().toString());
       uppgift.setFsSAinformation(UUID.randomUUID().toString());
       uppgift.setUtforare(idtyp);
-      uppgift.setHandlaggningId(handlaggningId);
-      uppgift.setUnderlag(List.of(createUnderlag()));
-      uppgift.setResultat(List.of(createUppgiftsdata()));
+      uppgift.setUnderlag(List.of(createUppgiftsdatakopia(), createUppgiftsdatakoppling()));
+      uppgift.setResultat(List.of(createUppgiftsdatakoppling()));
 
       return uppgift;
    }
 
-   private static Underlag createUnderlag()
+   private static Uppgiftsdatakopia createUppgiftsdatakopia()
    {
-      Underlag underlag = new Underlag();
-      underlag.setTyp("test");
-      underlag.setVersion(1);
-      underlag.setData("test");
+      Uppgiftsdatakopia kopia = new Uppgiftsdatakopia();
+      kopia.setTyp(Uppgiftsdata.TypEnum.KOPIA);
+      kopia.setInformationsobjekttyp("test");
+      kopia.setData("test");
 
-      return underlag;
+      return kopia;
    }
 
-   private static Uppgiftsdata createUppgiftsdata()
+   private static Uppgiftsdatakoppling createUppgiftsdatakoppling()
    {
-      Uppgiftsdata uppgiftsdata = new Uppgiftsdata();
-      uppgiftsdata.setInformationsobjektId(UUID.randomUUID().toString());
-      uppgiftsdata.setVersion(1);
+      Uppgiftsdatakoppling koppling = new Uppgiftsdatakoppling();
+      koppling.setTyp(Uppgiftsdata.TypEnum.KOPPLING);
+      koppling.setInformationsobjektId(UUID.randomUUID().toString());
+      koppling.setInformationsobjektversion(1);
 
-      return uppgiftsdata;
+      return koppling;
    }
 }

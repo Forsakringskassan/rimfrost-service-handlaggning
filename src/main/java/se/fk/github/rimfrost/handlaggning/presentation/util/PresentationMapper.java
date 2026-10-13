@@ -14,10 +14,11 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Regelutfall;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.RollIYrkande;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.SakfragaStallningstagandeContainer;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.SakfragaStallningstagandeRef;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdata;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 
 @ApplicationScoped
@@ -39,12 +40,11 @@ public class PresentationMapper
       return response;
    }
 
-   public HandlaggningPutRequest toHandlaggningPutRequest(UUID handlaggningId,
-         HandlaggningUpdate handlaggningUpdate)
+   public HandlaggningPutRequest toHandlaggningPutRequest(HandlaggningUpdate handlaggningUpdate)
    {
       return ImmutableHandlaggningPutRequest.builder()
             .handlaggning(toHandlaggningDTO(handlaggningUpdate.getHandlaggning()))
-            .uppgift(toUppgiftDTO(handlaggningId, handlaggningUpdate.getUppgift()))
+            .uppgift(toUppgiftDTO(handlaggningUpdate.getUppgift()))
             .build();
    }
 
@@ -247,11 +247,15 @@ public class PresentationMapper
       return ref;
    }
 
-   private UppgiftDTO toUppgiftDTO(UUID handlaggningId, Uppgift uppgift)
+   private UppgiftDTO toUppgiftDTO(Uppgift uppgift)
    {
+      if (uppgift == null)
+      {
+         return null;
+      }
+
       return ImmutableUppgiftDTO.builder()
             .uppgiftId(uppgift.getId())
-            .handlaggningId(handlaggningId)
             .utforare(toIdtypDTO(uppgift.getUtforare()))
             .skapadTS(uppgift.getSkapadTS())
             .planeradTillTS(uppgift.getPlaneradTillTS())
@@ -263,13 +267,18 @@ public class PresentationMapper
             .fssaInformation(uppgift.getFsSAinformation())
             .aktivitetId(uppgift.getAktivitetId())
             .regelutfall(toRegelutfallDTO(uppgift.getRegelutfall()))
-            .underlag(nullSafe(uppgift.getUnderlag()).stream().map(this::toUnderlagDTO).toList())
-            .resultat(nullSafe(uppgift.getResultat()).stream().map(this::toUppgiftsdataDTO).toList())
+            .underlag(nullSafe(uppgift.getUnderlag()).stream().map(this::toUppgiftsdataDTO).toList())
+            .resultat(nullSafe(uppgift.getResultat()).stream().map(this::toUppgiftsdatakopplingDTO).toList())
             .build();
    }
 
    private Uppgift toUppgift(UppgiftDTO uppgiftDTO)
    {
+      if (uppgiftDTO == null)
+      {
+         return null;
+      }
+
       var uppgift = new Uppgift();
       uppgift.setId(uppgiftDTO.uppgiftId());
       uppgift.setVersion(uppgiftDTO.version());
@@ -282,10 +291,9 @@ public class PresentationMapper
       uppgift.setFsSAinformation(uppgiftDTO.fssaInformation());
       uppgift.setUppgiftStatus(uppgiftDTO.uppgiftStatus());
       uppgift.setKommentar(uppgiftDTO.kommentar());
-      uppgift.setHandlaggningId(uppgiftDTO.handlaggningId());
       uppgift.setRegelutfall(toRegelutfall(uppgiftDTO.regelutfall()));
-      uppgift.setUnderlag(uppgiftDTO.underlag().stream().map(this::toUnderlag).toList());
-      uppgift.setResultat(uppgiftDTO.resultat().stream().map(this::toUppgiftsdata).toList());
+      uppgift.setUnderlag(uppgiftDTO.underlag().stream().map(this::toUppgiftsdata).toList());
+      uppgift.setResultat(uppgiftDTO.resultat().stream().map(this::toUppgiftsdatakoppling).toList());
 
       return uppgift;
    }
@@ -330,38 +338,57 @@ public class PresentationMapper
       return regelutfall;
    }
 
-   private UnderlagDTO toUnderlagDTO(Underlag underlag)
-   {
-      return ImmutableUnderlagDTO.builder()
-            .typ(underlag.getTyp())
-            .version(underlag.getVersion())
-            .data(underlag.getData())
-            .build();
-   }
-
-   private Underlag toUnderlag(UnderlagDTO underlagDTO)
-   {
-      var underlag = new Underlag();
-      underlag.setTyp(underlagDTO.typ());
-      underlag.setVersion(underlagDTO.version());
-      underlag.setData(underlagDTO.data());
-      return underlag;
-   }
-
    private UppgiftsdataDTO toUppgiftsdataDTO(Uppgiftsdata uppgiftsdata)
    {
-      return ImmutableUppgiftsdataDTO.builder()
-            .informationsobjektId(uppgiftsdata.getInformationsobjektId())
-            .version(uppgiftsdata.getVersion())
-            .build();
+      return switch (uppgiftsdata)
+      {
+         case Uppgiftsdatakoppling koppling -> toUppgiftsdatakopplingDTO(koppling);
+         case Uppgiftsdatakopia kopia -> toUppgiftsdatakopiaDTO(kopia);
+         default -> throw new IllegalArgumentException("Okänd typ av uppgiftsdata: " + uppgiftsdata.getTyp());
+      };
    }
 
    private Uppgiftsdata toUppgiftsdata(UppgiftsdataDTO uppgiftsdataDTO)
    {
-      var uppgiftsdata = new Uppgiftsdata();
-      uppgiftsdata.setInformationsobjektId(uppgiftsdataDTO.informationsobjektId());
-      uppgiftsdata.setVersion(uppgiftsdataDTO.version());
-      return uppgiftsdata;
+      return switch (uppgiftsdataDTO)
+      {
+         case UppgiftsdatakopplingDTO kopplingDTO -> toUppgiftsdatakoppling(kopplingDTO);
+         case UppgiftsdatakopiaDTO kopiaDTO -> toUppgiftsdatakopia(kopiaDTO);
+      };
+   }
+
+   private UppgiftsdatakopplingDTO toUppgiftsdatakopplingDTO(Uppgiftsdatakoppling koppling)
+   {
+      return ImmutableUppgiftsdatakopplingDTO.builder()
+            .informationsobjektId(koppling.getInformationsobjektId())
+            .informationsobjektversion(koppling.getInformationsobjektversion())
+            .build();
+   }
+
+   private Uppgiftsdatakoppling toUppgiftsdatakoppling(UppgiftsdatakopplingDTO kopplingDTO)
+   {
+      var koppling = new Uppgiftsdatakoppling();
+      koppling.setInformationsobjektId(kopplingDTO.informationsobjektId());
+      koppling.setInformationsobjektversion(kopplingDTO.informationsobjektversion());
+      koppling.setTyp(Uppgiftsdata.TypEnum.KOPPLING);
+      return koppling;
+   }
+
+   private UppgiftsdatakopiaDTO toUppgiftsdatakopiaDTO(Uppgiftsdatakopia kopia)
+   {
+      return ImmutableUppgiftsdatakopiaDTO.builder()
+            .informationsobjekttyp(kopia.getInformationsobjekttyp())
+            .data(kopia.getData())
+            .build();
+   }
+
+   private Uppgiftsdatakopia toUppgiftsdatakopia(UppgiftsdatakopiaDTO kopiaDTO)
+   {
+      var kopia = new Uppgiftsdatakopia();
+      kopia.setInformationsobjekttyp(kopiaDTO.informationsobjekttyp());
+      kopia.setData(kopiaDTO.data());
+      kopia.setTyp(Uppgiftsdata.TypEnum.KOPIA);
+      return kopia;
    }
 
    private IdtypDTO toIdtypDTO(Idtyp idtyp)

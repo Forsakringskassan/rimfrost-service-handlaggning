@@ -25,8 +25,6 @@ public interface UppgiftDTO
    @Nullable
    IdtypDTO utforare();
 
-   UUID handlaggningId();
-
    UUID aktivitetId();
 
    @Nullable
@@ -43,13 +41,13 @@ public interface UppgiftDTO
    RegelutfallDTO regelutfall();
 
    @Value.Default
-   default List<UnderlagDTO> underlag()
+   default List<UppgiftsdataDTO> underlag()
    {
       return List.of();
    }
 
    @Value.Default
-   default List<UppgiftsdataDTO> resultat()
+   default List<UppgiftsdatakopplingDTO> resultat()
    {
       return List.of();
    }

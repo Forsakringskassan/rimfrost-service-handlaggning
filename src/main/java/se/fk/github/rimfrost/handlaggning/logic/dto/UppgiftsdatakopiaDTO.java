@@ -3,13 +3,9 @@ package se.fk.github.rimfrost.handlaggning.logic.dto;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface UnderlagDTO
+public non-sealed interface UppgiftsdatakopiaDTO extends UppgiftsdataDTO
 {
-
-   String typ();
-
-   int version();
+   String informationsobjekttyp();
 
    String data();
-
 }

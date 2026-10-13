@@ -19,6 +19,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.config.ObjectMapperConfig.objectMapperConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public abstract class HandlaggningTestBase
 {
@@ -111,6 +112,12 @@ public abstract class HandlaggningTestBase
 
    private void verifyUppgift(Uppgift expectedUppgift, Uppgift actualUppgift)
    {
+      if (expectedUppgift == null)
+      {
+         assertNull(actualUppgift);
+         return;
+      }
+
       assertNotNull(actualUppgift);
       assertEquals(expectedUppgift.getId(), actualUppgift.getId());
       assertEquals(expectedUppgift.getVersion(), actualUppgift.getVersion());
@@ -123,7 +130,6 @@ public abstract class HandlaggningTestBase
       assertEquals(expectedUppgift.getUppgiftStatus(), actualUppgift.getUppgiftStatus());
       assertEquals(expectedUppgift.getKommentar(), actualUppgift.getKommentar());
       assertEquals(expectedUppgift.getFsSAinformation(), actualUppgift.getFsSAinformation());
-      assertEquals(expectedUppgift.getHandlaggningId(), actualUppgift.getHandlaggningId());
       assertEquals(expectedUppgift.getRegelutfall(), actualUppgift.getRegelutfall());
       assertEquals(expectedUppgift.getUnderlag(), actualUppgift.getUnderlag());
       assertEquals(expectedUppgift.getResultat(), actualUppgift.getResultat());
