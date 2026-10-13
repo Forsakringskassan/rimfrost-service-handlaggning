@@ -340,21 +340,28 @@ public class PresentationMapper
 
    private UppgiftsdataDTO toUppgiftsdataDTO(Uppgiftsdata uppgiftsdata)
    {
-      return switch (uppgiftsdata)
+      if (uppgiftsdata instanceof Uppgiftsdatakoppling koppling)
       {
-         case Uppgiftsdatakoppling koppling -> toUppgiftsdatakopplingDTO(koppling);
-         case Uppgiftsdatakopia kopia -> toUppgiftsdatakopiaDTO(kopia);
-         default -> throw new IllegalArgumentException("Okänd typ av uppgiftsdata: " + uppgiftsdata.getTyp());
-      };
+         return toUppgiftsdatakopplingDTO(koppling);
+      }
+      if (uppgiftsdata instanceof Uppgiftsdatakopia kopia)
+      {
+         return toUppgiftsdatakopiaDTO(kopia);
+      }
+      throw new IllegalArgumentException("Okänd typ av uppgiftsdata: " + uppgiftsdata.getTyp());
    }
 
    private Uppgiftsdata toUppgiftsdata(UppgiftsdataDTO uppgiftsdataDTO)
    {
-      return switch (uppgiftsdataDTO)
+      if (uppgiftsdataDTO instanceof UppgiftsdatakopplingDTO kopplingDTO)
       {
-         case UppgiftsdatakopplingDTO kopplingDTO -> toUppgiftsdatakoppling(kopplingDTO);
-         case UppgiftsdatakopiaDTO kopiaDTO -> toUppgiftsdatakopia(kopiaDTO);
-      };
+         return toUppgiftsdatakoppling(kopplingDTO);
+      }
+      if (uppgiftsdataDTO instanceof UppgiftsdatakopiaDTO kopiaDTO)
+      {
+         return toUppgiftsdatakopia(kopiaDTO);
+      }
+      throw new IllegalArgumentException("Okänd typ av uppgiftsdata: " + uppgiftsdataDTO);
    }
 
    private UppgiftsdatakopplingDTO toUppgiftsdatakopplingDTO(Uppgiftsdatakoppling koppling)
