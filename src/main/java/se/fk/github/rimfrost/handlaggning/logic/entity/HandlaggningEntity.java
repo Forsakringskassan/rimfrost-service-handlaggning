@@ -14,8 +14,10 @@ public interface HandlaggningEntity
 
    int version();
 
+   String handlaggningIdTyp();
+
    @Nullable
-   UUID processinstansId();
+   String handlaggningIdVarde();
 
    OffsetDateTime skapadTS();
 

@@ -2,14 +2,17 @@ package se.fk.github.rimfrost.handlaggning;
 
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslut;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Beslutsrad;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Handlaggning;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Idtyp;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.IndividYrkandeRoll;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultatRef;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Underlag;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.RollIYrkande;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.SakfragaStallningstagandeContainer;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.SakfragaStallningstagandeRef;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgift;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftSpecifikation;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdata;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkande;
 
 import java.time.OffsetDateTime;
@@ -20,42 +23,52 @@ public class HandlaggningTestData
 {
    public static HandlaggningUpdate createHandlaggningUpdate()
    {
-      HandlaggningUpdate handlaggningUpdate = new HandlaggningUpdate();
+      Handlaggning handlaggning = createHandlaggning();
 
-      handlaggningUpdate.setId(UUID.randomUUID());
-      handlaggningUpdate.setVersion(1);
-      handlaggningUpdate.setYrkande(createYrkande());
-      handlaggningUpdate.setProcessinstansId(UUID.randomUUID());
-      handlaggningUpdate.setSkapadTS(OffsetDateTime.now());
-      handlaggningUpdate.setHandlaggningspecifikationId(UUID.randomUUID());
-      handlaggningUpdate.underlag(List.of(createUnderlag()));
+      HandlaggningUpdate handlaggningUpdate = new HandlaggningUpdate();
+      handlaggningUpdate.setHandlaggning(handlaggning);
       handlaggningUpdate.setUppgift(createUppgift());
 
       return handlaggningUpdate;
    }
 
+   private static Handlaggning createHandlaggning()
+   {
+      Handlaggning handlaggning = new Handlaggning();
+
+      handlaggning.setId(UUID.randomUUID());
+      handlaggning.setVersion(1);
+      handlaggning.setYrkande(createYrkande());
+      handlaggning.setHandlaggningIdTyp(UUID.randomUUID().toString());
+      handlaggning.setHandlaggningIdVarde(UUID.randomUUID().toString());
+      handlaggning.setSkapadTS(OffsetDateTime.now());
+      handlaggning.setHandlaggningspecifikationId(UUID.randomUUID());
+
+      return handlaggning;
+   }
+
    private static Yrkande createYrkande()
    {
+      UUID yrkandeId = UUID.randomUUID();
+
       Idtyp idtyp = new Idtyp();
       idtyp.setTypId(UUID.randomUUID().toString());
       idtyp.setVarde(UUID.randomUUID().toString());
 
-      IndividYrkandeRoll individyrkandeRoll = new IndividYrkandeRoll();
-      individyrkandeRoll.setIndivid(idtyp);
-      individyrkandeRoll.setYrkandeRollId(UUID.randomUUID().toString());
+      RollIYrkande rollIYrkande = new RollIYrkande();
+      rollIYrkande.setId(UUID.randomUUID());
+      rollIYrkande.setIndivid(idtyp);
+      rollIYrkande.setYrkandeRollId(UUID.randomUUID().toString());
+      rollIYrkande.setAvserYrkande(yrkandeId);
 
-      ProduceratResultat produceratResultat = new ProduceratResultat();
-      produceratResultat.setId(UUID.randomUUID());
-      produceratResultat.setVersion(1);
-      produceratResultat.setFrom(OffsetDateTime.now());
-      produceratResultat.setTom(OffsetDateTime.now());
-      produceratResultat.setYrkandestatus(UUID.randomUUID().toString());
-      produceratResultat.setTyp(UUID.randomUUID().toString());
-      produceratResultat.setData("{}");
+      SakfragaStallningstagandeContainer sakfragaStallningstagande = new SakfragaStallningstagandeContainer();
+      sakfragaStallningstagande.setId(UUID.randomUUID());
+      sakfragaStallningstagande.setObjektTypId(UUID.randomUUID().toString());
+      sakfragaStallningstagande.setData("{}");
 
-      ProduceratResultatRef produceratResultatRef = new ProduceratResultatRef();
-      produceratResultatRef.setId(UUID.randomUUID());
-      produceratResultatRef.setVersion(1);
+      SakfragaStallningstagandeRef sakfragaStallningstagandeRef = new SakfragaStallningstagandeRef();
+      sakfragaStallningstagandeRef.setId(sakfragaStallningstagande.getId());
+      sakfragaStallningstagandeRef.setVersion(1);
 
       Beslutsrad beslutsrad = new Beslutsrad();
       beslutsrad.setId(UUID.randomUUID());
@@ -63,7 +76,7 @@ public class HandlaggningTestData
       beslutsrad.setAvslutsTyp(UUID.randomUUID().toString());
       beslutsrad.setBeslutsTyp(UUID.randomUUID().toString());
       beslutsrad.setBeslutsUtfall(UUID.randomUUID().toString());
-      beslutsrad.setProduceradeResultatRef(List.of(produceratResultatRef));
+      beslutsrad.setSakfragorStallningstaganden(List.of(sakfragaStallningstagandeRef));
 
       Beslut beslut = new Beslut();
       beslut.setId(UUID.randomUUID());
@@ -73,17 +86,17 @@ public class HandlaggningTestData
       beslut.setBeslutsrader(List.of(beslutsrad));
 
       Yrkande yrkande = new Yrkande();
-      yrkande.setId(UUID.randomUUID());
+      yrkande.setId(yrkandeId);
       yrkande.setVersion(1);
-      yrkande.setErbjudandeId(UUID.randomUUID().toString());
+      yrkande.setIngangtypId(UUID.randomUUID().toString());
       yrkande.setYrkandedatum(OffsetDateTime.now());
       yrkande.setYrkandestatus(UUID.randomUUID().toString());
       yrkande.setYrkandeFrom(OffsetDateTime.now());
       yrkande.setYrkandeTom(OffsetDateTime.now());
       yrkande.setAvsikt(UUID.randomUUID().toString());
-      yrkande.setIndividYrkandeRoller(List.of(individyrkandeRoll));
-      yrkande.setProduceradeResultat(List.of(produceratResultat));
-      yrkande.setBeslut(beslut);
+      yrkande.setRollerIYrkande(List.of(rollIYrkande));
+      yrkande.setSakfragorStallningstaganden(List.of(sakfragaStallningstagande));
+      yrkande.setBeslut(List.of(beslut));
 
       return yrkande;
    }
@@ -101,23 +114,36 @@ public class HandlaggningTestData
       Uppgift uppgift = new Uppgift();
       uppgift.setId(UUID.randomUUID());
       uppgift.setVersion(1);
-      uppgift.setSkapadTs(OffsetDateTime.now());
+      uppgift.setSkapadTS(OffsetDateTime.now());
       uppgift.setAktivitetId(UUID.randomUUID());
       uppgift.setUppgiftspecifikation(uppgiftSpecifikation);
       uppgift.setUppgiftStatus(UUID.randomUUID().toString());
+      uppgift.setKommentar(UUID.randomUUID().toString());
       uppgift.setFsSAinformation(UUID.randomUUID().toString());
-      uppgift.setUtforarId(idtyp);
+      uppgift.setUtforare(idtyp);
+      uppgift.setUnderlag(List.of(createUppgiftsdatakopia(), createUppgiftsdatakoppling()));
+      uppgift.setResultat(List.of(createUppgiftsdatakoppling()));
 
       return uppgift;
    }
 
-   private static Underlag createUnderlag()
+   private static Uppgiftsdatakopia createUppgiftsdatakopia()
    {
-      Underlag underlag = new Underlag();
-      underlag.setTyp("test");
-      underlag.setVersion(1);
-      underlag.setData("test");
+      Uppgiftsdatakopia kopia = new Uppgiftsdatakopia();
+      kopia.setTyp(Uppgiftsdata.TypEnum.KOPIA);
+      kopia.setInformationsobjekttyp("test");
+      kopia.setData("test");
 
-      return underlag;
+      return kopia;
+   }
+
+   private static Uppgiftsdatakoppling createUppgiftsdatakoppling()
+   {
+      Uppgiftsdatakoppling koppling = new Uppgiftsdatakoppling();
+      koppling.setTyp(Uppgiftsdata.TypEnum.KOPPLING);
+      koppling.setInformationsobjektId(UUID.randomUUID().toString());
+      koppling.setInformationsobjektversion(1);
+
+      return koppling;
    }
 }

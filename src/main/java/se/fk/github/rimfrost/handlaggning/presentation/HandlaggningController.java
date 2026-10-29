@@ -4,6 +4,7 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -17,8 +18,7 @@ import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
 import se.fk.github.rimfrost.handlaggning.presentation.util.PresentationMapper;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.HandlaggningControllerApi;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.GetHandlaggningResponse;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningResponse;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.HandlaggningUpdate;
 
 @SuppressWarnings("unused")
 @ApplicationScoped
@@ -58,11 +58,17 @@ public class HandlaggningController implements HandlaggningControllerApi
    {
          "application/json"
    })
-   public PutHandlaggningResponse putHandlaggning(UUID handlaggningId,
-         @Valid @NotNull PutHandlaggningRequest putHandlaggningRequest)
+   public HandlaggningUpdate putHandlaggning(UUID handlaggningId,
+         @Valid @NotNull HandlaggningUpdate putHandlaggningRequest)
    {
+
+      if (!handlaggningId.equals(putHandlaggningRequest.getHandlaggning().getId()))
+      {
+         throw new ValidationException("handlaggningId in path does not match handlaggning id in request body");
+      }
+
       HandlaggningPutRequest handlaggningPutRequest = mapper
-            .toHandlaggningPutRequest(handlaggningId, putHandlaggningRequest);
+            .toHandlaggningPutRequest(putHandlaggningRequest);
       HandlaggningPutResponse handlaggningPutResponse = handlaggningService
             .putHandlaggning(handlaggningPutRequest);
       return mapper.toPutHandlaggningResponse(handlaggningPutResponse);

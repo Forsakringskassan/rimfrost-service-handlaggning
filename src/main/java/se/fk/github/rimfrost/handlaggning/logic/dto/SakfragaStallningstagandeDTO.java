@@ -1,14 +1,14 @@
 package se.fk.github.rimfrost.handlaggning.logic.dto;
 
+import java.util.UUID;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface UnderlagDTO
+public interface SakfragaStallningstagandeDTO
 {
+   UUID id();
 
-   String typ();
-
-   int version();
+   String objektTypId();
 
    String data();
 

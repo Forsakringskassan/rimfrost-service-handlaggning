@@ -3,7 +3,6 @@ package se.fk.github.rimfrost.handlaggning.logic.service.impl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.github.rimfrost.handlaggning.logic.dto.*;
-import se.fk.github.rimfrost.handlaggning.logic.entity.*;
 import se.fk.github.rimfrost.handlaggning.logic.exception.HandlaggningNotFoundException;
 import se.fk.github.rimfrost.handlaggning.logic.repository.HandlaggningRepository;
 import se.fk.github.rimfrost.handlaggning.logic.service.HandlaggningService;
@@ -35,20 +34,9 @@ public class HandlaggningServiceImpl implements HandlaggningService
 
       handlaggningRepository.save(entity);
 
-      var yrkande = ImmutableYrkandeDTO.builder()
-            .from(mapper.toYrkandeDTO(entity.yrkande()))
-            .beslut(request.handlaggning().yrkande().beslut())
-            .build();
-
-      var handlaggning = ImmutableHandlaggningDTO.builder()
-            .from(mapper.toHandlaggningDTO(entity))
-            .yrkande(yrkande)
-            .uppgift(request.handlaggning().uppgift())
-            .underlag(request.handlaggning().underlag())
-            .build();
-
       return ImmutableHandlaggningPutResponse.builder()
-            .handlaggning(handlaggning)
+            .handlaggning(mapper.toHandlaggningDTO(entity))
+            .uppgift(request.uppgift())
             .build();
    }
 }

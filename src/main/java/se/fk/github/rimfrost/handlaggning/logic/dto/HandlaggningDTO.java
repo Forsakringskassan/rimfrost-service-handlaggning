@@ -1,7 +1,6 @@
 package se.fk.github.rimfrost.handlaggning.logic.dto;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
 import jakarta.annotation.Nullable;
@@ -15,9 +14,6 @@ public interface HandlaggningDTO
 
    Integer version();
 
-   @Nullable
-   UUID processinstansId();
-
    UUID handlaggningspecifikationId();
 
    OffsetDateTime skapadTS();
@@ -25,8 +21,9 @@ public interface HandlaggningDTO
    @Nullable
    OffsetDateTime avslutadTS();
 
-   @Nullable
-   UppgiftDTO uppgift();
+   String handlaggningIdTyp();
 
-   List<UnderlagDTO> underlag();
+   @Nullable
+   String handlaggningIdVarde();
+
 }

@@ -1,6 +1,7 @@
 package se.fk.github.rimfrost.handlaggning.logic.dto;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 import org.immutables.value.Value;
 import jakarta.annotation.Nullable;
@@ -13,26 +14,42 @@ public interface UppgiftDTO
 
    int version();
 
-   OffsetDateTime skapadTs();
+   OffsetDateTime skapadTS();
 
    @Nullable
-   OffsetDateTime utfordTs();
+   OffsetDateTime utfordTS();
 
    @Nullable
-   OffsetDateTime planeradTs();
+   OffsetDateTime planeradTillTS();
 
    @Nullable
-   IdtypDTO utforarId();
-
-   UUID handlaggningId();
+   IdtypDTO utforare();
 
    UUID aktivitetId();
 
    @Nullable
    String uppgiftStatus();
 
+   @Nullable
+   String kommentar();
+
    String fssaInformation();
 
    UppgiftspecifikationDTO uppgiftSpecifikation();
+
+   @Nullable
+   RegelutfallDTO regelutfall();
+
+   @Value.Default
+   default List<UppgiftsdataDTO> underlag()
+   {
+      return List.of();
+   }
+
+   @Value.Default
+   default List<UppgiftsdatakopplingDTO> resultat()
+   {
+      return List.of();
+   }
 
 }
