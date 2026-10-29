@@ -4,6 +4,7 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -60,6 +61,12 @@ public class HandlaggningController implements HandlaggningControllerApi
    public HandlaggningUpdate putHandlaggning(UUID handlaggningId,
          @Valid @NotNull HandlaggningUpdate putHandlaggningRequest)
    {
+
+      if (!handlaggningId.equals(putHandlaggningRequest.getHandlaggning().getId()))
+      {
+         throw new ValidationException("handlaggningId in path does not match handlaggning id in request body");
+      }
+
       HandlaggningPutRequest handlaggningPutRequest = mapper
             .toHandlaggningPutRequest(putHandlaggningRequest);
       HandlaggningPutResponse handlaggningPutResponse = handlaggningService
