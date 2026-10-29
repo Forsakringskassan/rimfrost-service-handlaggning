@@ -2,6 +2,30 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.3.4 (2026-10-29)
+
+### Dependency updates
+
+- update forsakringskassan/.github digest to cbd74f1 ([d18f6](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/d18f6ef99ade96e) renovate[bot])  
+- update forsakringskassan/.github digest to bfb01f7 ([da42b](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/da42bab37a0e279) renovate[bot])  
+### Other changes
+
+**Fix/fkpoc 1129 update to new openapi (#40)**
+
+* fix: update to use new openapi model 
+* fix: update with uppgift.kommentar 
+* fix: update to match the new model 
+* fix: Update to new model 
+* fix: update pom 
+* fix: openapi version 
+* fix: add check that path handlaggningId matches the one in the body 
+* fix: rename SakfragaStallningstagande to ..Container 
+
+[fe888](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/fe888f98c8ea825) NilsElveros *2026-10-29 12:43:36*
+
+
+## rimfrost-1_2 (2026-09-22)
+
 ## 1.3.3 (2026-09-22)
 
 ### Bug Fixes
