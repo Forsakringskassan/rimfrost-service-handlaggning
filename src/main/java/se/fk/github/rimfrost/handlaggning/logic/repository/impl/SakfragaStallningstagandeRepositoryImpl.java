@@ -7,31 +7,31 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import se.fk.github.rimfrost.handlaggning.logic.entity.SakfragaStallningstagandeEntity;
+import se.fk.github.rimfrost.handlaggning.logic.entity.SakfragaStallningstagandeContainerEntity;
 import se.fk.github.rimfrost.handlaggning.logic.repository.SakfragaStallningstagandeRepository;
 
 @ApplicationScoped
 public class SakfragaStallningstagandeRepositoryImpl implements SakfragaStallningstagandeRepository
 {
 
-   private final Map<UUID, SakfragaStallningstagandeEntity> store = new ConcurrentHashMap<>();
+   private final Map<UUID, SakfragaStallningstagandeContainerEntity> store = new ConcurrentHashMap<>();
 
    @Override
-   public SakfragaStallningstagandeEntity save(SakfragaStallningstagandeEntity e)
+   public SakfragaStallningstagandeContainerEntity save(SakfragaStallningstagandeContainerEntity e)
    {
       store.put(e.id(), e);
       return e;
    }
 
    @Override
-   public List<SakfragaStallningstagandeEntity> save(List<SakfragaStallningstagandeEntity> list)
+   public List<SakfragaStallningstagandeContainerEntity> save(List<SakfragaStallningstagandeContainerEntity> list)
    {
       list.stream().forEach(e -> store.put(e.id(), e));
       return list;
    }
 
    @Override
-   public Optional<SakfragaStallningstagandeEntity> findById(UUID id)
+   public Optional<SakfragaStallningstagandeContainerEntity> findById(UUID id)
    {
       return Optional.ofNullable(store.get(id));
    }

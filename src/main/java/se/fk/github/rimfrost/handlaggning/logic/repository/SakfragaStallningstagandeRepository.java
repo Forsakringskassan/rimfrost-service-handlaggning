@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import se.fk.github.rimfrost.handlaggning.logic.entity.SakfragaStallningstagandeEntity;
+import se.fk.github.rimfrost.handlaggning.logic.entity.SakfragaStallningstagandeContainerEntity;
 
 public interface SakfragaStallningstagandeRepository
 {
 
-   SakfragaStallningstagandeEntity save(SakfragaStallningstagandeEntity e);
+   SakfragaStallningstagandeContainerEntity save(SakfragaStallningstagandeContainerEntity e);
 
-   List<SakfragaStallningstagandeEntity> save(List<SakfragaStallningstagandeEntity> list);
+   List<SakfragaStallningstagandeContainerEntity> save(List<SakfragaStallningstagandeContainerEntity> list);
 
-   Optional<SakfragaStallningstagandeEntity> findById(UUID id);
+   Optional<SakfragaStallningstagandeContainerEntity> findById(UUID id);
 
 }

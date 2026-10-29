@@ -45,12 +45,12 @@ public class LogicMapper
    }
 
    public SakfragaStallningstagandeDTO toSakfragaStallningstagandeDTO(
-         SakfragaStallningstagandeEntity sakfragaStallningstagandeEntity)
+         SakfragaStallningstagandeContainerEntity sakfragaStallningstagandeContainerEntity)
    {
       return ImmutableSakfragaStallningstagandeDTO.builder()
-            .id(sakfragaStallningstagandeEntity.id())
-            .objektTypId(sakfragaStallningstagandeEntity.objektTypId())
-            .data(sakfragaStallningstagandeEntity.data())
+            .id(sakfragaStallningstagandeContainerEntity.id())
+            .objektTypId(sakfragaStallningstagandeContainerEntity.objektTypId())
+            .data(sakfragaStallningstagandeContainerEntity.data())
             .build();
    }
 
@@ -130,7 +130,7 @@ public class LogicMapper
             .sakfragorStallningstaganden(
                   yrkandeDTO.sakfragorStallningstaganden()
                         .stream()
-                        .map(this::toSakfragaStallningstagandeEntity)
+                        .map(this::toSakfragaStallningstagandeContainerEntity)
                         .toList())
             .build();
    }
@@ -145,10 +145,10 @@ public class LogicMapper
             .build();
    }
 
-   public SakfragaStallningstagandeEntity toSakfragaStallningstagandeEntity(
+   public SakfragaStallningstagandeContainerEntity toSakfragaStallningstagandeContainerEntity(
          SakfragaStallningstagandeDTO sakfragaStallningstagandeDTO)
    {
-      return ImmutableSakfragaStallningstagandeEntity.builder()
+      return ImmutableSakfragaStallningstagandeContainerEntity.builder()
             .id(sakfragaStallningstagandeDTO.id())
             .objektTypId(sakfragaStallningstagandeDTO.objektTypId())
             .data(sakfragaStallningstagandeDTO.data())

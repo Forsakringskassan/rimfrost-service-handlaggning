@@ -37,7 +37,7 @@ public interface YrkandeEntity
    }
 
    @Value.Default
-   default List<SakfragaStallningstagandeEntity> sakfragorStallningstaganden()
+   default List<SakfragaStallningstagandeContainerEntity> sakfragorStallningstaganden()
    {
       return List.of();
    }
