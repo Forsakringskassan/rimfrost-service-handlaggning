@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-service-handlaggning.
 
+## 1.3.5 (2026-11-03)
+
+### Bug Fixes
+
+-  workflows (#41) ([99cb5](https://github.com/Forsakringskassan/rimfrost-service-handlaggning/commit/99cb500d5764603) NilsElveros)  
+
 ## 1.3.4 (2026-10-29)
 
 ### Dependency updates
